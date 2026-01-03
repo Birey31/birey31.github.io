@@ -9,24 +9,21 @@
         .main-photo { max-width: 90%; width: 500px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .back-link { margin-bottom: 20px; text-decoration: none; color: #666; font-size: 14px; }
         .music-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
-    background: rgba(255, 255, 255, 0.8); /* Hafif şeffaf beyaz */
-    backdrop-filter: blur(10px); /* Arkayı bulanıklaştırır, çok estetiktir */
-    padding: 10px 0;
+    background: #000000; /* Tam siyah arka plan */
+    padding: 15px 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-bottom: 1px solid #ddd;
-    z-index: 1000;
+    border-bottom: 1px solid #333;
+    /* position: fixed; satırını sildik, böylece yukarıda kalacak */
 }
 
 audio {
-    width: 80%; /* Ekranın %80'ini kaplar, uzun durur */
-    height: 30px;
-    filter: sepia(20%) brightness(90%); /* Standart gri rengi biraz yumuşatır */
+    width: 80%;
+    height: 35px;
+    /* Siyah arka planda daha iyi görünmesi için hafif parlaklık */
+    filter: invert(100%) hue-rotate(180deg) brightness(1.5); 
 }
     </style>
 </head>
