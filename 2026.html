@@ -7,6 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Reeha">
 
+    <meta name="theme-color" content="#0e0e0e" id="meta-theme">
     <meta name="theme-color" content="#0e0e0e" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#fcfcfc" media="(prefers-color-scheme: light)">
     
@@ -28,14 +29,13 @@
         :root { 
             --bg: #fcfcfc; 
             --text: #1a1a1a; 
-            /* Sistem arayüzünü (yükleme çubuğu dahil) karartır */
             color-scheme: light dark;
         }
         [data-theme="dark"] { --bg: #0e0e0e; --text: #e0e0e0; }
 
-        /* Sayfa daha yüklenmeden arka planın beyazlamasını önle */
         html {
-            background-color: #0e0e0e; /* Varsayılan koyu başlar */
+            background-color: #0e0e0e;
+            transition: background-color 0.8s ease;
         }
         
         body { 
@@ -47,7 +47,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Yükleme barı ve scrollbar gizleme */
         ::-webkit-scrollbar {
             display: none;
         }
@@ -79,7 +78,6 @@
             transition: 0.3s; padding: 10px; z-index: 10001;
         }
 
-        /* PLAYER PANEL */
         .player-container {
             position: fixed; bottom: 35px; left: 50%;
             transform: translateX(-50%);
@@ -111,7 +109,6 @@
             .arrow-btn { font-size: 1rem; }
         }
 
-        /* GALERİ VE MODAL */
         .gallery { column-count: 2; column-gap: 15px; width: 100%; max-width: 1200px; margin-top: 100px; margin-bottom: 120px; }
         @media (min-width: 768px) { .gallery { column-count: 4; column-gap: 25px; } }
         
@@ -125,7 +122,6 @@
             backface-visibility: hidden;
         }
 
-        /* STAGGER EFECT */
         .gallery img:nth-child(1) { animation-delay: 0.1s; }
         .gallery img:nth-child(2) { animation-delay: 0.2s; }
         .gallery img:nth-child(3) { animation-delay: 0.3s; }
@@ -190,17 +186,24 @@
     const gallery = document.getElementById('mainGallery');
     const music = document.getElementById('bgMusic');
     const playerBar = document.getElementById('playerBar');
+    const metaTheme = document.getElementById('meta-theme');
     const tracks = ["askim.mp3", "askim2.mp3"];
     let currentTrackIndex = 0;
+
+    function updateStatusColor(color) {
+        if (metaTheme) metaTheme.setAttribute('content', color);
+    }
 
     function applyTheme() {
         const savedTheme = localStorage.getItem('theme') || 'dark';
         if (savedTheme === 'light') {
             body.removeAttribute('data-theme');
             document.querySelector('html').style.backgroundColor = "#fcfcfc";
+            updateStatusColor("#fcfcfc");
         } else {
             body.setAttribute('data-theme', 'dark');
             document.querySelector('html').style.backgroundColor = "#0e0e0e";
+            updateStatusColor("#0e0e0e");
         }
     }
     applyTheme();
@@ -210,10 +213,12 @@
             body.removeAttribute('data-theme');
             localStorage.setItem('theme', 'light');
             document.querySelector('html').style.backgroundColor = "#fcfcfc";
+            updateStatusColor("#fcfcfc");
         } else {
             body.setAttribute('data-theme', 'dark');
             localStorage.setItem('theme', 'dark');
             document.querySelector('html').style.backgroundColor = "#0e0e0e";
+            updateStatusColor("#0e0e0e");
         }
     }
 
