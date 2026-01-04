@@ -28,7 +28,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.3s, color 0.3s, opacity 0.6s ease;
+            min-height: 100vh;
         }
 
         /* 3. KONTROL PANELİ (BUTONLAR VE OK) */
@@ -39,6 +40,7 @@
             display: flex;
             gap: 12px;
             z-index: 10000;
+            animation: fadeInUI 0.8s ease-out 0.4s backwards;
         }
 
         .back-link {
@@ -59,6 +61,12 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             z-index: 10000;
             transition: transform 0.2s, background 0.3s;
+            animation: fadeInUI 0.8s ease-out 0.2s backwards;
+        }
+
+        @keyframes fadeInUI {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         #theme-toggle, #play-pause {
@@ -82,13 +90,13 @@
             transform: scale(0.9);
         }
 
-        /* 4. GALERİ */
+        /* 4. GALERİ VE RESİM ANİMASYONLARI */
         .gallery {
             column-count: 2;
             column-gap: 10px;
             width: 100%;
             max-width: 1000px;
-            margin-top: 80px; /* Butonların altına inmesi için */
+            margin-top: 80px;
         }
         @media (min-width: 900px) { .gallery { column-count: 4; } }
 
@@ -101,7 +109,21 @@
             break-inside: avoid;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
+            opacity: 0;
+            animation: imgFadeUp 0.8s ease-out forwards;
         }
+
+        @keyframes imgFadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Resimlerin sırayla gelmesi için gecikmeler */
+        .gallery img:nth-child(1) { animation-delay: 0.1s; }
+        .gallery img:nth-child(2) { animation-delay: 0.2s; }
+        .gallery img:nth-child(3) { animation-delay: 0.3s; }
+        .gallery img:nth-child(4) { animation-delay: 0.4s; }
+        .gallery img:nth-child(5) { animation-delay: 0.5s; }
 
         /* 5. MODAL */
         #modal {
@@ -164,6 +186,16 @@
         const controls = document.getElementById('main-controls');
         const backArrow = document.getElementById('back-arrow');
 
+        // YUMUŞAK ÇIKIŞ ANİMASYONU
+        backArrow.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetUrl = this.href;
+            document.body.style.opacity = "0";
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 600);
+        });
+
         function togglePlay() {
             if (audio.paused) {
                 audio.play();
@@ -177,14 +209,14 @@
         function openModal(src) {
             document.getElementById('modal').style.display = 'flex';
             document.getElementById('modalImg').src = src;
-            controls.style.display = 'none'; // Sağdakileri gizle
-            backArrow.style.display = 'none'; // Soldakini gizle
+            controls.style.display = 'none'; 
+            backArrow.style.display = 'none'; 
         }
 
         function closeModal() {
             document.getElementById('modal').style.display = 'none';
-            controls.style.display = 'flex'; // Sağdakileri göster
-            backArrow.style.display = 'flex'; // Soldakini göster
+            controls.style.display = 'flex'; 
+            backArrow.style.display = 'flex'; 
         }
 
         function toggleTheme() {
