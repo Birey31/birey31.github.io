@@ -26,27 +26,23 @@
             font-family: 'Playfair Display', serif;
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh;
-            /* Kaydırmayı engellemeden menüleri kısıtlar */
             -webkit-overflow-scrolling: touch;
         }
 
-        /* Grain Efekti */
         body::before {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Noise_Texture.png');
             opacity: 0.04; pointer-events: none; z-index: 9999;
         }
 
-        /* TARAYICI MENÜLERİNİ ENGELLEME (Kritik Kısım) */
         img {
-            -webkit-touch-callout: none !important; /* iOS Safari uzun basma menüsü */
-            -webkit-user-select: none !important;    /* Metin seçimi */
+            -webkit-touch-callout: none !important; 
+            -webkit-user-select: none !important;    
             user-select: none !important;
-            -webkit-user-drag: none !important;      /* Görseli sürükleme */
-            touch-action: none;                      /* Varsayılan dokunma hareketleri */
+            -webkit-user-drag: none !important;      
+            touch-action: none;                      
         }
 
-        /* Long Press Preview Stilleri */
         .preview-active .gallery img:not(.img-previewing) {
             filter: blur(12px) grayscale(100%);
             opacity: 0.2;
@@ -92,11 +88,9 @@
     </div>
 
     <script>
-        // 1. SAĞ TIK VE MENÜ ENGELLEME (JavaScript)
+        // 1. SAĞ TIK VE MENÜ ENGELLEME
         document.addEventListener('contextmenu', event => {
-            if (event.target.tagName === 'IMG') {
-                event.preventDefault();
-            }
+            if (event.target.tagName === 'IMG') event.preventDefault();
         });
 
         // 2. LONG PRESS PREVIEW MANTIĞI
@@ -119,31 +113,40 @@
                 clearTimeout(pressTimer);
                 img.classList.remove('img-previewing');
                 document.body.classList.remove('preview-active');
-                
-                // Eğer uzun basıldıysa, tıklama olayını (modal açılmasını) engelle
-                if (isLongPress) {
-                    e.preventDefault();
-                }
+                if (isLongPress) e.preventDefault();
             });
 
-            img.addEventListener('touchmove', () => {
-                clearTimeout(pressTimer);
-            }, {passive: true});
+            img.addEventListener('touchmove', () => clearTimeout(pressTimer), {passive: true});
         });
 
-        // 3. MODAL FONKSİYONLARI
+        // 3. MODAL VE GERİ TUŞU KONTROLÜ
         function openModal(src) {
-            // Sadece uzun basılmadıysa modalı aç
             if (!isLongPress) {
                 document.getElementById('modal').style.display = 'flex';
                 document.getElementById('modalImg').src = src;
+                
+                // Geri tuşu için sanal bir geçmiş kaydı ekle
+                history.pushState({modalOpen: true}, "");
             }
         }
+
         function closeModal() {
-            document.getElementById('modal').style.display = 'none';
+            const modal = document.getElementById('modal');
+            if (modal.style.display === 'flex') {
+                modal.style.display = 'none';
+                // Eğer modal manuel kapandıysa (butona basarak), sanal geçmişi temizle
+                if (history.state && history.state.modalOpen) {
+                    history.back();
+                }
+            }
         }
 
-        // Boşluğa tıklayınca kapat
+        // TELEFON GERİ TUŞUNA BASILDIĞINDA ÇALIŞIR
+        window.onpopstate = function(event) {
+            // Eğer geri tuşuna basıldıysa ve modal açıksa, modalı kapat
+            document.getElementById('modal').style.display = 'none';
+        };
+
         window.onclick = function(event) {
             const modal = document.getElementById('modal');
             if (event.target == modal) closeModal();
