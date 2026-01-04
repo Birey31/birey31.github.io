@@ -2,37 +2,54 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Reeha - Keşif Modu</title>
+<title>Reeha - Kolay Keşif</title>
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+
 <style>
     body { margin: 0; padding: 0; background: #000; overflow: hidden; }
     #map { position: absolute; top: 0; bottom: 0; width: 100%; }
     
+    /* Üst Bar Tasarımı */
+    .top-bar {
+        position: absolute; top: 0; left: 0; width: 100%; height: 80px;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
+        z-index: 100; display: flex; align-items: center; padding: 0 25px;
+    }
+
     .back-btn {
-        position: absolute; top: 25px; left: 25px; z-index: 100;
         color: white; text-decoration: none; font-family: serif;
-        background: rgba(0,0,0,0.6); padding: 12px 20px;
-        letter-spacing: 3px; font-size: 11px; transition: 0.4s;
-        border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px);
+        letter-spacing: 2px; font-size: 11px; opacity: 0.6; transition: 0.3s;
+        margin-right: 30px;
     }
-    .back-btn:hover { background: #fff; color: #000; }
+    .back-btn:hover { opacity: 1; }
 
-    /* Sağ tarafa kontrol butonları ekledik */
-    .mapboxgl-ctrl-group {
-        background: rgba(255,255,255,0.1) !important;
-        border: 1px solid rgba(255,255,255,0.2) !important;
-        backdrop-filter: blur(5px);
+    /* Arama kutusunu özelleştirme */
+    .mapboxgl-ctrl-geocoder {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        backdrop-filter: blur(10px);
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        width: 300px !important;
+        max-width: none !important;
     }
-    .mapboxgl-ctrl-icon { filter: invert(1); } /* Butonları beyaz yapar */
+    .mapboxgl-ctrl-geocoder--input { color: white !important; font-family: serif !important; }
+    .mapboxgl-ctrl-geocoder--icon-search { fill: white !important; }
 
-    .mapboxgl-ctrl-attrib, .mapboxgl-ctrl-logo { opacity: 0.1; }
+    /* Mapbox yazılarını gizle/soluklaştır */
+    .mapboxgl-ctrl-bottom-right, .mapboxgl-ctrl-bottom-left { opacity: 0.1; }
 </style>
 </head>
 <body>
 
-<a href="index.html" class="back-btn">← ANA SAYFA</a>
+<div class="top-bar">
+    <a href="index.html" class="back-btn">← ANA SAYFA</a>
+    <div id="geocoder"></div> </div>
+
 <div id="map"></div>
 
 <script>
@@ -45,38 +62,34 @@
         zoom: 2,
         center: [28.97, 41.00],
         antialias: true,
-        // Trackpad hassasiyeti ayarları
-        wheelZoomRate: 1/150, // Zoom'u daha pürüzsüz yapar
-        dragRotate: true
+        wheelZoomRate: 1/200 // MacBook için yavaş zoom
     });
 
-    // MacBook kullanıcıları için ekrana kontrol butonları ekliyoruz
-    map.addControl(new mapboxgl.NavigationControl({
-        visualizePitch: true // Dünyayı eğmek için buton ekler
-    }), 'top-right');
+    // Arama Çubuğunu Oluştur
+    const geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        mapboxgl: mapboxgl,
+        marker: false, // Aranan yere işaretçi koyma
+        placeholder: 'BİR ŞEHİR VEYA ÜLKE YAZ...',
+        zoom: 15, // Arama bitince ne kadar yaklaşacağını belirler
+        flyTo: {
+            duration: 8000, // 8 saniyede süzülerek git
+            curve: 1,
+            essential: true
+        }
+    });
+
+    document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
 
     map.on('style.load', () => {
         map.setFog({
-            'range': [0.5, 10],
             'color': '#000',
             'high-color': '#000',
-            'space-color': '#000',
-            'horizon-blend': 0.02
+            'space-color': '#000'
         });
     });
 
-    // Tıklayınca Sokağa Süzülme
-    map.on('click', (e) => {
-        map.flyTo({
-            center: [e.lngLat.lng, e.lngLat.lat],
-            zoom: 17,
-            pitch: 60,
-            duration: 8000,
-            essential: true
-        });
-    });
-
-    // Otomatik Dönüş Mantığı
+    // Otomatik Dönüş
     let isUserInteracting = false;
     function rotateGlobe() {
         if (!isUserInteracting && map.getZoom() < 5) {
@@ -85,13 +98,9 @@
             map.easeTo({ center, duration: 0, easing: (n) => n });
         }
     }
-
-    map.on('mousedown', () => { isUserInteracting = true; });
-    map.on('mouseup', () => { isUserInteracting = false; });
-    map.on('touchstart', () => { isUserInteracting = true; });
-    map.on('touchend', () => { isUserInteracting = false; });
-    map.on('moveend', () => { rotateGlobe(); });
-
+    map.on('mousedown', () => isUserInteracting = true);
+    map.on('mouseup', () => isUserInteracting = false);
+    map.on('moveend', () => rotateGlobe());
     rotateGlobe();
 </script>
 
