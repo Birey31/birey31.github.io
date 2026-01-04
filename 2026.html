@@ -53,12 +53,36 @@
 </head>
 <body>
 
-    <div class="music-container">
-        <audio controls>
-            <source src="https://birey31.github.io/askim.mp3" type="audio/mpeg">
-            Tarayıcınız müzik çalmayı desteklemiyor.
-        </audio>
-    </div>
+   <div class="music-container">
+    <audio id="myAudio" controls>
+        <source src="https://birey31.github.io/askim.mp3" type="audio/mpeg">
+    </audio>
+</div> 
+    <script>
+    var audio = document.getElementById('myAudio');
+    
+    // Çalacak şarkıların listesi
+    var playlist = [
+        "https://birey31.github.io/askim.mp3",
+        "https://birey31.github.io/askim2.mp3"
+    ];
+    
+    var currentTrack = 0;
+
+    // Şarkı bittiğinde bu fonksiyon çalışır
+    audio.onended = function() {
+        currentTrack++; // Bir sonraki şarkıya geç
+        if (currentTrack < playlist.length) {
+            audio.src = playlist[currentTrack];
+            audio.play(); // Otomatik olarak ikinciyi başlatır
+        } else {
+            // Liste bittiğinde istersen başa dönebilirsin:
+            currentTrack = 0;
+            audio.src = playlist[currentTrack];
+            // audio.play(); // Başa dönüp tekrar çalmasını istersen burayı aç
+        }
+    };
+</script>
 
     <a href="index.html" class="back-link">← Dön Tatlım</a>
 
