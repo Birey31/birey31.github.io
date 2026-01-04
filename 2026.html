@@ -13,6 +13,8 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Reeha - Sergi</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
@@ -36,39 +38,38 @@
             opacity: 0.04; pointer-events: none; z-index: 9999;
         }
 
-        /* ÜST PANEL (SAYFANIN BAŞINDA KALIR, KAYINCA GİDER) */
         .top-bar {
-            position: absolute; /* Sayfanın başında çakılı kalır, kaydırdıkça yukarıda kalır */
+            position: absolute; 
             top: 0; right: 0;
             display: flex; gap: 15px; align-items: center;
             padding: 25px 30px; z-index: 1000;
         }
 
-        /* GERİ BUTONU (SENİNLE AŞAĞI GELİR) */
         .back-btn {
-            position: fixed; /* Ekrana sabitlenir, senle gelir */
+            position: fixed; 
             top: 25px; left: 30px;
             background: none; border: none; color: var(--text);
             font-size: 24px; cursor: pointer; opacity: 0.6;
             transition: 0.3s; padding: 10px; line-height: 1;
-            z-index: 10001; /* Her şeyin üstünde */
+            z-index: 10001; 
             -webkit-tap-highlight-color: transparent;
         }
         .back-btn:hover { opacity: 1; transform: translateX(-3px); }
 
         .nav-btn-minimal {
             background: none; border: none; color: var(--text);
-            cursor: pointer; font-size: 1.2rem; transition: 0.3s;
+            cursor: pointer; font-size: 1.2rem; 
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
             padding: 10px; outline: none;
             -webkit-tap-highlight-color: transparent;
         }
+        .nav-btn-minimal:active { transform: scale(0.8); }
 
         .theme-toggle .sun-emoji { display: none; }
         .theme-toggle .moon-emoji { display: block; }
         [data-theme="dark"] .sun-emoji { display: block; }
         [data-theme="dark"] .moon-emoji { display: none; }
 
-        /* GALERİ */
         .gallery {
             column-count: 2; column-gap: 15px; 
             width: 100%; max-width: 1200px; 
@@ -98,7 +99,6 @@
 
         @keyframes imgFadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* MODAL */
         #modal {
             display: none; position: fixed; z-index: 10002; top: 0; left: 0;
             width: 100%; height: 100%; background: var(--bg);
@@ -120,17 +120,6 @@
         .side-right { right: 0; }
 
         .gallery img.reveal { filter: grayscale(0%) !important; }
-        /* Premium Müzik Butonu Efekti */
-#music-toggle {
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#music-toggle:active {
-    transform: scale(0.85); /* Dokunulduğunda hafifçe küçülür */
-}
     </style>
 </head>
 <body>
@@ -145,9 +134,8 @@
     </button>
 </div>
 
-<audio id="bgMusic" loop>
+<audio id="bgMusic">
     <source src="askim.mp3" type="audio/mpeg">
-    <source src="askim2.mp3" type="audio/mpeg">
 </audio>
 
 <div class="gallery">
@@ -191,56 +179,56 @@
     function goHome() {
         document.body.style.opacity = "0"; 
         setTimeout(() => { window.location.href = 'index.html'; }, 300);
-    const music = document.getElementById('bgMusic');
-const tracks = ["askim.mp3", "askim2.mp3"]; // Şarkı listen
-let currentTrackIndex = 0;
-
-function toggleMusic() {
-    const btn = document.getElementById('music-toggle');
-    
-    // Eğer müzik çalmıyorsa başlat
-    if (music.paused) {
-        music.play();
-        btn.innerHTML = "⏸";
-        btn.style.transform = "scale(1.2)"; // Küçük bir hareket
-        setTimeout(() => btn.style.transform = "scale(1)", 200);
-    } else {
-        // Eğer müzik çalıyorsa "Soft Fade" ile bir sonraki şarkıya geç
-        premiumTrackChange();
     }
-}
 
-function premiumTrackChange() {
-    const btn = document.getElementById('music-toggle');
-    
-    // Ses yavaşça kısılır (Fade Out)
-    let fadeOut = setInterval(() => {
-        if (music.volume > 0.1) {
-            music.volume -= 0.1;
-        } else {
-            clearInterval(fadeOut);
-            
-            // Şarkı değiştir
-            currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-            music.src = tracks[currentTrackIndex];
-            music.play();
-            
-            // Ses yavaşça açılır (Fade In)
-            let fadeIn = setInterval(() => {
-                if (music.volume < 0.9) {
-                    music.volume += 0.1;
-                } else {
-                    music.volume = 1;
-                    clearInterval(fadeIn);
-                }
-            }, 50);
+    // PREMIUM MÜZİK SİSTEMİ (Çift Şarkı Destekli)
+    const music = document.getElementById('bgMusic');
+    const tracks = ["askim.mp3", "askim2.mp3"];
+    let currentTrackIndex = 0;
+
+    function toggleMusic() {
+        const btn = document.getElementById('music-toggle');
+        if (music.paused) { 
+            music.play(); 
+            btn.innerHTML = "⏸"; 
+        } else { 
+            changeTrackPremium(btn);
         }
-    }, 50);
+    }
 
-    // Butonun premium görünmesi için küçük bir animasyon
-    btn.style.opacity = "0.5";
-    setTimeout(() => btn.style.opacity = "1", 300);
-}
+    function changeTrackPremium(btn) {
+        btn.style.opacity = "0.4";
+        // Fade Out
+        let fadeOut = setInterval(() => {
+            if (music.volume > 0.1) {
+                music.volume -= 0.1;
+            } else {
+                clearInterval(fadeOut);
+                // Sıradaki şarkıya geç
+                currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+                music.src = tracks[currentTrackIndex];
+                music.play();
+                // Fade In
+                let fadeIn = setInterval(() => {
+                    if (music.volume < 0.9) {
+                        music.volume += 0.1;
+                    } else {
+                        music.volume = 1;
+                        btn.style.opacity = "1";
+                        btn.innerHTML = "⏸";
+                        clearInterval(fadeIn);
+                    }
+                }, 50);
+            }
+        }, 50);
+    }
+
+    // Şarkı bittiğinde otomatik sonraki şarkıya geç
+    music.onended = function() {
+        const btn = document.getElementById('music-toggle');
+        changeTrackPremium(btn);
+    };
+
     const observerOptions = { root: null, rootMargin: '-20% 0px -20% 0px', threshold: 0.2 };
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
