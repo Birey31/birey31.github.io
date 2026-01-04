@@ -6,6 +6,33 @@
     <title>Hmmm</title>
     <link rel="icon" type="image/jpeg" href="logo.jpeg">
     <style>
+        /* Sayfa Renkleri */
+:root { --bg: #ffffff; --text: #000000; }
+[data-theme="dark"] { --bg: #000000; --text: #ffffff; }
+
+body { 
+    background-color: var(--bg); 
+    color: var(--text); 
+    transition: 0.3s; 
+}
+
+/* Butonu En Sağ Üste Sabitleme */
+#theme-toggle {
+    position: fixed; /* Ekrana sabitler */
+    top: 20px;       /* Üstten boşluk */
+    right: 20px;     /* En sağdan boşluk */
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    background: var(--bg); /* Arka plana göre renk değiştirir */
+    cursor: pointer;
+    z-index: 10000;  /* Her şeyin en üstünde durması için */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+}
         /* Modal (Büyütme Ekranı) */
 #modal {
     display: none;
@@ -115,6 +142,7 @@
     </style>
 </head>
 <body>
+    <button id="theme-toggle" onclick="toggleTheme()">☀️</button>
 
     <div class="music-container">
         <audio id="myAudio" controls>
@@ -184,6 +212,32 @@ function closeModal() {
     document.getElementById('modal').style.display = 'none';
 }
         }
+        function toggleTheme() {
+    const html = document.documentElement;
+    const btn = document.getElementById('theme-toggle');
+    
+    if (html.getAttribute('data-theme') === 'dark') {
+        html.removeAttribute('data-theme');
+        btn.innerHTML = '☀️';
+        localStorage.setItem('theme', 'light');
+    } else {
+        html.setAttribute('data-theme', 'dark');
+        btn.innerHTML = '🌙';
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// SAYFA YÜKLENDİĞİNDE: Diğer sayfalardan gelen seçimi uygula
+(function() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        // Sayfa yüklendiğinde butonun ikonunu da güncellemek için
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('theme-toggle').innerHTML = '🌙';
+        });
+    }
+})();
     </script>
 </body>
 </html>
