@@ -25,7 +25,7 @@
             --video-shadow: rgba(255,255,255,0.1);
         }
 
-        /* 2. GENEL SAYFA AYARLARI */
+        /* 2. GENEL SAYFA AYARLARI VE GİRİŞ ANİMASYONU */
         body { 
             margin: 0;
             height: 100vh;
@@ -33,31 +33,40 @@
             justify-content: center;
             align-items: center;
             font-family: sans-serif;
-            background-color: var(--bg); /* SABİT RENK YERİNE DEĞİŞKEN */
+            background-color: var(--bg); 
             color: var(--text); 
-            transition: background-color 0.3s, color 0.3s; 
+            transition: background-color 0.3s, color 0.3s, opacity 0.5s ease; /* Çıkış geçişi için opacity ekledik */
+            animation: fadeInPage 0.8s ease-in-out; /* Sayfa açılış animasyonu */
         }
 
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* 3. TEMA BUTONU */
         #theme-toggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: none;         /* Gri halkayı sildik */
-    outline: none;        /* Tıklayınca çıkan çizgiyi sildik */
-    background: var(--bg);
-    color: var(--text);
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 20px;
-    /* İstersen hafif bir gölge ekleyebilirsin, daha şık durur: */
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
-}
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: none;
+            outline: none;
+            background: var(--bg);
+            color: var(--text);
+            cursor: pointer;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+            transition: transform 0.2s;
+        }
+
+        #theme-toggle:active { transform: scale(0.9); }
 
         /* 4. BAŞLIK (2026) */
         .title-link {
@@ -67,13 +76,11 @@
             text-decoration: none;
             font-size: 24px;
             font-weight: bold;
-            color: var(--text); /* SABİT RENK YERİNE DEĞİŞKEN */
+            color: var(--text); 
             transition: opacity 0.3s;
         }
 
-        .title-link:hover {
-            opacity: 0.6;
-        }
+        .title-link:hover { opacity: 0.6; }
 
         /* 5. VİDEO KONTEYNER */
         .video-container {
@@ -94,7 +101,7 @@
 
     <button id="theme-toggle" onclick="toggleTheme()">☀️</button>
 
-    <a href="2026.html" class="title-link">2026</a>
+    <a href="2026.html" class="title-link" id="nav-2026">2026</a>
 
     <div class="video-container">
         <video autoplay loop muted playsinline>
@@ -103,6 +110,16 @@
     </div>
 
     <script>
+        // Sayfadan Çıkış Animasyonu
+        document.getElementById('nav-2026').addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetUrl = this.href;
+            document.body.style.opacity = "0"; // Ekranı karart
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 500); // 0.5 saniye sonra geçiş yap
+        });
+
         function toggleTheme() {
             const html = document.documentElement;
             const btn = document.getElementById('theme-toggle');
@@ -117,7 +134,6 @@
             }
         }
 
-        // Sayfa yüklendiğinde tercihi uygula
         (function() {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
