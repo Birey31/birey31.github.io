@@ -176,12 +176,13 @@
             else { music.pause(); btn.innerHTML = "▶"; }
         }
 
-        // TELEFONDA DİNAMİK RENKLENME (Scroll-Reveal & Re-Grayscale)
+    // TELEFONDA DİNAMİK RENKLENME (Daha Dar Odak Ayarı)
         const observerOptions = {
             root: null,
-            // rootMargin: Ekranın en üstünde ve en altında %25'lik alanı gri tutar, ortadaki %50'yi renklendirir
-            rootMargin: '-25% 0px -25% 0px', 
-            threshold: 0.2 
+            // rootMargin: Üstten ve alttan %40'lık alanı gri tutar, sadece ortadaki %20'yi renklendirir.
+            // Bu sayede odak çok daha keskinleşir.
+            rootMargin: '-40% 0px -40% 0px', 
+            threshold: 0.1 
         };
 
         const observer = new IntersectionObserver((entries) => {
@@ -190,12 +191,12 @@
                     if (entry.isIntersecting) {
                         entry.target.classList.add('reveal');
                     } else {
-                        // Ekranda odak dışına çıkınca (yukarı/aşağı) tekrar gri olur
                         entry.target.classList.remove('reveal');
                     }
                 }
             });
         }, observerOptions);
+        
 
         window.onload = () => {
             document.querySelectorAll('.gallery img').forEach(img => observer.observe(img));
