@@ -46,11 +46,11 @@
             renderer.setPixelRatio(window.devicePixelRatio);
             document.body.appendChild(renderer.domElement);
 
-            // 1. Yıldızlar (Arka Plan)
+            // 1. Yıldızlar (Arka Plan Derinliği)
             const starGeometry = new THREE.BufferGeometry();
-            const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.7 });
+            const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.8 });
             const starVertices = [];
-            for (let i = 0; i < 5000; i++) {
+            for (let i = 0; i < 6000; i++) {
                 const x = (Math.random() - 0.5) * 2000;
                 const y = (Math.random() - 0.5) * 2000;
                 const z = (Math.random() - 0.5) * 2000;
@@ -60,45 +60,47 @@
             const stars = new THREE.Points(starGeometry, starMaterial);
             scene.add(stars);
 
-            // 2. Dünya
+            // 2. Dünya Oluşturma
             const textureLoader = new THREE.TextureLoader();
-            // Yüksek çözünürlüklü dünya haritası
+            // Google Earth kalitesinde doku
             const earthTexture = textureLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_atmos_2048.jpg');
             
             const geometry = new THREE.SphereGeometry(3, 64, 64);
             const material = new THREE.MeshPhongMaterial({
                 map: earthTexture,
-                shininess: 10
+                shininess: 8
             });
             earth = new THREE.Mesh(geometry, material);
             scene.add(earth);
 
-            // 3. Işıklandırma
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+            // 3. Işıklandırma (Sinematik)
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
             scene.add(ambientLight);
 
-            const sunLight = new THREE.DirectionalLight(0xffffff, 1.5);
-            sunLight.position.set(10, 5, 10);
+            const sunLight = new THREE.DirectionalLight(0xffffff, 1.2);
+            sunLight.position.set(12, 6, 10);
             scene.add(sunLight);
 
-            // 4. Kontroller (Özgürce Döndürme)
+            // 4. Kontroller (Özgür Keşif)
             controls = new OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
+            controls.enableDamping = true; // Yumuşak duruş
             controls.dampingFactor = 0.05;
-            controls.rotateSpeed = 0.5;
-            controls.autoRotate = true; // Kendi kendine yavaşça dönsün
-            controls.autoRotateSpeed = 0.3;
-            controls.enablePan = false; // Sağa sola kaydırmayı kapat, sadece döndür
+            controls.autoRotate = true; // Başlangıçta yavaşça dönsün
+            controls.autoRotateSpeed = 0.4;
+            controls.enablePan = false; 
+            controls.minDistance = 4; // Çok fazla yakınlaşmayı engelle
+            controls.maxDistance = 20; // Çok fazla uzaklaşmayı engelle
 
             animate();
         }
 
         function animate() {
             requestAnimationFrame(animate);
-            controls.update();
+            controls.update(); // Kontrolleri her karede güncelle
             renderer.render(scene, camera);
         }
 
+        // Ekran boyutu değişirse uyarla
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
