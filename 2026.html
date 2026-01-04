@@ -1,144 +1,228 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
-<meta charset="utf-8">
-<title>Reeha - Şahsi Galeri</title>
-<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-<link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
-<script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
-<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
-<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RJ71VQXBKJ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RJ71VQXBKJ');
+    </script>
 
-<style>
-    body { margin: 0; padding: 0; background: #000; overflow: hidden; }
-    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Reeha - Sergi</title>
     
-    .top-bar {
-        position: absolute; top: 0; left: 0; width: 100%; height: 80px;
-        background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
-        z-index: 100; display: flex; align-items: center; padding: 0 25px;
-    }
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
 
-    .back-btn {
-        color: white; text-decoration: none; font-family: serif;
-        letter-spacing: 2px; font-size: 11px; opacity: 0.6; transition: 0.3s;
-        margin-right: 30px;
-    }
+    <style>
+        :root { --bg: #f5f5f3; --text: #1a1a1a; }
+        [data-theme="dark"] { --bg: #121212; --text: #e0e0e0; }
 
-    /* Fotoğraf Popup Tasarımı */
-    .mapboxgl-popup-content {
-        background: #000 !important;
-        color: white !important;
-        border: 1px solid #333;
-        border-radius: 0 !important;
-        padding: 10px !important;
-    }
-    .popup-img {
-        width: 100%; max-width: 300px; height: auto;
-        display: block; border: 1px solid #222;
-    }
+        body { 
+            background-color: var(--bg); color: var(--text); 
+            margin: 0; padding: 20px; transition: background-color 0.4s ease;
+            font-family: 'Playfair Display', serif;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; -webkit-overflow-scrolling: touch;
+        }
 
-    /* Özel Pin Tasarımı */
-    .custom-marker {
-        width: 12px; height: 12px;
-        background: #fff; border-radius: 50%;
-        cursor: pointer; box-shadow: 0 0 15px #fff;
-    }
+        /* Grain Efekti */
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Noise_Texture.png');
+            opacity: 0.04; pointer-events: none; z-index: 9999;
+        }
 
-    /* Dosya Seçme Inputu (Gizli) */
-    #photoInput { display: none; }
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; 
+            display: flex; justify-content: flex-end; align-items: center;
+            padding: 30px; box-sizing: border-box; z-index: 10000;
+        }
 
-    .mapboxgl-ctrl-geocoder { background-color: rgba(255, 255, 255, 0.05) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; }
-    .mapboxgl-ctrl-geocoder--input { color: white !important; }
-</style>
+        .nav-controls { display: flex; gap: 15px; }
+
+        /* index.html'deki buton stili */
+        #theme-toggle, #music-toggle {
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 1.2rem;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #theme-toggle:hover, #music-toggle:hover { opacity: 1; }
+
+        img {
+            -webkit-touch-callout: none !important; 
+            -webkit-user-select: none !important;    
+            user-select: none !important;
+            touch-action: none;                      
+        }
+
+        /* Long Press Preview */
+        .preview-active .gallery img:not(.img-previewing) {
+            filter: blur(12px) grayscale(100%); opacity: 0.2;
+        }
+        .img-previewing {
+            transform: scale(1.05) !important; z-index: 10001;
+            filter: grayscale(0%) !important; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+
+        .gallery {
+            column-count: 2; column-gap: 20px; width: 100%; max-width: 1100px; margin-top: 100px;
+        }
+        .gallery img {
+            width: 100%; display: block; margin-bottom: 20px; border-radius: 2px;
+            cursor: pointer; filter: grayscale(100%); transition: all 0.5s ease;
+            opacity: 0; animation: imgFadeUp 1s forwards;
+        }
+        @keyframes imgFadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Modal */
+        #modal {
+            display: none; position: fixed; z-index: 99999; top: 0; left: 0;
+            width: 100%; height: 100%; background: var(--bg);
+            justify-content: center; align-items: center;
+        }
+        #modal img { max-width: 88%; max-height: 82vh; object-fit: contain; transition: 0.3s; z-index: 1; }
+        
+        .modal-side {
+            position: absolute; top: 0; height: 100%; width: 45%; z-index: 2;
+            cursor: pointer; -webkit-tap-highlight-color: transparent;
+        }
+        .side-left { left: 0; }
+        .side-right { right: 0; }
+
+        .close-btn {
+            position: absolute; top: 30px; left: 50%; transform: translateX(-50%);
+            z-index: 3; font-size: 11px; letter-spacing: 3px; cursor: pointer; opacity: 0.4;
+        }
+    </style>
 </head>
 <body>
 
-<div class="top-bar">
-    <a href="index.html" class="back-btn">← ANA SAYFA</a>
-    <div id="geocoder"></div>
-</div>
+    <header>
+        <div class="nav-controls">
+            <button id="music-toggle" onclick="toggleMusic()">▶</button>
+            <button id="theme-toggle" onclick="toggleTheme()">🌙</button>
+        </div>
+    </header>
 
-<input type="file" id="photoInput" accept="image/*">
+    <audio id="bgMusic" loop>
+        <source src="ask.mp3" type="audio/mpeg">
+    </audio>
 
-<div id="map"></div>
+    <div class="gallery">
+        <img src="ask.jpg" onclick="openModal(this.src)">
+        <img src="ask1.jpg" onclick="openModal(this.src)">
+        <img src="ask2.jpeg" onclick="openModal(this.src)">
+        <img src="ask3.jpeg" onclick="openModal(this.src)">
+    </div>
 
-<script>
-    mapboxgl.accessToken = 'pk.eyJ1IjoiYWRlbTk5MTciLCJhIjoiY21rMDF6YXNjNmNtYzNlczU5YTUyYXUzMCJ9.mjaJaz3MfODoSZrL2wVKJw';
-    
-    const map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/mapbox/satellite-v9', 
-        projection: 'globe', 
-        zoom: 2,
-        center: [28.97, 41.00],
-        antialias: true
-    });
+    <div id="modal">
+        <div class="close-btn" onclick="closeModal()">KAPAT</div>
+        <div class="modal-side side-left" onclick="navigate(-1)"></div>
+        <img id="modalImg">
+        <div class="modal-side side-right" onclick="navigate(1)"></div>
+    </div>
 
-    const geocoder = new MapboxGeocoder({
-        accessToken: mapboxgl.accessToken,
-        mapboxgl: mapboxgl,
-        marker: false,
-        placeholder: 'KONUM ARA VE TIKLAYIP FOTO EKLE...',
-        zoom: 16
-    });
-
-    document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
-
-    let selectedCoords = null;
-
-    // 1. Haritaya tıklandığında konumu al ve dosya seçiciyi aç
-    map.on('click', (e) => {
-        selectedCoords = e.lngLat;
-        document.getElementById('photoInput').click(); // Dosya seçme penceresini açar
-    });
-
-    // 2. Dosya seçildiğinde haritaya yerleştir
-    document.getElementById('photoInput').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (!file || !selectedCoords) return;
-
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const imageUrl = event.target.result;
-            createMarker(selectedCoords.lng, selectedCoords.lat, imageUrl);
-        };
-        reader.readAsDataURL(file);
-    });
-
-    // 3. Pin ve Popup Oluşturma
-    function createMarker(lng, lat, imageUrl) {
-        const el = document.createElement('div');
-        el.className = 'custom-marker';
-
-        const popup = new mapboxgl.Popup({ offset: 25 })
-            .setHTML(`<img src="${imageUrl}" class="popup-img"><p style="text-align:center; font-size:10px; margin-top:5px;">${new Date().toLocaleDateString()}</p>`);
-
-        new mapboxgl.Marker(el)
-            .setLngLat([lng, lat])
-            .setPopup(popup)
-            .addTo(map);
-            
-        console.log("Fotoğraf başarıyla konuma işlendi.");
-    }
-
-    // Atmosfer ve Dönüş Ayarları
-    let isSpinning = true;
-    map.on('mousedown', () => isSpinning = false);
-    map.on('style.load', () => {
-        map.setFog({ 'color': '#000', 'high-color': '#000', 'space-color': '#000' });
-        rotateGlobe();
-    });
-
-    function rotateGlobe() {
-        if (isSpinning && map.getZoom() < 5) {
-            const center = map.getCenter();
-            center.lng -= 0.15;
-            map.easeTo({ center, duration: 0, easing: (n) => n });
+    <script>
+        // 1. TEMA KONTROLÜ (index.html ile birebir)
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('theme-toggle');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                btn.innerHTML = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                btn.innerHTML = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
         }
-    }
-    map.on('moveend', () => { if (isSpinning) rotateGlobe(); });
-</script>
 
+        // 2. MÜZİK KONTROLÜ
+        const music = document.getElementById('bgMusic');
+        function toggleMusic() {
+            const btn = document.getElementById('music-toggle');
+            if (music.paused) { 
+                music.play(); 
+                btn.innerHTML = "⏸";
+            } else { 
+                music.pause(); 
+                btn.innerHTML = "▶";
+            }
+        }
+
+        // Sayfa yüklendiğinde tema ayarı
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                const btn = document.getElementById('theme-toggle');
+                if(btn) btn.innerHTML = '☀️';
+            }
+        })();
+
+        // 3. LONG PRESS PREVIEW & ENGELLEME
+        document.addEventListener('contextmenu', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
+        let pressTimer, isLongPress = false;
+        const galleryImgs = Array.from(document.querySelectorAll('.gallery img'));
+
+        galleryImgs.forEach(img => {
+            img.addEventListener('touchstart', () => {
+                isLongPress = false;
+                pressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    img.classList.add('img-previewing');
+                    document.body.classList.add('preview-active');
+                    if (navigator.vibrate) navigator.vibrate(15);
+                }, 400);
+            }, {passive: true});
+            img.addEventListener('touchend', () => {
+                clearTimeout(pressTimer);
+                img.classList.remove('img-previewing');
+                document.body.classList.remove('preview-active');
+            });
+            img.addEventListener('touchmove', () => clearTimeout(pressTimer), {passive: true});
+        });
+
+        // 4. MODAL & NAVİGASYON
+        let currentIndex = 0;
+        function openModal(src) {
+            if (!isLongPress) {
+                currentIndex = galleryImgs.findIndex(img => img.src === src);
+                document.getElementById('modalImg').src = src;
+                document.getElementById('modal').style.display = 'flex';
+                history.pushState({modalOpen: true}, "");
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+            if (history.state && history.state.modalOpen) history.back();
+        }
+
+        function navigate(direction) {
+            const modalImg = document.getElementById('modalImg');
+            modalImg.style.opacity = '0';
+            setTimeout(() => {
+                currentIndex = (currentIndex + direction + galleryImgs.length) % galleryImgs.length;
+                modalImg.src = galleryImgs[currentIndex].src;
+                modalImg.style.opacity = '1';
+            }, 150);
+        }
+
+        window.onpopstate = function() { document.getElementById('modal').style.display = 'none'; };
+    </script>
 </body>
 </html>
