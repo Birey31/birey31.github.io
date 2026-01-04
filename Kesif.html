@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reeha - Dünya</title>
+    <title>Reeha - Dünya Keşfi</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <style>
@@ -24,6 +24,17 @@
 
     <script>
         let scene, camera, renderer, controls, earth;
+        const markers = []; // Tıklanabilir noktalar listesi
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        // Şehirler ve Koordinatları
+        const locations = [
+            { name: "İstanbul", lat: 41.0082, lng: 28.9784 },
+            { name: "Paris", lat: 48.8566, lng: 2.3522 },
+            { name: "New York", lat: 40.7128, lng: -74.0060 },
+            { name: "Tokyo", lat: 35.6762, lng: 139.6503 }
+        ];
 
         function init() {
             scene = new THREE.Scene();
@@ -55,19 +66,79 @@
             );
             scene.add(earth);
 
-            // 3. Işık
+            // 3. Noktaları (Marker) Ekleme
+            locations.forEach(loc => {
+                const marker = createMarker(loc.lat, loc.lng, loc.name);
+                earth.add(marker); // Noktayı dünyaya bağladık ki dünya ile dönsün
+                markers.push(marker);
+            });
+
+            // 4. Işık
             scene.add(new THREE.AmbientLight(0xffffff, 0.3));
             const sunLight = new THREE.DirectionalLight(0xffffff, 1.2);
-            sunLight.position.set(12, 6, 10);
+                sunLight.position.set(12, 6, 10);
             scene.add(sunLight);
 
-            // 4. Kontroller
+            // 5. Kontroller
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.autoRotate = true;
             controls.autoRotateSpeed = 0.5;
+            controls.minDistance = 4;
+            controls.maxDistance = 15;
+
+            // Tıklama Olayı
+            window.addEventListener('click', onMarkerClick);
 
             animate();
+        }
+
+        // Enlem-Boylamı 3D koordinata çeviren fonksiyon
+        function createMarker(lat, lng, name) {
+            const phi = (90 - lat) * (Math.PI / 180);
+            const theta = (lng + 180) * (Math.PI / 180);
+            const radius = 3.05; // Dünyanın yarıçapından (3) birazcık büyük
+
+            const x = -(radius * Math.sin(phi) * Math.cos(theta));
+            const y = radius * Math.cos(phi);
+            const z = radius * Math.sin(phi) * Math.sin(theta);
+
+            const markerGeo = new THREE.SphereGeometry(0.05, 16, 16);
+            const markerMat = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Kırmızı parlayan nokta
+            const marker = new THREE.Mesh(markerGeo, markerMat);
+            
+            marker.position.set(x, y, z);
+            marker.userData = { name: name };
+            return marker;
+        }
+
+        function onMarkerClick(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(markers);
+
+            if (intersects.length > 0) {
+                const targetMarker = intersects[0].object;
+                const targetName = targetMarker.userData.name;
+                
+                // Zoom Mantığı
+                controls.autoRotate = false;
+                
+                // Noktanın dünya üzerindeki dünya-merkezi pozisyonunu al
+                const targetPosition = new THREE.Vector3();
+                targetMarker.getWorldPosition(targetPosition);
+                
+                // Kamerayı o noktaya yönlendir ve yaklaştır
+                const zoomPosition = targetPosition.clone().multiplyScalar(2); // 2 katı uzaklıkta dur
+                
+                // Basit bir geçiş (Lerp) - Daha pürüzsüz zoom için
+                camera.position.lerp(zoomPosition, 0.1); 
+                controls.target.lerp(targetPosition, 0.1);
+
+                console.log(targetName + " noktasına yaklaşıldı.");
+            }
         }
 
         function animate() {
