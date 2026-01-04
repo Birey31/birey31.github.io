@@ -46,17 +46,18 @@
         }
 
         .gallery img {
-            width: auto;
-            max-width: 280px;
-            height: auto; 
-            max-height: 280px;
-            object-fit: contain; 
-            cursor: pointer;
-            border: none;
-            /* Netlik Ayarları */
-            image-rendering: -webkit-optimize-contrast; 
-            image-rendering: high-quality;
-        }
+        width: auto;
+        max-width: 280px;
+        height: auto;
+        max-height: 280px;
+        object-fit: contain;
+        cursor: pointer;
+        
+        /* NETLİK AYARLARI */
+        image-rendering: -webkit-optimize-contrast; /* Safari ve Chrome için keskinlik */
+        image-rendering: crisp-edges;               /* Firefox için keskinlik */
+        -ms-interpolation-mode: nearest-neighbor;   /* IE için */
+    }
 
         /* TAM EKRAN MODU - KALİTEYİ KORUYAN AYARLAR */
         #modal {
@@ -71,15 +72,22 @@
             cursor: zoom-out;
         }
 
-        #modal img {
-            max-width: 95%;
-            max-height: 95%;
-            object-fit: contain;
-            /* Fotoğrafın piksellenmesini engeller */
-            image-rendering: auto;
-            -ms-interpolation-mode: bicubic;
-        }
-    </style>
+        /* TAM EKRAN MODU - MAKSİMUM KALİTE */
+    #modal img {
+        max-width: 100%; /* Fotoğrafın taşmasını engeller ama küçültmez */
+        max-height: 100vh;
+        object-fit: contain;
+        
+        /* KALİTE KAYBINI ÖNLEYEN KRİTİK KOMUTLAR */
+        image-rendering: auto; 
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: high-quality; /* En yüksek render kalitesi */
+        
+        /* Piksellenmeyi önlemek için donanım hızlandırma */
+        transform: translateZ(0);
+        backface-visibility: hidden;
+    }
+</style>
 </head>
 <body>
 
