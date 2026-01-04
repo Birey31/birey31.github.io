@@ -18,8 +18,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
 
     <style>
-        :root { --bg: #fcfcfc; --text: #1a1a1a; --blur-bg: rgba(252, 252, 252, 0.4); }
-        [data-theme="dark"] { --bg: #0e0e0e; --text: #e0e0e0; --blur-bg: rgba(14, 14, 14, 0.4); }
+        :root { --bg: #fcfcfc; --text: #1a1a1a; }
+        [data-theme="dark"] { --bg: #0e0e0e; --text: #e0e0e0; }
 
         body { 
             background-color: var(--bg); color: var(--text); 
@@ -27,9 +27,10 @@
             font-family: 'Playfair Display', serif;
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh; -webkit-overflow-scrolling: touch;
+            /* Mavi seçimi engelleme */
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Kumlanma Efekti */
         body::before {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Noise_Texture.png');
@@ -39,18 +40,25 @@
         header {
             position: fixed; top: 0; left: 0; width: 100%; 
             display: flex; justify-content: space-between; 
-            align-items: center; padding: 20px 30px; box-sizing: border-box; z-index: 10000;
+            align-items: center; padding: 25px 30px; box-sizing: border-box; z-index: 10000;
         }
 
-        .header-logo img {
-            width: 80px; height: auto; cursor: pointer;
-            filter: grayscale(100%); transition: 0.4s;
+        /* Geri Ok Butonu */
+        .back-btn {
+            background: none; border: none; color: var(--text);
+            font-size: 24px; cursor: pointer; opacity: 0.5;
+            transition: 0.3s; padding: 0; line-height: 1;
+            -webkit-tap-highlight-color: transparent;
         }
+        .back-btn:hover { opacity: 1; transform: translateX(-3px); }
+
+        .nav-controls { display: flex; gap: 20px; align-items: center; }
 
         .nav-btn-minimal {
             background: none; border: none; color: var(--text);
             cursor: pointer; font-size: 1.2rem; transition: 0.3s;
-            padding: 5px; -webkit-tap-highlight-color: transparent; outline: none;
+            padding: 5px; outline: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .theme-toggle .sun-emoji { display: none; }
@@ -58,13 +66,11 @@
         [data-theme="dark"] .sun-emoji { display: block; }
         [data-theme="dark"] .moon-emoji { display: none; }
 
-        /* GALERİ VE KORUMA ÖZELLİKLERİ */
+        /* GALERİ VE KORUMA */
         .gallery {
             column-count: 2; column-gap: 15px; 
             width: 100%; max-width: 1200px; margin-top: 100px;
-            transition: filter 0.5s ease;
         }
-
         @media (min-width: 768px) { .gallery { column-count: 4; column-gap: 25px; } }
 
         .gallery img {
@@ -72,40 +78,34 @@
             cursor: pointer; filter: grayscale(100%); 
             transition: filter 0.8s ease, transform 0.5s ease, box-shadow 0.5s ease;
             opacity: 0; animation: imgFadeUp 1s forwards;
-            /* İndirme Engelleme */
             -webkit-touch-callout: none !important;
-            -webkit-user-select: none !important;
             user-select: none !important;
-            pointer-events: auto;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* BASILI TUTUNCA / HOVER YAPINCA EFEKT */
         .gallery img:active, .gallery img:hover {
-            transform: scale(1.04);
-            z-index: 10;
+            transform: scale(1.04); z-index: 10;
             filter: grayscale(0%) !important;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
 
-        /* Fotoğrafa odaklanınca arkayı bulanıklaştır */
         .gallery:has(img:active) img:not(:active) {
-            filter: grayscale(100%) blur(4px);
-            opacity: 0.6;
+            filter: grayscale(100%) blur(4px); opacity: 0.6;
         }
 
         @keyframes imgFadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* MODAL KORUMA */
+        /* MODAL */
         #modal {
             display: none; position: fixed; z-index: 99999; top: 0; left: 0;
             width: 100%; height: 100%; background: var(--bg);
             justify-content: center; align-items: center;
             backdrop-filter: blur(10px);
+            -webkit-tap-highlight-color: transparent;
         }
         #modal img { 
-            max-width: 88%; max-height: 82vh; object-fit: contain; 
-            transition: opacity 0.3s;
-            -webkit-touch-callout: none !important; /* Modal içi indirme engeli */
+            max-width: 88%; max-height: 82vh; object-fit: contain; transition: opacity 0.3s;
+            -webkit-touch-callout: none !important;
         }
         
         .close-btn {
@@ -113,18 +113,19 @@
             z-index: 3; font-size: 11px; letter-spacing: 3px; cursor: pointer; opacity: 0.4;
         }
 
-        .modal-side { position: absolute; top: 0; height: 100%; width: 45%; z-index: 2; cursor: pointer; }
+        .modal-side { position: absolute; top: 0; height: 100%; width: 45%; z-index: 2; cursor: pointer; -webkit-tap-highlight-color: transparent; }
         .side-left { left: 0; }
         .side-right { right: 0; }
+
+        /* Mobil renklenme sınıfı */
+        .gallery img.reveal { filter: grayscale(0%) !important; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="header-logo" onclick="goHome()">
-        <img src="logo.png" alt="Reeha">
-    </div>
-    <div class="nav-controls" style="display:flex; gap:20px;">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <div class="nav-controls">
         <button class="nav-btn-minimal" id="music-toggle" onclick="toggleMusic()">▶</button>
         <button class="nav-btn-minimal theme-toggle" id="theme-btn" onclick="toggleTheme()">
             <span class="sun-emoji">☀️</span>
@@ -159,7 +160,6 @@
 <script>
     const body = document.documentElement;
 
-    // TEMA KONTROLÜ
     function applyTheme() {
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'light') body.removeAttribute('data-theme');
@@ -182,7 +182,6 @@
         setTimeout(() => { window.location.href = 'index.html'; }, 300);
     }
 
-    // MÜZİK
     const music = document.getElementById('bgMusic');
     function toggleMusic() {
         const btn = document.getElementById('music-toggle');
@@ -190,7 +189,6 @@
         else { music.pause(); btn.innerHTML = "▶"; }
     }
 
-    // MOBİL RENKLENME
     const observerOptions = { root: null, rootMargin: '-20% 0px -20% 0px', threshold: 0.2 };
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -204,12 +202,10 @@
     window.onload = () => {
         document.querySelectorAll('.gallery img').forEach(img => {
             observer.observe(img);
-            // SAĞ TIK ENGELLEME
             img.oncontextmenu = (e) => e.preventDefault();
         });
     };
 
-    // MODAL İŞLEMLERİ
     let currentIndex = 0;
     const galleryImgs = Array.from(document.querySelectorAll('.gallery img'));
 
@@ -236,11 +232,7 @@
     }
 
     window.onpopstate = function() { document.getElementById('modal').style.display = 'none'; };
-    
-    // TÜM SAYFADA SAĞ TIK KORUMASI
-    document.addEventListener('contextmenu', e => { 
-        if (e.target.tagName === 'IMG') e.preventDefault(); 
-    });
+    document.addEventListener('contextmenu', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
 </script>
 
 </body>
