@@ -11,11 +11,15 @@
             --bg: #ffffff; 
             --text: #333333; 
             --link-color: #888;
+            --player-bg: #f8f8f8;
+            --progress-bg: #e0e0e0;
         }
         [data-theme="dark"] { 
             --bg: #000000; 
             --text: #ffffff; 
             --link-color: #bbb;
+            --player-bg: #1a1a1a;
+            --progress-bg: #333;
         }
 
         /* 2. GENEL SAYFA AYARLARI */
@@ -31,35 +35,75 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
+        /* 3. TEMA BUTONU */
         #theme-toggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: none;         /* Gri halkayı sildik */
-    outline: none;        /* Tıklayınca çıkan çizgiyi sildik */
-    background: var(--bg);
-    color: var(--text);
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 20px;
-    /* İstersen hafif bir gölge ekleyebilirsin, daha şık durur: */
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
-}
-
-        /* 4. MÜZİK VE BAĞLANTI */
-        .music-container {
-            width: 100%;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            outline: none;
+            background: var(--bg);
+            color: var(--text);
+            cursor: pointer;
+            z-index: 10000;
             display: flex;
             justify-content: center;
-            margin: 20px 0;
+            align-items: center;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
         }
-        audio { width: 95%; max-width: 500px; }
+
+        /* 4. ÖZEL MÜZİK OYNATICI TASARIMI */
+        .custom-player {
+            width: 95%;
+            max-width: 500px;
+            background: var(--player-bg);
+            border-radius: 50px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: background 0.3s;
+        }
+
+        #play-pause {
+            background: var(--text);
+            color: var(--bg);
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            transition: transform 0.2s;
+        }
+
+        #play-pause:active { transform: scale(0.9); }
+
+        .progress-container {
+            flex-grow: 1;
+            height: 6px;
+            background: var(--progress-bg);
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #ff4757; /* Kalp kırmızısı */
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.1s linear;
+        }
 
         .back-link {
             text-decoration: none;
@@ -87,6 +131,7 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
         }
+        .gallery img:hover { transform: scale(1.02); }
 
         /* 6. MODAL */
         #modal {
@@ -122,8 +167,12 @@
 
     <button id="theme-toggle" onclick="toggleTheme()">☀️</button>
 
-    <div class="music-container">
-        <audio id="myAudio" controls>
+    <div class="custom-player">
+        <button id="play-pause" onclick="togglePlay()">▶</button>
+        <div class="progress-container" onclick="setProgress(event)">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+        <audio id="myAudio">
             <source src="https://birey31.github.io/askim.mp3" type="audio/mpeg">
         </audio>
     </div>
@@ -144,55 +193,51 @@
     </div>
 
     <script>
+        // MÜZİK OYNATICI SCRIPTLERİ
+        const audio = document.getElementById('myAudio');
+        const playBtn = document.getElementById('play-pause');
+        const progress = document.getElementById('progress');
+        const playlist = ["https://birey31.github.io/askim.mp3", "https://birey31.github.io/askim2.mp3"];
+        let currentTrack = 0;
+
+        function togglePlay() {
+            if (audio.paused) {
+                audio.play();
+                playBtn.innerHTML = "||";
+            } else {
+                audio.pause();
+                playBtn.innerHTML = "▶";
+            }
+        }
+
+        audio.ontimeupdate = function() {
+            const percent = (audio.currentTime / audio.duration) * 100;
+            progress.style.width = percent + "%";
+        };
+
+        function setProgress(e) {
+            const container = document.querySelector('.progress-container');
+            const width = container.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audio.duration;
+            audio.currentTime = (clickX / width) * duration;
+        }
+
+        audio.onended = function() {
+            currentTrack++;
+            if (currentTrack >= playlist.length) currentTrack = 0;
+            audio.src = playlist[currentTrack];
+            audio.play();
+        };
+
         // MODAL FONKSİYONLARI
         function openModal(src) {
-    const modal = document.getElementById('modal');
-    const modalImg = document.getElementById('modalImg');
-    const themeBtn = document.getElementById('theme-toggle'); // Butonu seçiyoruz
-
-    modal.style.display = 'flex';
-    modalImg.src = src;
-    themeBtn.style.display = 'none'; // Fotoğraf açılınca butonu GİZLE
-}
-
-function closeModal() {
-    const modal = document.getElementById('modal');
-    const themeBtn = document.getElementById('theme-toggle'); // Butonu seçiyoruz
-
-    modal.style.display = 'none';
-    themeBtn.style.display = 'flex'; // Fotoğraf kapanınca butonu GÖSTER
-}
-        window.onclick = function(event) {
             const modal = document.getElementById('modal');
-            if (event.target == modal) closeModal();
+            const modalImg = document.getElementById('modalImg');
+            const themeBtn = document.getElementById('theme-toggle');
+            modal.style.display = 'flex';
+            modalImg.src = src;
+            themeBtn.style.display = 'none';
         }
 
-        // TEMA FONKSİYONU
-        function toggleTheme() {
-            const html = document.documentElement;
-            const btn = document.getElementById('theme-toggle');
-            if (html.getAttribute('data-theme') === 'dark') {
-                html.removeAttribute('data-theme');
-                btn.innerHTML = '☀️';
-                localStorage.setItem('theme', 'light');
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                btn.innerHTML = '🌙';
-                localStorage.setItem('theme', 'dark');
-            }
-        }
-
-        // SAYFA YÜKLENDİĞİNDE TERCİHİ UYGULA
-        (function() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                window.addEventListener('DOMContentLoaded', () => {
-                    const btn = document.getElementById('theme-toggle');
-                    if(btn) btn.innerHTML = '🌙';
-                });
-            }
-        })();
-    </script>
-</body>
-</html>
+        function closeModal() {
