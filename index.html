@@ -2,33 +2,75 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reeha</title>
     <link rel="icon" type="image/jpeg" href="logo.jpeg">
     <style>
-        body { 
-    background-color: #f4f4f4; 
-    margin: 0; 
-    font-family: sans-serif; 
-}
+        /* Sayfayı ortalamak için temel ayarlar */
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            flex-direction: column;
+            gap: 20px;
+        }
 
-.year-link { 
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    font-size: 24px; /* Yazıyı küçülttük */
-    color: #2b2826; 
-    text-decoration: none; 
-    font-weight: bold;
-    opacity: 0.8; /* Hafif transparan, daha estetik durur */
-}
+        /* 2026 Yazısı İçin Stil */
+        .title-link {
+            text-decoration: none;
+            font-size: 80px;
+            font-weight: bold;
+            color: #333;
+            letter-spacing: 5px;
+            transition: transform 0.3s, color 0.3s;
+            z-index: 2;
+        }
 
-.year-link:hover {
-    opacity: 1; /* Sadece üzerine gelince netleşir, efekt yok */
-}
-        
+        .title-link:hover {
+            color: #000;
+            transform: scale(1.1);
+        }
+
+        /* Video Kutusu */
+        .video-container {
+            width: 300px; /* Videonun genişliği */
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            background: #000;
+        }
+
+        .video-container video {
+            width: 100%;
+            display: block;
+        }
+
+        /* Alt yazı */
+        .sub-text {
+            color: #888;
+            font-size: 14px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
-    <a href="2026.html" class="year-link">2026</a>
+
+    <a href="2026.html" class="title-link">2026</a>
+
+    <div class="video-container">
+        <video autoplay loop muted playsinline>
+            <source src="shitty scrap.mp4" type="video/mp4">
+            Tarayıcınız video desteklemiyor.
+        </video>
+    </div>
+
+    <p class="sub-text">Girmek için sayıya tıkla...</p>
+
 </body>
 </html>
+    
+   
