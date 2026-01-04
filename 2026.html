@@ -5,82 +5,42 @@
     <title>Hmmm</title>
     <link rel="icon" type="image/jpeg" href="logo.jpeg">
     <style>
-        body { 
-            background-color: #f4f4f4; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            padding: 20px; 
-            margin: 0; 
-            font-family: sans-serif; 
-        }
-
-        /* Müzik çaları kapsayan alan (arka plan siyahlığı silindi) */
-        .music-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
-
-        audio {
-            width: 80%;
-            height: 35px;
-            /* Standart görünümü biraz daha yumuşatır */
-            filter: contrast(90%) brightness(105%); 
-        }
-
-        .back-link {
-            text-decoration: none;
-            color: #888;
-            font-size: 14px;
-            margin-bottom: 25px;
-            transition: 0.3s;
-        }
-
-        .back-link:hover {
-            color: #000;
-        }
-
-        .main-photo {
-            max-width: 95%;
-            width: 500px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        .gallery {
-    display: flex;
-    flex-wrap: wrap; /* Fotoğraflar sığmayınca alt satıra geçer */
-    width: 100%;
-    max-width: 1000px; /* Galerinin toplam genişliği */
-    margin: 0 auto; /* Galeriyi ortalar */
-    padding: 0;
-}
-
-.gallery img {
-    width: 50%; /* Yan yana 2 fotoğraf için (3 tane istersen %33.3 yapabilirsin) */
-    height: auto;
-    display: block; /* Altlarındaki boşluğu siler */
-    margin: 0;
-    padding: 0;
-    transition: transform 0.3s; /* Üzerine gelince hafif hareket için */
-}
-
-/* Pinterest etkisi: Üzerine gelinen fotoğraf hafifçe öne çıksın */
-.gallery img:hover {
-    transform: scale(1.02);
-    z-index: 10;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
-
-/* Mobilde (telefonda) fotoğraflar tek tek alt alta gelsin */
-@media (max-width: 600px) {
-    .gallery img {
-        width: 100%;
+    body { 
+        background-color: #f4f4f4; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        margin: 0; 
+        padding: 0;
+        font-family: sans-serif; 
     }
-}
-    </style>
+
+    /* Fotoğrafları yan yana ve bitişik yapan ana kutu */
+    .gallery {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        max-width: 1000px; /* Galerinin çok yayılmaması için */
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .gallery img {
+        width: 50%; /* Yan yana tam 2 fotoğraf dizilir */
+        height: auto;
+        display: block; /* Altlarındaki boşluğu yok eder */
+        margin: 0;
+        padding: 0;
+        border: none;
+    }
+
+    /* Mobilde fotoğraflar tek tek görünsün */
+    @media (max-width: 600px) {
+        .gallery img {
+            width: 100%;
+        }
+    }
+</style>    
 </head>
 <body>
 
@@ -118,10 +78,10 @@
     <a href="index.html" class="back-link">← Dön Tatlım</a>
 
 <div class="gallery">
-    <img src="https://birey31.github.io/ask.jpg">
-    <img src="https://github.com/Birey31/birey31.github.io/blob/main/ask1.jpg.">
-    <img src="https://github.com/Birey31/birey31.github.io/blob/main/ask2.jpeg">
-    <img src="https://github.com/Birey31/birey31.github.io/blob/main/ask3.jpeg">
+    <img src="ask.jpg">
+    <img src="ask1.jpg">
+    <img src="ask2.jpeg">
+    <img src="ask3.jpeg">
 </div>
 
 </body>
