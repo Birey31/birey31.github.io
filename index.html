@@ -1,59 +1,64 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reeha</title>
- <link rel="icon" type="image/jpeg" href="logo.jpeg">
- 
- <head>
+    
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
-    
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="giris.logo.png">
     <link rel="apple-touch-icon" href="giris.logo.png">
-</head>
+
     <style>
-     /* Sayfa Renkleri */
-:root { --bg: #ffffff; --text: #000000; }
-[data-theme="dark"] { --bg: #000000; --text: #ffffff; }
+        /* 1. RENK DEĞİŞKENLERİ */
+        :root { 
+            --bg: #ffffff; 
+            --text: #333333; 
+            --video-shadow: rgba(0,0,0,0.1);
+        }
+        [data-theme="dark"] { 
+            --bg: #000000; 
+            --text: #ffffff; 
+            --video-shadow: rgba(255,255,255,0.1);
+        }
 
-body { 
-    background-color: var(--bg); 
-    color: var(--text); 
-    transition: 0.3s; 
-}
-
-/* Butonu En Sağ Üste Sabitleme */
-#theme-toggle {
-    position: fixed; /* Ekrana sabitler */
-    top: 20px;       /* Üstten boşluk */
-    right: 20px;     /* En sağdan boşluk */
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 1px solid #ccc;
-    background: var(--bg); /* Arka plana göre renk değiştirir */
-    cursor: pointer;
-    z-index: 10000;  /* Her şeyin en üstünde durması için */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 20px;
-}
-        body {
+        /* 2. GENEL SAYFA AYARLARI */
+        body { 
             margin: 0;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #f4f4f4;
             font-family: sans-serif;
+            background-color: var(--bg); /* SABİT RENK YERİNE DEĞİŞKEN */
+            color: var(--text); 
+            transition: background-color 0.3s, color 0.3s; 
         }
 
-        /* 2026 Yazısı - Sol Üst Köşe */
+        /* 3. TEMA BUTONU */
+        #theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+            background: var(--bg);
+            color: var(--text);
+            cursor: pointer;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            transition: 0.3s;
+        }
+
+        /* 4. BAŞLIK (2026) */
         .title-link {
             position: absolute;
             top: 20px;
@@ -61,7 +66,7 @@ body {
             text-decoration: none;
             font-size: 24px;
             font-weight: bold;
-            color: #333;
+            color: var(--text); /* SABİT RENK YERİNE DEĞİŞKEN */
             transition: opacity 0.3s;
         }
 
@@ -69,12 +74,12 @@ body {
             opacity: 0.6;
         }
 
-        /* Merkeze Yerleştirilen Video */
+        /* 5. VİDEO KONTEYNER */
         .video-container {
-            width: 320px; /* Videonun genişliğini buradan ayarlayabilirsin */
+            width: 320px;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px var(--video-shadow);
             background: #000;
         }
 
@@ -83,10 +88,10 @@ body {
             display: block;
         }
     </style>
- 
 </head>
 <body>
- <button id="theme-toggle" onclick="toggleTheme()">☀️</button>
+
+    <button id="theme-toggle" onclick="toggleTheme()">☀️</button>
 
     <a href="2026.html" class="title-link">2026</a>
 
@@ -96,9 +101,7 @@ body {
         </video>
     </div>
 
-
-</body>
- <script>
+    <script>
         function toggleTheme() {
             const html = document.documentElement;
             const btn = document.getElementById('theme-toggle');
