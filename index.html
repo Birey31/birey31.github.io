@@ -139,6 +139,11 @@
                 if(btn) btn.innerHTML = '☀️';
             }
         })();
+        // URL Temizleme: Instagram'dan gelen gereksiz takip kodlarını siler
+if (window.location.search) {
+    const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+    window.history.replaceState({}, document.title, cleanUrl);
+}
     </script>
 </body>
 </html>
