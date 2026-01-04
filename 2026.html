@@ -120,6 +120,17 @@
         .side-right { right: 0; }
 
         .gallery img.reveal { filter: grayscale(0%) !important; }
+        /* Premium Müzik Butonu Efekti */
+#music-toggle {
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#music-toggle:active {
+    transform: scale(0.85); /* Dokunulduğunda hafifçe küçülür */
+}
     </style>
 </head>
 <body>
@@ -180,15 +191,56 @@
     function goHome() {
         document.body.style.opacity = "0"; 
         setTimeout(() => { window.location.href = 'index.html'; }, 300);
-    }
-
     const music = document.getElementById('bgMusic');
-    function toggleMusic() {
-        const btn = document.getElementById('music-toggle');
-        if (music.paused) { music.play(); btn.innerHTML = "⏸"; } 
-        else { music.pause(); btn.innerHTML = "▶"; }
-    }
+const tracks = ["askim.mp3", "askim2.mp3"]; // Şarkı listen
+let currentTrackIndex = 0;
 
+function toggleMusic() {
+    const btn = document.getElementById('music-toggle');
+    
+    // Eğer müzik çalmıyorsa başlat
+    if (music.paused) {
+        music.play();
+        btn.innerHTML = "⏸";
+        btn.style.transform = "scale(1.2)"; // Küçük bir hareket
+        setTimeout(() => btn.style.transform = "scale(1)", 200);
+    } else {
+        // Eğer müzik çalıyorsa "Soft Fade" ile bir sonraki şarkıya geç
+        premiumTrackChange();
+    }
+}
+
+function premiumTrackChange() {
+    const btn = document.getElementById('music-toggle');
+    
+    // Ses yavaşça kısılır (Fade Out)
+    let fadeOut = setInterval(() => {
+        if (music.volume > 0.1) {
+            music.volume -= 0.1;
+        } else {
+            clearInterval(fadeOut);
+            
+            // Şarkı değiştir
+            currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+            music.src = tracks[currentTrackIndex];
+            music.play();
+            
+            // Ses yavaşça açılır (Fade In)
+            let fadeIn = setInterval(() => {
+                if (music.volume < 0.9) {
+                    music.volume += 0.1;
+                } else {
+                    music.volume = 1;
+                    clearInterval(fadeIn);
+                }
+            }, 50);
+        }
+    }, 50);
+
+    // Butonun premium görünmesi için küçük bir animasyon
+    btn.style.opacity = "0.5";
+    setTimeout(() => btn.style.opacity = "1", 300);
+}
     const observerOptions = { root: null, rootMargin: '-20% 0px -20% 0px', threshold: 0.2 };
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
