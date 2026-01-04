@@ -81,4 +81,106 @@
             margin-bottom: 10px;
             border-radius: 8px;
             cursor: pointer;
-            break-inside:
+            break-inside: avoid;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        /* 6. MODAL */
+        #modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #modal img {
+            max-width: 95%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+        .close-btn {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background-color: #fff;
+            color: #000;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="theme-toggle" onclick="toggleTheme()">☀️</button>
+
+    <div class="music-container">
+        <audio id="myAudio" controls>
+            <source src="https://birey31.github.io/askim.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <a href="index.html" class="back-link">← Dön Tatlım</a>
+
+    <div class="gallery">
+        <img src="ask.jpg?raw=true" onclick="openModal(this.src)">
+        <img src="ask1.jpg?raw=true" onclick="openModal(this.src)">
+        <img src="ask2.jpeg?raw=true" onclick="openModal(this.src)">
+        <img src="ask3.jpeg?raw=true" onclick="openModal(this.src)">
+        <img src="pexels-pixabay-33045.jpg?raw=true" onclick="openModal(this.src)">
+    </div>
+
+    <div id="modal">
+        <img id="modalImg">
+        <button class="close-btn" onclick="closeModal()">Geri Dön</button>
+    </div>
+
+    <script>
+        // MODAL FONKSİYONLARI
+        function openModal(src) {
+            document.getElementById('modal').style.display = 'flex';
+            document.getElementById('modalImg').src = src;
+        }
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target == modal) closeModal();
+        }
+
+        // TEMA FONKSİYONU
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('theme-toggle');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                btn.innerHTML = '☀️';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                btn.innerHTML = '🌙';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // SAYFA YÜKLENDİĞİNDE TERCİHİ UYGULA
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                window.addEventListener('DOMContentLoaded', () => {
+                    const btn = document.getElementById('theme-toggle');
+                    if(btn) btn.innerHTML = '🌙';
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
