@@ -86,8 +86,6 @@
             transition: transform 0.2s;
         }
 
-        #play-pause:active { transform: scale(0.9); }
-
         .progress-container {
             flex-grow: 1;
             height: 6px;
@@ -99,7 +97,7 @@
 
         .progress-bar {
             height: 100%;
-            background: #ff4757; /* Kalp kırmızısı */
+            background: #ff4757;
             width: 0%;
             border-radius: 10px;
             transition: width 0.1s linear;
@@ -131,7 +129,6 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
         }
-        .gallery img:hover { transform: scale(1.02); }
 
         /* 6. MODAL */
         #modal {
@@ -193,7 +190,7 @@
     </div>
 
     <script>
-        // MÜZİK OYNATICI SCRIPTLERİ
+        // --- MÜZİK OYNATICI ---
         const audio = document.getElementById('myAudio');
         const playBtn = document.getElementById('play-pause');
         const progress = document.getElementById('progress');
@@ -211,8 +208,10 @@
         }
 
         audio.ontimeupdate = function() {
-            const percent = (audio.currentTime / audio.duration) * 100;
-            progress.style.width = percent + "%";
+            if (audio.duration) {
+                const percent = (audio.currentTime / audio.duration) * 100;
+                progress.style.width = percent + "%";
+            }
         };
 
         function setProgress(e) {
@@ -228,9 +227,10 @@
             if (currentTrack >= playlist.length) currentTrack = 0;
             audio.src = playlist[currentTrack];
             audio.play();
+            playBtn.innerHTML = "||";
         };
 
-        // MODAL FONKSİYONLARI
+        // --- MODAL FONKSİYONLARI ---
         function openModal(src) {
             const modal = document.getElementById('modal');
             const modalImg = document.getElementById('modalImg');
