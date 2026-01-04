@@ -18,18 +18,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
 
     <style>
-        :root { --bg: #f5f5f3; --text: #1a1a1a; }
-        [data-theme="dark"] { --bg: #121212; --text: #e0e0e0; }
+        :root { --bg: #fcfcfc; --text: #1a1a1a; --blur-bg: rgba(252, 252, 252, 0.4); }
+        [data-theme="dark"] { --bg: #0e0e0e; --text: #e0e0e0; --blur-bg: rgba(14, 14, 14, 0.4); }
 
         body { 
             background-color: var(--bg); color: var(--text); 
-            margin: 0; padding: 20px; transition: background-color 0.4s ease, opacity 0.3s ease;
+            margin: 0; padding: 20px; transition: background-color 0.6s ease;
             font-family: 'Playfair Display', serif;
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh; -webkit-overflow-scrolling: touch;
-            opacity: 1;
         }
 
+        /* Kumlanma Efekti */
         body::before {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Noise_Texture.png');
@@ -39,233 +39,209 @@
         header {
             position: fixed; top: 0; left: 0; width: 100%; 
             display: flex; justify-content: space-between; 
-            align-items: center; padding: 30px; box-sizing: border-box; z-index: 10000;
+            align-items: center; padding: 20px 30px; box-sizing: border-box; z-index: 10000;
+        }
+
+        .header-logo img {
+            width: 80px; height: auto; cursor: pointer;
+            filter: grayscale(100%); transition: 0.4s;
         }
 
         .nav-btn-minimal {
             background: none; border: none; color: var(--text);
-            cursor: pointer; font-size: 1.2rem; opacity: 0.5;
-            transition: opacity 0.3s ease; padding: 10px;
-            display: flex; align-items: center; justify-content: center;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .nav-btn-minimal:hover { opacity: 1; }
-        .nav-controls { display: flex; gap: 10px; }
-
-        img {
-            -webkit-touch-callout: none !important; 
-            -webkit-user-select: none !important;    
-            user-select: none !important;
+            cursor: pointer; font-size: 1.2rem; transition: 0.3s;
+            padding: 5px; -webkit-tap-highlight-color: transparent; outline: none;
         }
 
-        /* GALERİ - MOBİL (2 Sütun) */
+        .theme-toggle .sun-emoji { display: none; }
+        .theme-toggle .moon-emoji { display: block; }
+        [data-theme="dark"] .sun-emoji { display: block; }
+        [data-theme="dark"] .moon-emoji { display: none; }
+
+        /* GALERİ VE KORUMA ÖZELLİKLERİ */
         .gallery {
             column-count: 2; column-gap: 15px; 
             width: 100%; max-width: 1200px; margin-top: 100px;
+            transition: filter 0.5s ease;
         }
 
-        /* GALERİ - BİLGİSAYAR (4 Sütun) */
-        @media (min-width: 768px) {
-            .gallery { column-count: 4; column-gap: 25px; }
-        }
+        @media (min-width: 768px) { .gallery { column-count: 4; column-gap: 25px; } }
 
         .gallery img {
             width: 100%; display: block; margin-bottom: 15px; border-radius: 2px;
-            cursor: pointer; 
-            filter: grayscale(100%); /* Başlangıç kesin gri */
-            transition: filter 0.8s ease, transform 0.5s ease;
+            cursor: pointer; filter: grayscale(100%); 
+            transition: filter 0.8s ease, transform 0.5s ease, box-shadow 0.5s ease;
             opacity: 0; animation: imgFadeUp 1s forwards;
+            /* İndirme Engelleme */
+            -webkit-touch-callout: none !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+            pointer-events: auto;
         }
 
-        /* BİLGİSAYARA ÖZEL: Fare üzerindeyken renklenme */
-        @media (hover: hover) {
-            .gallery img:hover {
-                filter: grayscale(0%) !important;
-                transform: scale(1.02);
-            }
-        }
-
-        /* TELEFONA ÖZEL: Ortada olan resmin sınıfı */
-        .gallery img.reveal {
+        /* BASILI TUTUNCA / HOVER YAPINCA EFEKT */
+        .gallery img:active, .gallery img:hover {
+            transform: scale(1.04);
+            z-index: 10;
             filter: grayscale(0%) !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        /* Fotoğrafa odaklanınca arkayı bulanıklaştır */
+        .gallery:has(img:active) img:not(:active) {
+            filter: grayscale(100%) blur(4px);
+            opacity: 0.6;
         }
 
         @keyframes imgFadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Modal Tasarımı */
+        /* MODAL KORUMA */
         #modal {
             display: none; position: fixed; z-index: 99999; top: 0; left: 0;
             width: 100%; height: 100%; background: var(--bg);
             justify-content: center; align-items: center;
+            backdrop-filter: blur(10px);
         }
-        #modal img { max-width: 88%; max-height: 82vh; object-fit: contain; transition: opacity 0.3s; z-index: 1; }
-
-        @media (min-width: 768px) {
-            #modal img { max-width: 50%; } 
+        #modal img { 
+            max-width: 88%; max-height: 82vh; object-fit: contain; 
+            transition: opacity 0.3s;
+            -webkit-touch-callout: none !important; /* Modal içi indirme engeli */
         }
         
-        .modal-side {
-            position: absolute; top: 0; height: 100%; width: 45%; z-index: 2;
-            cursor: pointer; -webkit-tap-highlight-color: transparent;
-        }
-        .side-left { left: 0; }
-        .side-right { right: 0; }
-
         .close-btn {
             position: absolute; top: 30px; left: 50%; transform: translateX(-50%);
             z-index: 3; font-size: 11px; letter-spacing: 3px; cursor: pointer; opacity: 0.4;
         }
+
+        .modal-side { position: absolute; top: 0; height: 100%; width: 45%; z-index: 2; cursor: pointer; }
+        .side-left { left: 0; }
+        .side-right { right: 0; }
     </style>
 </head>
 <body>
 
-    <header>
-    <div class="nav-controls">
+<header>
+    <div class="header-logo" onclick="goHome()">
+        <img src="logo.png" alt="Reeha">
+    </div>
+    <div class="nav-controls" style="display:flex; gap:20px;">
         <button class="nav-btn-minimal" id="music-toggle" onclick="toggleMusic()">▶</button>
+        <button class="nav-btn-minimal theme-toggle" id="theme-btn" onclick="toggleTheme()">
+            <span class="sun-emoji">☀️</span>
+            <span class="moon-emoji">🌙</span>
+        </button>
     </div>
 </header>
 
-<audio id="bgMusic">
+<audio id="bgMusic" loop>
     <source src="askim.mp3" type="audio/mpeg">
     <source src="askim2.mp3" type="audio/mpeg">
 </audio>
-    <div class="gallery">
-        <img src="ask.jpg" onclick="openModal(this.src)">
-        <img src="ask1.jpg" onclick="openModal(this.src)">
-        <img src="ask2.jpeg" onclick="openModal(this.src)">
-        <img src="ask3.jpeg" onclick="openModal(this.src)">
-        <img src="ask4.jpeg" onclick="openModal(this.src)">
-        <img src="ask5.jpeg" onclick="openModal(this.src)">
-        <img src="ask6.jpeg" onclick="openModal(this.src)">
-        <img src="ask7.jpeg" onclick="openModal(this.src)">
-    </div>
 
-    <div id="modal">
-        <div class="close-btn" onclick="closeModal()">KAPAT</div>
-        <div class="modal-side side-left" onclick="navigate(-1)"></div>
-        <img id="modalImg">
-        <div class="modal-side side-right" onclick="navigate(1)"></div>
-    </div>
+<div class="gallery">
+    <img src="ask.jpg" onclick="openModal(this.src)">
+    <img src="ask1.jpg" onclick="openModal(this.src)">
+    <img src="ask2.jpeg" onclick="openModal(this.src)">
+    <img src="ask3.jpeg" onclick="openModal(this.src)">
+    <img src="ask4.jpeg" onclick="openModal(this.src)">
+    <img src="ask5.jpeg" onclick="openModal(this.src)">
+    <img src="ask6.jpeg" onclick="openModal(this.src)">
+    <img src="ask7.jpeg" onclick="openModal(this.src)">
+</div>
 
-    <script>
-        function goHome() {
-            document.body.style.opacity = "0"; 
-            setTimeout(() => { window.location.href = 'index.html'; }, 200);
-        }
+<div id="modal">
+    <div class="close-btn" onclick="closeModal()">KAPAT</div>
+    <div class="modal-side side-left" onclick="navigate(-1)"></div>
+    <img id="modalImg" oncontextmenu="return false;">
+    <div class="modal-side side-right" onclick="navigate(1)"></div>
+</div>
 
-        function toggleTheme() {
-            const html = document.documentElement;
-            const btn = document.getElementById('theme-toggle');
-            if (html.getAttribute('data-theme') === 'dark') {
-                html.removeAttribute('data-theme');
-                btn.innerHTML = '🌙';
-                localStorage.setItem('theme', 'light');
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                btn.innerHTML = '☀️';
-                localStorage.setItem('theme', 'dark');
-            }
-        }
+<script>
+    const body = document.documentElement;
 
-        const music = document.getElementById('bgMusic');
-        function toggleMusic() {
-            const btn = document.getElementById('music-toggle');
-            if (music.paused) { music.play(); btn.innerHTML = "⏸"; } 
-            else { music.pause(); btn.innerHTML = "▶"; }
-        }
-
-        // TELEFONDA DİNAMİK RENKLENME (Scroll-Reveal & Re-Grayscale)
-        const observerOptions = {
-            root: null,
-            // rootMargin: Ekranın en üstünde ve en altında %25'lik alanı gri tutar, ortadaki %50'yi renklendirir
-            rootMargin: '-25% 0px -25% 0px', 
-            threshold: 0.2 
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (window.innerWidth < 1024) { 
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('reveal');
-                    } else {
-                        // Ekranda odak dışına çıkınca (yukarı/aşağı) tekrar gri olur
-                        entry.target.classList.remove('reveal');
-                    }
-                }
-            });
-        }, observerOptions);
-
-        window.onload = () => {
-            document.querySelectorAll('.gallery img').forEach(img => observer.observe(img));
-        };
-
-        (function() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                const btn = document.getElementById('theme-toggle');
-                if(btn) btn.innerHTML = '☀️';
-            }
-        })();
-
-        let currentIndex = 0;
-        const galleryImgs = Array.from(document.querySelectorAll('.gallery img'));
-
-        function openModal(src) {
-            currentIndex = galleryImgs.findIndex(img => img.src === src);
-            document.getElementById('modalImg').src = src;
-            document.getElementById('modal').style.display = 'flex';
-            history.pushState({modalOpen: true}, "");
-        }
-
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-            if (history.state && history.state.modalOpen) history.back();
-        }
-
-        function navigate(direction) {
-            const modalImg = document.getElementById('modalImg');
-            modalImg.style.opacity = '0';
-            setTimeout(() => {
-                currentIndex = (currentIndex + direction + galleryImgs.length) % galleryImgs.length;
-                modalImg.src = galleryImgs[currentIndex].src;
-                modalImg.style.opacity = '1';
-            }, 150);
-        }
-
-        window.onpopstate = function() { document.getElementById('modal').style.display = 'none'; };
-        document.addEventListener('contextmenu', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
-        // MÜZİK ÇALAR VE SIRAYLA ÇALMA MANTIĞI
-const music = document.getElementById('bgMusic');
-let currentTrack = 0;
-const tracks = ["askim.mp3", "askim2.mp3"]; // Çalınacak dosyalar
-
-function toggleMusic() {
-    const btn = document.getElementById('music-toggle');
-    if (music.paused) { 
-        music.play().catch(e => console.log("Müzik dosyası bulunamadı veya oynatılamıyor:", e)); 
-        btn.innerHTML = "⏸"; 
-    } 
-    else { 
-        music.pause(); 
-        btn.innerHTML = "▶"; 
+    // TEMA KONTROLÜ
+    function applyTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') body.removeAttribute('data-theme');
+        else body.setAttribute('data-theme', 'dark');
     }
-}
+    applyTheme();
 
-// Birinci şarkı bitince ikinciye otomatik geçiş
-music.onended = function() {
-    currentTrack = (currentTrack + 1) % tracks.length;
-    music.src = tracks[currentTrack];
-    music.play();
-};
-        const body = document.documentElement;
-// Sayfa açıldığında hafızaya bak
-if (localStorage.getItem('theme') === 'light') {
-    body.setAttribute('data-theme', 'light');
-}
+    function toggleTheme() {
+        if (body.getAttribute('data-theme') === 'dark') {
+            body.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+        } else {
+            body.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+        }
+    }
 
-// Tema değiştirme butonun varsa onun içine de şunu ekle:
-// localStorage.setItem('theme', 'light'); (veya dark)
-    </script>
+    function goHome() {
+        document.body.style.opacity = "0"; 
+        setTimeout(() => { window.location.href = 'index.html'; }, 300);
+    }
+
+    // MÜZİK
+    const music = document.getElementById('bgMusic');
+    function toggleMusic() {
+        const btn = document.getElementById('music-toggle');
+        if (music.paused) { music.play(); btn.innerHTML = "⏸"; } 
+        else { music.pause(); btn.innerHTML = "▶"; }
+    }
+
+    // MOBİL RENKLENME
+    const observerOptions = { root: null, rootMargin: '-20% 0px -20% 0px', threshold: 0.2 };
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (window.innerWidth < 1024) {
+                if (entry.isIntersecting) entry.target.classList.add('reveal');
+                else entry.target.classList.remove('reveal');
+            }
+        });
+    }, observerOptions);
+
+    window.onload = () => {
+        document.querySelectorAll('.gallery img').forEach(img => {
+            observer.observe(img);
+            // SAĞ TIK ENGELLEME
+            img.oncontextmenu = (e) => e.preventDefault();
+        });
+    };
+
+    // MODAL İŞLEMLERİ
+    let currentIndex = 0;
+    const galleryImgs = Array.from(document.querySelectorAll('.gallery img'));
+
+    function openModal(src) {
+        currentIndex = galleryImgs.findIndex(img => img.src === src);
+        document.getElementById('modalImg').src = src;
+        document.getElementById('modal').style.display = 'flex';
+        history.pushState({modalOpen: true}, "");
+    }
+
+    function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+        if (history.state && history.state.modalOpen) history.back();
+    }
+
+    function navigate(direction) {
+        const modalImg = document.getElementById('modalImg');
+        modalImg.style.opacity = '0';
+        setTimeout(() => {
+            currentIndex = (currentIndex + direction + galleryImgs.length) % galleryImgs.length;
+            modalImg.src = galleryImgs[currentIndex].src;
+            modalImg.style.opacity = '1';
+        }, 150);
+    }
+
+    window.onpopstate = function() { document.getElementById('modal').style.display = 'none'; };
+    
+    // TÜM SAYFADA SAĞ TIK KORUMASI
+    document.addEventListener('contextmenu', e => { 
+        if (e.target.tagName === 'IMG') e.preventDefault(); 
+    });
+</script>
+
 </body>
 </html>
