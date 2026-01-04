@@ -120,17 +120,15 @@
 <body>
 
     <header>
-        <button class="nav-btn-minimal" onclick="goHome()">←</button>
-        <div class="nav-controls">
-            <button class="nav-btn-minimal" id="music-toggle" onclick="toggleMusic()">▶</button>
-            <button class="nav-btn-minimal" id="theme-toggle" onclick="toggleTheme()">🌙</button>
-        </div>
-    </header>
+    <div class="nav-controls">
+        <button class="nav-btn-minimal" id="music-toggle" onclick="toggleMusic()">▶</button>
+    </div>
+</header>
 
-    <audio id="bgMusic" loop>
-        <source src="askim.mp3" type="audio/mpeg">
-    </audio>
-
+<audio id="bgMusic">
+    <source src="askim.mp3" type="audio/mpeg">
+    <source src="askim2.mp3" type="audio/mpeg">
+</audio>
     <div class="gallery">
         <img src="ask.jpg" onclick="openModal(this.src)">
         <img src="ask1.jpg" onclick="openModal(this.src)">
@@ -237,6 +235,29 @@
 
         window.onpopstate = function() { document.getElementById('modal').style.display = 'none'; };
         document.addEventListener('contextmenu', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
+        // MÜZİK ÇALAR VE SIRAYLA ÇALMA MANTIĞI
+const music = document.getElementById('bgMusic');
+let currentTrack = 0;
+const tracks = ["askim.mp3", "askim2.mp3"]; // Çalınacak dosyalar
+
+function toggleMusic() {
+    const btn = document.getElementById('music-toggle');
+    if (music.paused) { 
+        music.play().catch(e => console.log("Müzik dosyası bulunamadı veya oynatılamıyor:", e)); 
+        btn.innerHTML = "⏸"; 
+    } 
+    else { 
+        music.pause(); 
+        btn.innerHTML = "▶"; 
+    }
+}
+
+// Birinci şarkı bitince ikinciye otomatik geçiş
+music.onended = function() {
+    currentTrack = (currentTrack + 1) % tracks.length;
+    music.src = tracks[currentTrack];
+    music.play();
+};
     </script>
 </body>
 </html>
