@@ -88,12 +88,11 @@
         .arrow-btn { font-size: 1.2rem; opacity: 0.4; }
         .arrow-btn:hover { opacity: 1; }
         
-        /* Başlat / Sus Butonu (Yazılı) */
         .play-pause-btn { 
             font-family: 'Playfair Display', serif;
-            font-size: 0.8rem; font-weight: bold; 
-            text-transform: uppercase; letter-spacing: 4px;
-            min-width: 100px;
+            font-size: 0.9rem; font-weight: bold; 
+            letter-spacing: 4px;
+            min-width: 80px;
         }
 
         /* GALERİ */
@@ -142,7 +141,9 @@
 
 <div class="player-container" onclick="event.stopPropagation()">
     <button class="player-btn arrow-btn" onclick="changeTrack(-1)">←</button>
-    <button class="player-btn play-pause-btn" id="music-toggle" onclick="toggleMusic()">BAŞLAT</button>
+    <button class="player-btn play-pause-btn" id="music-toggle" onclick="toggleMusic()">
+        <span id="play-icon">▶</span>
+    </button>
     <button class="player-btn arrow-btn" onclick="changeTrack(1)">→</button>
 </div>
 
@@ -199,7 +200,7 @@
             btn.innerHTML = "SUS";
         } else {
             music.pause();
-            btn.innerHTML = "BAŞLAT";
+            btn.innerHTML = "<span>▶</span>";
         }
     }
 
