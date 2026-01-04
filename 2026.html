@@ -20,13 +20,11 @@
         [data-theme="dark"] { --bg: #121212; --text: #e0e0e0; }
 
         body { 
-            background-color: var(--bg); 
-            color: var(--text); 
+            background-color: var(--bg); color: var(--text); 
             margin: 0; padding: 20px;
             font-family: 'Playfair Display', serif;
             display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh;
-            -webkit-overflow-scrolling: touch;
+            min-height: 100vh; -webkit-overflow-scrolling: touch;
         }
 
         body::before {
@@ -70,12 +68,15 @@
             width: 100%; height: 100%; background: var(--bg);
             flex-direction: column; justify-content: center; align-items: center;
         }
-        #modal img { max-width: 90%; max-height: 80vh; object-fit: contain; }
+        #modal img { 
+            max-width: 90%; max-height: 80vh; object-fit: contain; 
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
     </style>
 </head>
 <body>
 
-    <div class="gallery">
+    <div class="gallery" id="mainGallery">
         <img src="ask.jpg" onclick="openModal(this.src)">
         <img src="ask1.jpg" onclick="openModal(this.src)">
         <img src="ask2.jpeg" onclick="openModal(this.src)">
@@ -84,19 +85,17 @@
 
     <div id="modal">
         <img id="modalImg">
-        <button onclick="closeModal()" style="margin-top:20px; background:none; border:1px solid var(--text); color:var(--text); padding:10px 20px; cursor:pointer;">Kapat</button>
+        <button onclick="closeModal()" style="margin-top:20px; background:none; border:1px solid var(--text); color:var(--text); padding:10px 20px; cursor:pointer; font-family: inherit;">Kapat</button>
     </div>
 
     <script>
-        // 1. SAĞ TIK VE MENÜ ENGELLEME
-        document.addEventListener('contextmenu', event => {
-            if (event.target.tagName === 'IMG') event.preventDefault();
-        });
+        // 1. MENÜ ENGELLEME
+        document.addEventListener('contextmenu', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
 
-        // 2. LONG PRESS PREVIEW MANTIĞI
+        // 2. LONG PRESS PREVIEW
         let pressTimer;
         let isLongPress = false;
-        const galleryImgs = document.querySelectorAll('.gallery img');
+        const galleryImgs = Array.from(document.querySelectorAll('.gallery img'));
 
         galleryImgs.forEach(img => {
             img.addEventListener('touchstart', (e) => {
@@ -113,19 +112,22 @@
                 clearTimeout(pressTimer);
                 img.classList.remove('img-previewing');
                 document.body.classList.remove('preview-active');
-                if (isLongPress) e.preventDefault();
             });
 
             img.addEventListener('touchmove', () => clearTimeout(pressTimer), {passive: true});
         });
 
-        // 3. MODAL VE GERİ TUŞU KONTROLÜ
+        // 3. MODAL, SWIPE VE GERİ TUŞU
+        let currentIndex = 0;
+        let touchStartX = 0;
+
         function openModal(src) {
             if (!isLongPress) {
-                document.getElementById('modal').style.display = 'flex';
-                document.getElementById('modalImg').src = src;
-                
-                // Geri tuşu için sanal bir geçmiş kaydı ekle
+                const modal = document.getElementById('modal');
+                const modalImg = document.getElementById('modalImg');
+                currentIndex = galleryImgs.findIndex(img => img.src === src);
+                modalImg.src = src;
+                modal.style.display = 'flex';
                 history.pushState({modalOpen: true}, "");
             }
         }
@@ -134,23 +136,41 @@
             const modal = document.getElementById('modal');
             if (modal.style.display === 'flex') {
                 modal.style.display = 'none';
-                // Eğer modal manuel kapandıysa (butona basarak), sanal geçmişi temizle
-                if (history.state && history.state.modalOpen) {
-                    history.back();
-                }
+                if (history.state && history.state.modalOpen) history.back();
             }
         }
 
-        // TELEFON GERİ TUŞUNA BASILDIĞINDA ÇALIŞIR
-        window.onpopstate = function(event) {
-            // Eğer geri tuşuna basıldıysa ve modal açıksa, modalı kapat
-            document.getElementById('modal').style.display = 'none';
-        };
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('modal');
-            if (event.target == modal) closeModal();
+        function navigate(direction) {
+            const modalImg = document.getElementById('modalImg');
+            modalImg.style.opacity = '0';
+            setTimeout(() => {
+                currentIndex = (currentIndex + direction + galleryImgs.length) % galleryImgs.length;
+                modalImg.src = galleryImgs[currentIndex].src;
+                modalImg.style.opacity = '1';
+            }, 200);
         }
+
+        // Swipe (Kaydırma) Kontrolü
+        const modal = document.getElementById('modal');
+        modal.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+        modal.addEventListener('touchend', e => {
+            let touchEndX = e.changedTouches[0].screenX;
+            if (touchStartX - touchEndX > 50) navigate(1); // Sola kaydır -> İleri
+            if (touchEndX - touchStartX > 50) navigate(-1); // Sağa kaydır -> Geri
+        }, {passive: true});
+
+        // Klavye Ok Tuşları
+        document.addEventListener('keydown', e => {
+            if (modal.style.display === 'flex') {
+                if (e.key === "ArrowRight") navigate(1);
+                if (e.key === "ArrowLeft") navigate(-1);
+                if (e.key === "Escape") closeModal();
+            }
+        });
+
+        window.onpopstate = function() { document.getElementById('modal').style.display = 'none'; };
+
+        window.onclick = function(e) { if (e.target == modal) closeModal(); }
     </script>
 </body>
 </html>
