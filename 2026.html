@@ -31,24 +31,26 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* 3. TEMA BUTONU */
         #theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 1px solid #ccc;
-            background: var(--bg);
-            color: var(--text);
-            cursor: pointer;
-            z-index: 10000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-        }
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;         /* Gri halkayı sildik */
+    outline: none;        /* Tıklayınca çıkan çizgiyi sildik */
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    /* İstersen hafif bir gölge ekleyebilirsin, daha şık durur: */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+}
 
         /* 4. MÜZİK VE BAĞLANTI */
         .music-container {
