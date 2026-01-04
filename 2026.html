@@ -87,6 +87,14 @@
         /* Piksellenmeyi önlemek için donanım hızlandırma */
         transform: translateZ(0);
         backface-visibility: hidden;
+        #modal img {
+    max-width: 95%;
+    max-height: 95%;
+    object-fit: contain;
+    /* Görüntüye hafif bir keskinlik (sharpness) verir */
+    filter: contrast(1.05) saturate(1.05) brightness(1.02);
+    image-rendering: -webkit-optimize-contrast;
+}
     }
 </style>
 </head>
