@@ -5,35 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reeha</title>
     <style>
-        /* 2026.html ile Aynı Renk Paleti */
         :root {
-            --bg-color: #0e0e0e; /* 2026.html Gece Arka Planı */
+            --bg-color: #0e0e0e; 
             --icon-color: #ffffff;
         }
 
         [data-theme="light"] {
-            --bg-color: #fcfcfc; /* 2026.html Gündüz Arka Planı */
+            --bg-color: #fcfcfc; 
             --icon-color: #000000;
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+            margin: 0; padding: 0; width: 100%; height: 100%;
             background-color: var(--bg-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: flex; justify-content: center; align-items: center;
             transition: background-color 0.6s ease;
             overflow: hidden;
         }
 
         /* Logo: Gri başlar, üzerine gelince renklenir */
         .logo-container img {
-            width: 250px;
-            height: auto;
-            cursor: pointer;
+            width: 250px; height: auto; cursor: pointer;
             filter: grayscale(100%) opacity(0.6);
             transition: filter 0.5s ease, transform 0.5s ease, opacity 0.5s ease;
         }
@@ -43,67 +35,51 @@
             transform: scale(1.03);
         }
 
-        /* 2026.html'deki Gece/Gündüz Simgeleri */
         .theme-toggle {
-            position: absolute;
-            top: 40px;
-            right: 40px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            z-index: 100;
-            outline: none;
+            position: absolute; top: 40px; right: 40px;
+            background: none; border: none; cursor: pointer; padding: 0; z-index: 100; outline: none;
         }
 
-        .theme-toggle svg {
-            width: 22px;
-            height: 22px;
-            fill: var(--icon-color);
-            transition: fill 0.5s ease, transform 0.5s ease;
-        }
+        .theme-toggle svg { width: 22px; height: 22px; fill: var(--icon-color); transition: 0.5s; }
 
         /* Simge Değişimi */
         .sun-icon { display: block; }
         .moon-icon { display: none; }
-
         [data-theme="light"] .sun-icon { display: none; }
         [data-theme="light"] .moon-icon { display: block; }
-
-        .theme-toggle:hover svg {
-            transform: scale(1.1);
-        }
     </style>
 </head>
 <body>
 
     <button class="theme-toggle" id="themeBtn">
-        <svg class="sun-icon" viewBox="0 0 24 24">
-            <path d="M12 9c1.65 0 3 1.35 3 3s-1.35 3-3 3-3-1.35-3-3 1.35-3 3-3m0-2c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/>
-        </svg>
-        <svg class="moon-icon" viewBox="0 0 24 24">
-            <path d="M12.12 2.01c-1.6.06-3.13.46-4.51 1.15 4.96 2.48 6.74 8.49 4.26 13.45-1.12 2.24-3.04 3.92-5.3 4.76 1.34.42 2.76.64 4.22.64 7.18 0 13-5.82 13-13s-5.82-13-13-13c-.23 0-.45.01-.67.01z"/>
-        </svg>
+        <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12 9c1.65 0 3 1.35 3 3s-1.35 3-3 3-3-1.35-3-3 1.35-3 3-3m0-2c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
+        <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.12 2.01c-1.6.06-3.13.46-4.51 1.15 4.96 2.48 6.74 8.49 4.26 13.45-1.12 2.24-3.04 3.92-5.3 4.76 1.34.42 2.76.64 4.22.64 7.18 0 13-5.82 13-13s-5.82-13-13-13c-.23 0-.45.01-.67.01z"/></svg>
     </button>
 
     <div class="logo-container">
-        <a href="2026.html">
-            <img src="logo.png" alt="Reeha Logo">
-        </a>
+        <a href="2026.html"><img src="logo.png" alt="Reeha Logo"></a>
     </div>
 
     <script>
         const themeBtn = document.getElementById('themeBtn');
         const body = document.documentElement;
 
+        // 1. Sayfa yüklendiğinde hafızadaki modu kontrol et
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'light') {
+            body.setAttribute('data-theme', 'light');
+        }
+
+        // 2. Butona basıldığında modu değiştir ve hafızaya kaydet
         themeBtn.addEventListener('click', () => {
             if (body.getAttribute('data-theme') === 'light') {
                 body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark'); // Hafızaya 'dark' yaz
             } else {
                 body.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light'); // Hafızaya 'light' yaz
             }
         });
     </script>
-
 </body>
 </html>
