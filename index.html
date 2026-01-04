@@ -1,178 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
-    <meta charset="utf-8">
-    <title>Reeha - Şahsi Keşif Günlüğü</title>
-    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-    <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
-    <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
-    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
-    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reeha</title>
     <style>
-        body { margin: 0; padding: 0; background: #000; overflow: hidden; }
-        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-        
-        .top-bar {
-            position: absolute; top: 0; left: 0; width: 100%; height: 80px;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
-            z-index: 100; display: flex; align-items: center; padding: 0 25px;
+        /* Temel sayfa ayarları */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000; /* Saf siyah arka plan */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: serif;
         }
 
-        .back-btn {
-            color: white; text-decoration: none; font-family: serif;
-            letter-spacing: 2px; font-size: 11px; opacity: 0.6; transition: 0.3s;
-            margin-right: 30px;
+        /* Merkezdeki Logo */
+        .logo-container {
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        /* PREMIUM POPUP TASARIMI */
-        .mapboxgl-popup-content {
-            background: rgba(0,0,0,0.95) !important;
-            color: white !important;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 0 !important;
-            padding: 5px !important;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .popup-img { 
-            width: 100%; 
-            max-width: 400px; /* Fotoğrafı biraz daha büyük açar */
-            height: auto; 
-            display: block;
+        .logo-container a {
+            text-decoration: none;
+            color: white;
+            font-size: 24px;
+            letter-spacing: 12px;
+            font-weight: 300;
+            text-transform: uppercase;
+            transition: 0.5s;
+            opacity: 0.8;
         }
 
-        /* PREMIUM MİNYATÜR PİN TASARIMI */
-        .custom-marker {
-            width: 45px;
-            height: 45px;
-            border: 2px solid white;
-            background-size: cover;
-            background-position: center;
-            border-radius: 4px; /* Hafif yuvarlatılmış kare (Polaroid tarzı) */
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(255,255,255,0.3);
-            transition: transform 0.3s ease;
-            position: relative;
+        /* Logo Hover Efekti */
+        .logo-container a:hover {
+            opacity: 1;
+            letter-spacing: 16px; /* Hafif genişleme efekti */
         }
-        .custom-marker:hover {
-            transform: scale(1.2) rotate(5deg);
-            box-shadow: 0 0 25px rgba(255,255,255,0.6);
-            z-index: 1000;
-        }
-        /* Pin'in altındaki küçük üçgen uç */
-        .custom-marker::after {
-            content: '';
+
+        /* Alt bilgi (Opsiyonel) */
+        .footer {
             position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 8px solid white;
+            bottom: 30px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 10px;
+            letter-spacing: 2px;
         }
-
-        .mapboxgl-ctrl-geocoder { background-color: rgba(255, 255, 255, 0.05) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; }
-        .mapboxgl-ctrl-geocoder--input { color: white !important; font-family: serif; }
-        .mapboxgl-ctrl-bottom-right, .mapboxgl-ctrl-bottom-left { display: none; }
     </style>
 </head>
 <body>
 
-<div class="top-bar">
-    <a href="index.html" class="back-btn">← ANA SAYFA</a>
-    <div id="geocoder"></div>
-</div>
+    <div class="logo-container">
+        <a href="index.html">REEHA</a>
+    </div>
 
-<input type="file" id="photoInput" accept="image/*" style="display:none;">
-
-<div id="map"></div>
-
-<script>
-    mapboxgl.accessToken = 'pk.eyJ1IjoiYWRlbTk5MTciLCJhIjoiY21rMDF6YXNjNmNtYzNlczU5YTUyYXUzMCJ9.mjaJaz3MfODoSZrL2wVKJw';
-    
-    const map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/mapbox/satellite-v9', 
-        projection: 'globe', 
-        zoom: 2,
-        center: [28.97, 41.00],
-        antialias: true
-    });
-
-    const geocoder = new MapboxGeocoder({
-        accessToken: mapboxgl.accessToken,
-        mapboxgl: mapboxgl,
-        marker: false,
-        placeholder: 'KEŞİF NOKTASI ARA...',
-        zoom: 16
-    });
-
-    document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
-
-    let selectedCoords = null;
-    let savedMarkers = JSON.parse(localStorage.getItem('myMarkers')) || [];
-
-    map.on('click', (e) => {
-        // Sadece harita katmanına tıklandığında (butonlara vs değil)
-        if (e.originalEvent.target.className.includes('mapboxgl-canvas')) {
-            selectedCoords = e.lngLat;
-            document.getElementById('photoInput').click();
-        }
-    });
-
-    document.getElementById('photoInput').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const imageUrl = event.target.result;
-            const newMarker = { lng: selectedCoords.lng, lat: selectedCoords.lat, img: imageUrl };
-            
-            addMarkerToMap(newMarker);
-            savedMarkers.push(newMarker);
-            localStorage.setItem('myMarkers', JSON.stringify(savedMarkers));
-        };
-        reader.readAsDataURL(file);
-    });
-
-    function addMarkerToMap(data) {
-        const el = document.createElement('div');
-        el.className = 'custom-marker';
-        // Küçük önizleme resmi pinin içinde görünür
-        el.style.backgroundImage = `url(${data.img})`;
-
-        const popup = new mapboxgl.Popup({ offset: 30, maxWidth: 'none' })
-            .setHTML(`<img src="${data.img}" class="popup-img">`);
-
-        new mapboxgl.Marker(el)
-            .setLngLat([data.lng, data.lat])
-            .setPopup(popup)
-            .addTo(map);
-    }
-
-    map.on('load', () => {
-        savedMarkers.forEach(m => addMarkerToMap(m));
-    });
-
-    // Otomatik Dönüş Kontrolü
-    let isSpinning = true;
-    map.on('mousedown', () => isSpinning = false);
-    geocoder.on('result', () => isSpinning = false);
-
-    function rotateGlobe() {
-        if (isSpinning && map.getZoom() < 5) {
-            const center = map.getCenter();
-            center.lng -= 0.15;
-            map.easeTo({ center, duration: 0, easing: (n) => n });
-        }
-    }
-    map.on('moveend', () => { if (isSpinning) rotateGlobe(); });
-    map.on('style.load', () => {
-        map.setFog({ 'color': '#000', 'high-color': '#000', 'space-color': '#000' });
-        rotateGlobe();
-    });
-</script>
+    <div class="footer">2026</div>
 
 </body>
 </html>
