@@ -50,51 +50,42 @@
             z-index: 10001; -webkit-tap-highlight-color: transparent;
         }
 
-        .nav-btn-minimal {
-            background: none; border: none; color: var(--text);
-            cursor: pointer; font-size: 1.2rem; transition: 0.3s;
-            padding: 10px; outline: none; -webkit-tap-highlight-color: transparent;
-        }
-
-        .theme-toggle .sun-emoji { display: none; }
-        .theme-toggle .moon-emoji { display: block; }
-        [data-theme="dark"] .sun-emoji { display: block; }
-        [data-theme="dark"] .moon-emoji { display: none; }
-
-        /* YENİ MÜZİK ÇALAR PANELİ */
+        /* MODERN MÜZİK KONTROL PANELİ (SİMGELİ) */
         .player-container {
             position: fixed; bottom: 30px; left: 50%;
             transform: translateX(-50%);
-            display: flex; align-items: center; gap: 20px;
+            display: flex; align-items: center; gap: 30px;
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            padding: 12px 25px; border-radius: 50px;
+            backdrop-filter: blur(20px);
+            padding: 12px 35px; border-radius: 50px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 10005;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
         }
 
         [data-theme="dark"] .player-container {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .player-btn {
             background: none; border: none; color: var(--text);
-            font-family: 'Playfair Display', serif;
-            font-size: 0.8rem; letter-spacing: 2px;
-            cursor: pointer; text-transform: uppercase;
-            opacity: 0.6; transition: 0.3s;
+            font-size: 1.1rem; cursor: pointer;
+            opacity: 0.5; transition: 0.3s;
             outline: none; -webkit-tap-highlight-color: transparent;
+            display: flex; align-items: center; justify-content: center;
         }
         .player-btn:hover { opacity: 1; }
-        .play-pause-btn { font-size: 1rem; font-weight: bold; opacity: 1; min-width: 65px; }
+        
+        .play-pause-btn { 
+            font-size: 1.5rem; opacity: 1; min-width: 40px; 
+        }
 
         /* GALERİ AYARLARI */
         .gallery {
             column-count: 2; column-gap: 15px; 
             width: 100%; max-width: 1200px; 
-            margin-top: 100px; margin-bottom: 120px; /* Panel için pay bırakıldı */
+            margin-top: 100px; margin-bottom: 120px;
             transition: filter 0.5s ease;
         }
         @media (min-width: 768px) { .gallery { column-count: 4; column-gap: 25px; } }
@@ -105,7 +96,6 @@
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 0; animation: imgFadeUp 1s forwards;
             -webkit-touch-callout: none !important;
-            user-select: none !important;
         }
 
         .gallery img.focused {
@@ -128,17 +118,9 @@
             justify-content: center; align-items: center;
             backdrop-filter: blur(10px);
         }
-        #modal img { 
-            max-width: 88%; max-height: 82vh; object-fit: contain; transition: opacity 0.3s;
-            -webkit-touch-callout: none !important;
-        }
-        .close-btn {
-            position: absolute; top: 30px; left: 50%; transform: translateX(-50%);
-            z-index: 3; font-size: 11px; letter-spacing: 3px; cursor: pointer; opacity: 0.4;
-        }
+        #modal img { max-width: 88%; max-height: 82vh; object-fit: contain; }
+        .close-btn { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); font-size: 11px; letter-spacing: 3px; cursor: pointer; opacity: 0.4; }
         .modal-side { position: absolute; top: 0; height: 100%; width: 45%; z-index: 2; cursor: pointer; }
-        .side-left { left: 0; }
-        .side-right { right: 0; }
     </style>
 </head>
 <body onclick="resetFocus(event)">
@@ -153,9 +135,9 @@
 </div>
 
 <div class="player-container" onclick="event.stopPropagation()">
-    <button class="player-btn" onclick="changeTrack(-1)">prev</button>
-    <button class="player-btn play-pause-btn" id="music-toggle" onclick="toggleMusic()">play</button>
-    <button class="player-btn" onclick="changeTrack(1)">next</button>
+    <button class="player-btn" onclick="changeTrack(-1)">⏮</button>
+    <button class="player-btn play-pause-btn" id="music-toggle" onclick="toggleMusic()">▶</button>
+    <button class="player-btn" onclick="changeTrack(1)">⏭</button>
 </div>
 
 <audio id="bgMusic">
@@ -175,16 +157,18 @@
 
 <div id="modal">
     <div class="close-btn" onclick="closeModal()">KAPAT</div>
-    <div class="modal-side side-left" onclick="navigate(-1)"></div>
+    <div class="modal-side" style="left:0" onclick="navigate(-1)"></div>
     <img id="modalImg" oncontextmenu="return false;">
-    <div class="modal-side side-right" onclick="navigate(1)"></div>
+    <div class="modal-side" style="right:0" onclick="navigate(1)"></div>
 </div>
 
 <script>
     const body = document.documentElement;
     const gallery = document.getElementById('mainGallery');
+    const music = document.getElementById('bgMusic');
+    const tracks = ["askim.mp3", "askim2.mp3"];
+    let currentTrackIndex = 0;
 
-    // TEMA AYARLARI
     function applyTheme() {
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'light') body.removeAttribute('data-theme');
@@ -202,7 +186,6 @@
         }
     }
 
-    // FOTOĞRAF TIKLAMA MANTIĞI
     function handleImageClick(event, img) {
         event.stopPropagation();
         if (img.classList.contains('focused')) {
@@ -224,19 +207,14 @@
         setTimeout(() => { window.location.href = 'index.html'; }, 300);
     }
 
-    // MÜZİK SİSTEMİ
-    const music = document.getElementById('bgMusic');
-    const tracks = ["askim.mp3", "askim2.mp3"];
-    let currentTrackIndex = 0;
-
     function toggleMusic() {
         const btn = document.getElementById('music-toggle');
         if (music.paused) {
             music.play();
-            btn.innerHTML = "pause";
+            btn.innerHTML = "⏸";
         } else {
             music.pause();
-            btn.innerHTML = "play";
+            btn.innerHTML = "▶";
         }
     }
 
@@ -245,13 +223,11 @@
         currentTrackIndex = (currentTrackIndex + direction + tracks.length) % tracks.length;
         music.src = tracks[currentTrackIndex];
         music.play();
-        btn.innerHTML = "pause";
+        btn.innerHTML = "⏸";
     }
 
-    // Şarkı bitince otomatik sonrakine geç
     music.onended = () => changeTrack(1);
 
-    // MODAL İŞLEMLERİ
     let currentIndex = 0;
     const galleryImgs = Array.from(document.querySelectorAll('.gallery img'));
 
@@ -277,14 +253,8 @@
         }, 150);
     }
 
-    window.onpopstate = function() { document.getElementById('modal').style.display = 'none'; };
+    window.onpopstate = closeModal;
     document.addEventListener('contextmenu', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
-
-    window.onload = () => {
-        document.querySelectorAll('.gallery img').forEach(img => {
-            img.oncontextmenu = (e) => e.preventDefault();
-        });
-    };
 </script>
 
 </body>
