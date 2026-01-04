@@ -17,12 +17,12 @@
         :root { 
             --bg: #ffffff; 
             --text: #333333; 
-            --video-shadow: rgba(0,0,0,0.1);
+            --img-shadow: rgba(0,0,0,0.1);
         }
         [data-theme="dark"] { 
             --bg: #000000; 
             --text: #ffffff; 
-            --video-shadow: rgba(255,255,255,0.1);
+            --img-shadow: rgba(255,255,255,0.1);
         }
 
         /* 2. GENEL SAYFA AYARLARI */
@@ -45,7 +45,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Başlık - İlk önce gelir */
         .title-link {
             position: absolute;
             top: 20px;
@@ -58,18 +57,23 @@
             animation: contentFadeUp 0.8s ease-out forwards;
         }
 
-        /* Video Konteyner - Biraz gecikmeli gelir */
-        .video-container {
+        /* Görsel Konteyner */
+        .image-container {
             width: 320px;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 10px 30px var(--video-shadow);
-            background: #000;
-            opacity: 0; /* Başlangıçta gizli */
+            box-shadow: 0 10px 30px var(--img-shadow);
+            opacity: 0;
             animation: contentFadeUp 0.8s ease-out 0.3s forwards;
         }
 
-        /* Tema Butonu - En son gelir */
+        .image-container img {
+            width: 100%;
+            display: block;
+            opacity: 0; /* JS ile yüklendiğinde açılacak */
+            transition: opacity 1s ease;
+        }
+
         #theme-toggle {
             position: fixed;
             top: 20px;
@@ -95,13 +99,6 @@
 
         #theme-toggle:active { transform: scale(0.9); }
         .title-link:hover { opacity: 0.6; }
-
-        .video-container video {
-            width: 100%;
-            display: block;
-            opacity: 0; /* JS ile video hazır olunca açılacak */
-            transition: opacity 1s ease;
-        }
     </style>
 </head>
 <body>
@@ -110,6 +107,56 @@
 
     <a href="2026.html" class="title-link" id="nav-2026">2026</a>
 
-    <div class="video-container">
-        <video id="introVideo" autoplay loop muted playsinline>
-            <source
+    <div class="image-container">
+        <img id="mainImage" src="ar2026.png" alt="Giriş Görseli">
+    </div>
+
+    <script>
+        // 1. RESİM YÜKLENME KONTROLÜ (Takılmayı önlemek için)
+        const img = document.getElementById('mainImage');
+        if (img.complete) {
+            img.style.opacity = "1";
+        } else {
+            img.onload = function() {
+                img.style.opacity = "1";
+            };
+        }
+
+        // 2. SAYFADAN ÇIKIŞ ANİMASYONU
+        document.getElementById('nav-2026').addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetUrl = this.href;
+            document.body.style.opacity = "0"; 
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 600); 
+        });
+
+        // 3. TEMA DEĞİŞTİRME
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('theme-toggle');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                btn.innerHTML = '☀️';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                btn.innerHTML = '🌙';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                window.addEventListener('DOMContentLoaded', () => {
+                    const btn = document.getElementById('theme-toggle');
+                    if(btn) btn.innerHTML = '🌙';
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
