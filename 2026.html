@@ -15,7 +15,7 @@
             font-family: sans-serif; 
         }
 
-        /* Müzik Barı */
+        /* Müzik Çalar - Boyutu ve Rengi Düzenlendi */
         .music-container {
             width: 100%;
             display: flex;
@@ -23,7 +23,11 @@
             margin-top: 20px;
             margin-bottom: 15px;
         }
-        audio { width: 280px; height: 35px; }
+        audio { 
+            width: 320px; /* Standart şık boyut */
+            height: 40px; 
+            border-radius: 5px;
+        }
 
         /* Dön Tatlım Yazısı */
         .back-link {
@@ -31,6 +35,7 @@
             color: #888;
             font-size: 14px;
             margin-bottom: 40px;
+            display: block;
         }
 
         /* Galeri Düzeni */
@@ -38,39 +43,43 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
             width: 100%;
-            max-width: 1000px;
+            max-width: 1200px;
         }
 
-        /* Fotoğrafların Orijinal Şekli Bozulmadan Kare Görünmesi */
+        /* Fotoğraflar: Kesilmeden, Orijinal Oranında Küçük Hali */
         .gallery img {
-            width: 150px;
-            height: 150px;
-            object-fit: cover; /* Kare kutuya sığdırır */
+            width: auto;
+            max-width: 250px; /* Küçük önizleme genişliği */
+            height: auto; 
+            max-height: 250px;
+            object-fit: contain; /* Kesme yapmaz, orijinal şekli korur */
             cursor: pointer;
-            border-radius: 4px;
             border: none;
-            display: block;
+            background-color: transparent; /* Kenar beyazlıklarını yok eder */
+            transition: transform 0.2s;
         }
 
-        /* Tam Ekran Modu Arka Planı */
+        .gallery img:hover { transform: scale(1.03); }
+
+        /* Tam Ekran Modu (Kalite Kayıpsız) */
         #modal {
             display: none;
             position: fixed;
             z-index: 9999;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             justify-content: center;
             align-items: center;
+            cursor: zoom-out;
         }
 
-        /* Tam Ekran Fotoğrafın Kendisi */
         #modal img {
-            max-width: 95%;
-            max-height: 95%;
-            object-fit: contain; /* Fotoğrafın orijinal boyutunu korur */
+            max-width: 98%;
+            max-height: 98%;
+            object-fit: contain; /* Orijinal kalite ve oran */
         }
     </style>
 </head>
@@ -96,7 +105,7 @@
     </div>
 
     <script>
-        // Playlist Sistemi
+        // Şarkı Listesi ve Sıralı Çalma
         var audio = document.getElementById('myAudio');
         var playlist = [
             "https://birey31.github.io/muzik.mp3",
@@ -109,6 +118,9 @@
             if (currentTrack < playlist.length) {
                 audio.src = playlist[currentTrack];
                 audio.play();
+            } else {
+                currentTrack = 0; // Liste bitince başa dön
+                audio.src = playlist[currentTrack];
             }
         };
 
