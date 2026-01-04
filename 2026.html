@@ -36,38 +36,31 @@
             opacity: 0.04; pointer-events: none; z-index: 9999;
         }
 
-        /* HEADER SABİTLEME (STAY FIXED) */
-        header {
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 20px 30px; 
-            box-sizing: border-box; 
-            z-index: 10001; /* En üstte kalması için */
-            background-color: transparent; /* İstersen buraya var(--bg) verebilirsin */
+        /* ÜST PANEL (SAYFANIN BAŞINDA KALIR, KAYINCA GİDER) */
+        .top-bar {
+            position: absolute; /* Sayfanın başında çakılı kalır, kaydırdıkça yukarıda kalır */
+            top: 0; right: 0;
+            display: flex; gap: 15px; align-items: center;
+            padding: 25px 30px; z-index: 1000;
         }
 
+        /* GERİ BUTONU (SENİNLE AŞAĞI GELİR) */
         .back-btn {
+            position: fixed; /* Ekrana sabitlenir, senle gelir */
+            top: 25px; left: 30px;
             background: none; border: none; color: var(--text);
             font-size: 24px; cursor: pointer; opacity: 0.6;
             transition: 0.3s; padding: 10px; line-height: 1;
+            z-index: 10001; /* Her şeyin üstünde */
             -webkit-tap-highlight-color: transparent;
-            display: flex; align-items: center; justify-content: center;
         }
         .back-btn:hover { opacity: 1; transform: translateX(-3px); }
-
-        .nav-controls { display: flex; gap: 15px; align-items: center; }
 
         .nav-btn-minimal {
             background: none; border: none; color: var(--text);
             cursor: pointer; font-size: 1.2rem; transition: 0.3s;
             padding: 10px; outline: none;
             -webkit-tap-highlight-color: transparent;
-            display: flex; align-items: center; justify-content: center;
         }
 
         .theme-toggle .sun-emoji { display: none; }
@@ -79,7 +72,7 @@
         .gallery {
             column-count: 2; column-gap: 15px; 
             width: 100%; max-width: 1200px; 
-            margin-top: 100px; /* Header'ın altında kalmaması için */
+            margin-top: 100px;
             margin-bottom: 50px;
         }
         @media (min-width: 768px) { .gallery { column-count: 4; column-gap: 25px; } }
@@ -91,7 +84,6 @@
             opacity: 0; animation: imgFadeUp 1s forwards;
             -webkit-touch-callout: none !important;
             user-select: none !important;
-            -webkit-tap-highlight-color: transparent;
         }
 
         .gallery img:active, .gallery img:hover {
@@ -112,7 +104,6 @@
             width: 100%; height: 100%; background: var(--bg);
             justify-content: center; align-items: center;
             backdrop-filter: blur(10px);
-            -webkit-tap-highlight-color: transparent;
         }
         #modal img { 
             max-width: 88%; max-height: 82vh; object-fit: contain; transition: opacity 0.3s;
@@ -124,7 +115,7 @@
             z-index: 3; font-size: 11px; letter-spacing: 3px; cursor: pointer; opacity: 0.4;
         }
 
-        .modal-side { position: absolute; top: 0; height: 100%; width: 45%; z-index: 2; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        .modal-side { position: absolute; top: 0; height: 100%; width: 45%; z-index: 2; cursor: pointer; }
         .side-left { left: 0; }
         .side-right { right: 0; }
 
@@ -133,16 +124,15 @@
 </head>
 <body>
 
-<header>
-    <button class="back-btn" onclick="goHome()">←</button>
-    <div class="nav-controls">
-        <button class="nav-btn-minimal" id="music-toggle" onclick="toggleMusic()">▶</button>
-        <button class="nav-btn-minimal theme-toggle" id="theme-btn" onclick="toggleTheme()">
-            <span class="sun-emoji">☀️</span>
-            <span class="moon-emoji">🌙</span>
-        </button>
-    </div>
-</header>
+<button class="back-btn" onclick="goHome()">←</button>
+
+<div class="top-bar">
+    <button class="nav-btn-minimal" id="music-toggle" onclick="toggleMusic()">▶</button>
+    <button class="nav-btn-minimal theme-toggle" id="theme-btn" onclick="toggleTheme()">
+        <span class="sun-emoji">☀️</span>
+        <span class="moon-emoji">🌙</span>
+    </button>
+</div>
 
 <audio id="bgMusic" loop>
     <source src="askim.mp3" type="audio/mpeg">
