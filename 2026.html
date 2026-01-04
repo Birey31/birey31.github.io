@@ -23,16 +23,27 @@ const tracks = ["askim.mp3", "askim2.mp3"];
 let currentTrack = 0;
 
 function toggleMusic() {
-    // Şarkı kaynağı boşsa ilk şarkıyı ata
+    const btn = document.getElementById('music-toggle'); // Butonu seçiyoruz
+
     if (!music.src || music.src === "") {
         music.src = tracks[currentTrack];
     }
 
     if (music.paused) {
-        music.play().catch(e => console.log("Müzik dosyası hatası:", e));
+        music.play().catch(e => console.log("Müzik hatası:", e));
+        btn.innerHTML = "⏸"; // Çalarken her yerde bu simge gözüksün
     } else {
         music.pause();
+        btn.innerHTML = "▶"; // Durunca her yerde bu simge gözüksün
     }
+}
+
+music.onended = function() {
+    currentTrack = (currentTrack + 1) % tracks.length;
+    music.src = tracks[currentTrack];
+    music.play();
+};
+        
     // Simgeleri değiştiren satırları sildim, butonun orijinal hali korunacak.
 }
 
