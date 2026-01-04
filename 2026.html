@@ -13,258 +13,102 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hmmm - Sergi</title>
     
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#f5f5f3" id="theme-meta">
-
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/jpeg" href="logo.png">
 
     <style>
-        :root { 
-            --bg: #f5f5f3; 
-            --text: #1a1a1a; 
-            --ui-bg: rgba(255, 255, 255, 0.8);
-        }
-        [data-theme="dark"] { 
-            --bg: #121212; 
-            --text: #e0e0e0; 
-            --ui-bg: rgba(20, 20, 20, 0.8);
-        }
+        :root { --bg: #f5f5f3; --text: #1a1a1a; }
+        [data-theme="dark"] { --bg: #121212; --text: #e0e0e0; }
 
         body { 
             background-color: var(--bg); 
             color: var(--text); 
-            margin: 0; 
-            padding: 20px;
+            margin: 0; padding: 20px;
             font-family: 'Playfair Display', serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: background-color 0.5s ease, color 0.5s ease, opacity 0.6s ease;
+            display: flex; flex-direction: column; align-items: center;
             min-height: 100vh;
-            opacity: 1;
-            overscroll-behavior-x: none; 
         }
 
+        /* Grain Efekti */
         body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Noise_Texture.png');
-            opacity: 0.04;
-            pointer-events: none;
-            z-index: 9999;
+            opacity: 0.04; pointer-events: none; z-index: 9999;
         }
 
-        img {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-            -webkit-user-drag: none;
-            max-width: 100%; /* Resimlerin taşmasını önler */
-        }
-
+        /* Long Press Preview Stilleri */
         .preview-active .gallery img:not(.img-previewing) {
             filter: blur(8px) grayscale(100%);
-            opacity: 0.4;
+            opacity: 0.3;
         }
-
         .img-previewing {
-            transform: scale(1.08) !important;
+            transform: scale(1.1) !important;
             z-index: 10001;
             filter: grayscale(0%) !important;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-
-        .controls {
-            position: fixed;
-            top: 25px;
-            right: 25px;
-            display: flex;
-            gap: 15px;
-            z-index: 10000;
-        }
-
-        .back-link {
-            position: fixed;
-            top: 25px;
-            left: 25px;
-            text-decoration: none;
-            color: var(--text);
-            font-size: 24px;
-            z-index: 10000;
-            opacity: 0.6;
-        }
-
-        #theme-toggle, #play-pause {
-            background: none;
-            border: none;
-            color: var(--text);
-            cursor: pointer;
-            font-size: 20px;
-            opacity: 0.6;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            position: relative;
         }
 
         .gallery {
-            column-count: 2;
-            column-gap: 20px;
-            width: 100%;
-            max-width: 1100px;
-            margin-top: 100px;
-            min-height: 200px; /* Boş görünmemesi için minimum yükseklik */
+            column-count: 2; column-gap: 20px; width: 100%; max-width: 1100px; margin-top: 100px;
         }
-        @media (min-width: 900px) { .gallery { column-count: 3; } }
-
         .gallery img {
-            width: 100%;
-            display: block;
-            margin-bottom: 20px;
-            border-radius: 2px;
-            cursor: pointer;
-            break-inside: avoid;
-            filter: grayscale(100%);
-            transition: filter 0.6s ease, transform 0.4s ease, opacity 0.4s ease;
-            opacity: 0;
-            animation: imgFadeUp 1s ease-out forwards;
+            width: 100%; display: block; margin-bottom: 20px; border-radius: 2px;
+            cursor: pointer; filter: grayscale(100%); transition: all 0.4s ease;
+            opacity: 0; animation: imgFadeUp 1s forwards;
         }
-
-        @keyframes imgFadeUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes imgFadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         #modal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: var(--bg);
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            touch-action: none;
+            display: none; position: fixed; z-index: 99999; top: 0; left: 0;
+            width: 100%; height: 100%; background: var(--bg);
+            flex-direction: column; justify-content: center; align-items: center;
         }
-        #modal img {
-            max-width: 95%;
-            max-height: 80vh;
-            object-fit: contain;
-            transition: opacity 0.3s ease;
-        }
-        .close-btn {
-            margin-top: 20px;
-            padding: 10px 25px;
-            background: none;
-            border: 1px solid var(--text);
-            color: var(--text);
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            cursor: pointer;
-        }
+        #modal img { max-width: 90%; max-height: 80vh; object-fit: contain; }
     </style>
 </head>
 <body>
 
-    <a href="index.html" class="back-link" id="back-arrow">←</a>
-
-    <div class="controls" id="main-controls">
-        <button id="play-pause" onclick="togglePlay()">▶</button>
-        <button id="theme-toggle" onclick="toggleTheme()">☀️</button>
-    </div>
-
-    <audio id="myAudio" loop>
-        <source src="https://birey31.github.io/askim.mp3" type="audio/mpeg">
-    </audio>
-
-    <div class="gallery" id="mainGallery">
-        <img src="ask.jpg" loading="lazy" onclick="openModal(this.src)">
-        <img src="ask1.jpg" loading="lazy" onclick="openModal(this.src)">
-        <img src="ask2.jpeg" loading="lazy" onclick="openModal(this.src)">
-        <img src="ask3.jpeg" loading="lazy" onclick="openModal(this.src)">
+    <div class="gallery">
+        <img src="ask.jpg" onclick="openModal(this.src)">
+        <img src="ask1.jpg" onclick="openModal(this.src)">
+        <img src="ask2.jpeg" onclick="openModal(this.src)">
+        <img src="ask3.jpeg" onclick="openModal(this.src)">
     </div>
 
     <div id="modal">
         <img id="modalImg">
-        <button class="close-btn" onclick="closeModal()">kapat</button>
+        <button onclick="closeModal()" style="margin-top:20px; background:none; border:1px solid var(--text); color:var(--text); padding:10px 20px;">Kapat</button>
     </div>
 
     <script>
-        // JS kodların sorunsuz çalışması için tüm DOM yüklendiğinde başlar
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            // --- 1. LONG PRESS PREVIEW ---
-            let pressTimer;
-            const imgs = document.querySelectorAll('.gallery img');
-            
-            imgs.forEach(img => {
-                img.addEventListener('touchstart', (e) => {
-                    pressTimer = window.setTimeout(() => {
-                        img.classList.add('img-previewing');
-                        document.body.classList.add('preview-active');
-                        if (navigator.vibrate) navigator.vibrate(15); 
-                    }, 400);
-                }, {passive: true});
+        // Long Press Preview Mantığı
+        let pressTimer;
+        const galleryImgs = document.querySelectorAll('.gallery img');
 
-                img.addEventListener('touchend', () => {
-                    clearTimeout(pressTimer);
-                    img.classList.remove('img-previewing');
-                    document.body.classList.remove('preview-active');
-                });
-
-                img.addEventListener('touchmove', () => {
-                    clearTimeout(pressTimer);
-                });
+        galleryImgs.forEach(img => {
+            img.addEventListener('touchstart', (e) => {
+                pressTimer = setTimeout(() => {
+                    img.classList.add('img-previewing');
+                    document.body.classList.add('preview-active');
+                    if (navigator.vibrate) navigator.vibrate(20);
+                }, 400);
             });
 
-            // TEMA KONTROLÜ
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                document.getElementById('theme-toggle').innerHTML = '🌙';
-            }
+            img.addEventListener('touchend', () => {
+                clearTimeout(pressTimer);
+                img.classList.remove('img-previewing');
+                document.body.classList.remove('preview-active');
+            });
+
+            img.addEventListener('touchmove', () => clearTimeout(pressTimer));
         });
 
-        // --- 2. MODAL VE DİĞER FONKSİYONLAR ---
-        let currentImgIndex = 0;
-        const images = Array.from(document.querySelectorAll('.gallery img'));
-        const modalImg = document.getElementById('modalImg');
-        const modal = document.getElementById('modal');
-
         function openModal(src) {
-            modal.style.display = 'flex';
-            modalImg.src = src;
-            currentImgIndex = images.findIndex(img => img.src === src);
-            document.getElementById('main-controls').style.opacity = '0'; 
-            document.getElementById('back-arrow').style.opacity = '0'; 
+            document.getElementById('modal').style.display = 'flex';
+            document.getElementById('modalImg').src = src;
         }
-
         function closeModal() {
-            modal.style.display = 'none';
-            document.getElementById('main-controls').style.opacity = '1'; 
-            document.getElementById('back-arrow').style.opacity = '1'; 
-        }
-
-        function toggleTheme() {
-            const html = document.documentElement;
-            const btn = document.getElementById('theme-toggle');
-            const isDark = html.getAttribute('data-theme') !== 'dark';
-            html.setAttribute('data-theme', isDark ? 'dark' : 'light');
-            if (!isDark) html.removeAttribute('data-theme');
-            btn.innerHTML = isDark ? '🌙' : '☀️';
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        }
-
-        const audio = document.getElementById('myAudio');
-        const playBtn = document.getElementById('play-pause');
-        function togglePlay() {
-            if (audio.paused) { audio.play(); playBtn.innerHTML = "||"; }
-            else { audio.pause(); playBtn.innerHTML = "▶"; }
-        }
-
-        window.onclick = function(event) {
-            if (event.target == modal) closeModal();
+            document.getElementById('modal').style.display = 'none';
         }
     </script>
 </body>
