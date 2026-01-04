@@ -152,7 +152,26 @@
                 audio.src = playlist[currentTrack];
             }
         };
+function openModal(src) {
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modalImg');
+    modal.style.display = 'flex';
+    modalImg.src = src;
+}
 
+function closeModal() {
+    const modal = document.getElementById('modal');
+    modal.style.display = 'none';
+}
+
+// Alternatif: Klavyeden Esc tuşuna basınca veya 
+// fotoğraf dışındaki boşluğa tıklayınca da kapansın
+window.onclick = function(event) {
+    const modal = document.getElementById('modal');
+    if (event.target == modal) {
+        closeModal();
+    }
+}
         function openModal(src) {
             document.getElementById('modal').style.display = 'flex';
             document.getElementById('modalImg').src = src;
