@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<link rel="icon" type="image/png" href="logo.png">
+    <link rel="icon" type="image/png" href="logo.png">
+    
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RJ71VQXBKJ"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -72,12 +73,12 @@
         .gallery img {
             width: 100%; display: block; margin-bottom: 15px; border-radius: 2px;
             cursor: pointer; 
-            filter: grayscale(100%); /* Başlangıç siyah beyaz */
+            filter: grayscale(100%); /* Başlangıç kesin gri */
             transition: filter 0.8s ease, transform 0.5s ease;
             opacity: 0; animation: imgFadeUp 1s forwards;
         }
 
-        /* BİLGİSAYARA ÖZEL: Üstüne gelince renklenme */
+        /* BİLGİSAYARA ÖZEL: Sadece fare destekleyen cihazlarda hover çalışır */
         @media (hover: hover) {
             .gallery img:hover {
                 filter: grayscale(0%);
@@ -85,7 +86,7 @@
             }
         }
 
-        /* TELEFONA ÖZEL: JS ile eklenecek 'reveal' sınıfı */
+        /* TELEFONA ÖZEL: Ekrana girince tetiklenecek sınıf */
         .gallery img.reveal {
             filter: grayscale(0%) !important;
         }
@@ -179,15 +180,16 @@
             else { music.pause(); btn.innerHTML = "▶"; }
         }
 
-        // 4. TELEFONDA KAYDIRARAK RENKLENME (Scroll-Reveal)
+        // 4. TELEFONDA KAYDIRARAK RENKLENME (Android Fix)
         const observerOptions = {
             root: null,
-            threshold: 0.6 // Resmin %60'ı göründüğünde renklenir
+            threshold: 0.7 // Resmin %70'i ekranın ortasına gelince renklenir
         };
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (window.innerWidth < 1024) { // Sadece telefon ve tabletlerde çalışsın
+                // Sadece mobil cihazlarda bu tetiklensin
+                if (window.innerWidth < 1024) { 
                     if (entry.isIntersecting) {
                         entry.target.classList.add('reveal');
                     } else {
@@ -197,7 +199,10 @@
             });
         }, observerOptions);
 
-        document.querySelectorAll('.gallery img').forEach(img => observer.observe(img));
+        // Resimler yüklendikten sonra izlemeye başla
+        window.onload = () => {
+            document.querySelectorAll('.gallery img').forEach(img => observer.observe(img));
+        };
 
         // Sayfa yüklendiğinde tema kontrolü
         (function() {
