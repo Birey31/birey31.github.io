@@ -2,15 +2,14 @@
 <html lang="tr">
 <head>
     <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Reeha">
-<link rel="apple-touch-icon" href="logo.png">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Reeha">
+    <link rel="apple-touch-icon" href="logo.png">
     <link rel="icon" type="image/png" href="logo.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Reeha</title>
     <style>
-        /* 2026.html ile Senkronize Renk Paleti */
         :root {
             --bg-color: #0e0e0e; 
             --text-color: #ffffff;
@@ -25,19 +24,39 @@
             margin: 0; padding: 0; width: 100%; height: 100%;
             background-color: var(--bg-color);
             display: flex; justify-content: center; align-items: center;
-            transition: background-color 0.6s ease;
+            transition: background-color 0.8s ease;
             overflow: hidden;
             font-family: serif;
-            /* Mobildeki mavi seçimi (tap highlight) engellemek için */
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Logo: Gri başlar, Hover'da renklenir */
+        /* YENİ MİNİMAL TEMA TUŞU (SERGİ İLE AYNI) */
+        .theme-toggle {
+            position: absolute; top: 40px; right: 40px;
+            background: none; border: 1px solid var(--text-color); 
+            width: 14px; height: 14px; border-radius: 50%;
+            cursor: pointer; opacity: 0.3; transition: 0.4s;
+            padding: 0; outline: none;
+            z-index: 100;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .theme-toggle:hover { opacity: 1; transform: scale(1.1); }
+
+        /* Koyu temada içi dolu daire */
+        body:not([data-theme="light"]) .theme-toggle {
+            background: var(--text-color);
+        }
+        
+        /* Açık temada içi boş daire */
+        [data-theme="light"] .theme-toggle {
+            background: transparent;
+        }
+
         .logo-container img {
             width: 250px; height: auto; cursor: pointer;
             filter: grayscale(100%) opacity(0.6);
             transition: filter 0.5s ease, transform 0.5s ease, opacity 0.5s ease;
-            /* Mobilde logoya basınca mavi renk çıkmasını engeller */
             -webkit-tap-highlight-color: transparent;
             outline: none;
         }
@@ -47,40 +66,16 @@
             transform: scale(1.03);
         }
 
-        /* Emoji Buton Tasarımı */
-        .theme-toggle {
-            position: absolute; top: 40px; right: 40px;
-            background: none; border: none; cursor: pointer;
-            font-size: 20px; /* Emoji büyüklüğü */
-            z-index: 100; outline: none;
-            transition: transform 0.3s ease;
-            /* Mobilde butona basınca mavi renk çıkmasını engeller */
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .theme-toggle:hover { transform: scale(1.2); }
-
-        /* Emoji Değişimi Kontrolü */
-        .sun-emoji { display: block; }
-        .moon-emoji { display: none; }
-        [data-theme="light"] .sun-emoji { display: none; }
-        [data-theme="light"] .moon-emoji { display: block; }
-
-        /* Link üzerindeki mavi kutucuğu engellemek için */
         a {
             -webkit-tap-highlight-color: transparent;
             outline: none;
             text-decoration: none;
         }
-
     </style>
 </head>
 <body>
 
-    <button class="theme-toggle" id="themeBtn">
-        <span class="sun-emoji">☀️</span>
-        <span class="moon-emoji">🌙</span>
-    </button>
+    <button class="theme-toggle" id="themeBtn"></button>
 
     <div class="logo-container">
         <a href="2026.html"><img src="logo.png" alt="Reeha Logo"></a>
@@ -90,8 +85,8 @@
         const themeBtn = document.getElementById('themeBtn');
         const body = document.documentElement;
 
-        // Sayfa açıldığında tarayıcı hafızasına bak (Senkronizasyon)
-        const currentTheme = localStorage.getItem('theme');
+        // Sayfa açıldığında hafızayı kontrol et (Varsayılan Dark)
+        const currentTheme = localStorage.getItem('theme') || 'dark';
         if (currentTheme === 'light') {
             body.setAttribute('data-theme', 'light');
         }
