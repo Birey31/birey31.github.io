@@ -50,17 +50,18 @@
             z-index: 10001; -webkit-tap-highlight-color: transparent;
         }
 
-        /* MODERN MÜZİK KONTROL PANELİ (SİMGELİ) */
+        /* MODERN MÜZİK KONTROL PANELİ */
         .player-container {
             position: fixed; bottom: 30px; left: 50%;
             transform: translateX(-50%);
-            display: flex; align-items: center; gap: 30px;
+            display: flex; align-items: center; gap: 20px;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
-            padding: 12px 35px; border-radius: 50px;
+            padding: 12px 25px; border-radius: 50px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 10005;
             box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            white-space: nowrap;
         }
 
         [data-theme="dark"] .player-container {
@@ -70,15 +71,20 @@
 
         .player-btn {
             background: none; border: none; color: var(--text);
-            font-size: 1.1rem; cursor: pointer;
-            opacity: 0.5; transition: 0.3s;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.9rem; cursor: pointer;
+            opacity: 0.6; transition: 0.3s;
             outline: none; -webkit-tap-highlight-color: transparent;
-            display: flex; align-items: center; justify-content: center;
         }
         .player-btn:hover { opacity: 1; }
         
         .play-pause-btn { 
-            font-size: 1.5rem; opacity: 1; min-width: 40px; 
+            font-size: 0.85rem; 
+            font-weight: bold; 
+            opacity: 1; 
+            min-width: 140px; /* Kelimeler değişince buton genişliği sabit kalsın */
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         /* GALERİ AYARLARI */
@@ -136,7 +142,7 @@
 
 <div class="player-container" onclick="event.stopPropagation()">
     <button class="player-btn" onclick="changeTrack(-1)">⏮</button>
-    <button class="player-btn play-pause-btn" id="music-toggle" onclick="toggleMusic()">▶</button>
+    <button class="player-btn play-pause-btn" id="music-toggle" onclick="toggleMusic()">Ruhumu Doyur</button>
     <button class="player-btn" onclick="changeTrack(1)">⏭</button>
 </div>
 
@@ -211,10 +217,10 @@
         const btn = document.getElementById('music-toggle');
         if (music.paused) {
             music.play();
-            btn.innerHTML = "⏸";
+            btn.innerHTML = "Sus";
         } else {
             music.pause();
-            btn.innerHTML = "▶";
+            btn.innerHTML = "Ruhumu Doyur";
         }
     }
 
@@ -223,7 +229,7 @@
         currentTrackIndex = (currentTrackIndex + direction + tracks.length) % tracks.length;
         music.src = tracks[currentTrackIndex];
         music.play();
-        btn.innerHTML = "⏸";
+        btn.innerHTML = "Sus";
     }
 
     music.onended = () => changeTrack(1);
