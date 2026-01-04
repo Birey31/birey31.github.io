@@ -30,7 +30,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* YENİ MİNİMAL TEMA TUŞU (SERGİ İLE AYNI) */
+        /* YENİ MİNİMAL TEMA TUŞU */
         .theme-toggle {
             position: absolute; top: 40px; right: 40px;
             background: none; border: 1px solid var(--text-color); 
@@ -43,16 +43,15 @@
 
         .theme-toggle:hover { opacity: 1; transform: scale(1.1); }
 
-        /* Koyu temada içi dolu daire */
         body:not([data-theme="light"]) .theme-toggle {
             background: var(--text-color);
         }
         
-        /* Açık temada içi boş daire */
         [data-theme="light"] .theme-toggle {
             background: transparent;
         }
 
+        /* LOGO AYARLARI */
         .logo-container img {
             width: 250px; height: auto; cursor: pointer;
             filter: grayscale(100%) opacity(0.6);
@@ -64,6 +63,15 @@
         .logo-container img:hover {
             filter: grayscale(0%) opacity(1);
             transform: scale(1.03);
+        }
+
+        /* LOGO GÖSTERİM MANTIĞI */
+        .mobile-only { display: none; }
+        .desktop-only { display: block; }
+
+        @media (max-width: 768px) {
+            .desktop-only { display: none; }
+            .mobile-only { display: block; width: 200px; } /* Mobilde gerekirse boyutu buradan ayarla */
         }
 
         a {
@@ -78,14 +86,17 @@
     <button class="theme-toggle" id="themeBtn"></button>
 
     <div class="logo-container">
-        <a href="2026.html"><img src="logo.png" alt="Reeha Logo"></a>
+        <a href="2026.html">
+            <img src="logo.png" alt="Reeha Logo" class="desktop-only">
+            
+            <img src="mobillogo.png" alt="Reeha Logo" class="mobile-only">
+        </a>
     </div>
 
     <script>
         const themeBtn = document.getElementById('themeBtn');
         const body = document.documentElement;
 
-        // Sayfa açıldığında hafızayı kontrol et (Varsayılan Dark)
         const currentTheme = localStorage.getItem('theme') || 'dark';
         if (currentTheme === 'light') {
             body.setAttribute('data-theme', 'light');
