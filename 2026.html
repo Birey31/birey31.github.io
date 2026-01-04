@@ -56,7 +56,7 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
         }
 
-        /* 4. ÖZEL MÜZİK OYNATICI TASARIMI */
+        /* 4. MÜZİK OYNATICI */
         .custom-player {
             width: 95%;
             max-width: 500px;
@@ -68,9 +68,7 @@
             gap: 15px;
             margin: 20px 0;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transition: background 0.3s;
         }
-
         #play-pause {
             background: var(--text);
             color: var(--bg);
@@ -79,13 +77,8 @@
             height: 35px;
             border-radius: 50%;
             cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             font-size: 14px;
-            transition: transform 0.2s;
         }
-
         .progress-container {
             flex-grow: 1;
             height: 6px;
@@ -94,13 +87,11 @@
             cursor: pointer;
             position: relative;
         }
-
         .progress-bar {
             height: 100%;
             background: #ff4757;
             width: 0%;
             border-radius: 10px;
-            transition: width 0.1s linear;
         }
 
         .back-link {
@@ -150,11 +141,10 @@
         .close-btn {
             margin-top: 20px;
             padding: 12px 30px;
-            background-color: #fff;
+            background: #fff;
             color: #000;
             border: none;
             border-radius: 25px;
-            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
         }
@@ -190,13 +180,11 @@
     </div>
 
     <script>
-        // --- MÜZİK OYNATICI ---
         const audio = document.getElementById('myAudio');
         const playBtn = document.getElementById('play-pause');
         const progress = document.getElementById('progress');
-        const playlist = ["https://birey31.github.io/askim.mp3", "https://birey31.github.io/askim2.mp3"];
-        let currentTrack = 0;
 
+        // Müzik Oynatıcı
         function togglePlay() {
             if (audio.paused) {
                 audio.play();
@@ -215,29 +203,53 @@
         };
 
         function setProgress(e) {
-            const container = document.querySelector('.progress-container');
-            const width = container.clientWidth;
+            const width = document.querySelector('.progress-container').clientWidth;
             const clickX = e.offsetX;
-            const duration = audio.duration;
-            audio.currentTime = (clickX / width) * duration;
+            audio.currentTime = (clickX / width) * audio.duration;
         }
 
-        audio.onended = function() {
-            currentTrack++;
-            if (currentTrack >= playlist.length) currentTrack = 0;
-            audio.src = playlist[currentTrack];
-            audio.play();
-            playBtn.innerHTML = "||";
-        };
-
-        // --- MODAL FONKSİYONLARI ---
+        // Modal (Fotoğraf Büyütme)
         function openModal(src) {
-            const modal = document.getElementById('modal');
-            const modalImg = document.getElementById('modalImg');
-            const themeBtn = document.getElementById('theme-toggle');
-            modal.style.display = 'flex';
-            modalImg.src = src;
-            themeBtn.style.display = 'none';
+            document.getElementById('modal').style.display = 'flex';
+            document.getElementById('modalImg').src = src;
+            document.getElementById('theme-toggle').style.display = 'none';
         }
 
         function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('theme-toggle').style.display = 'flex';
+        }
+
+        // Tema Değiştirme
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('theme-toggle');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                btn.innerHTML = '☀️';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                btn.innerHTML = '🌙';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Sayfa Açıldığında Tema Kontrolü
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                window.addEventListener('DOMContentLoaded', () => {
+                    document.getElementById('theme-toggle').innerHTML = '🌙';
+                });
+            }
+        })();
+
+        // Dışarı tıklayınca modal kapat
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('modal')) closeModal();
+        }
+    </script>
+</body>
+</html>
