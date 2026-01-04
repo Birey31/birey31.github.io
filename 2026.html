@@ -40,7 +40,6 @@
             align-items: center; padding: 30px; box-sizing: border-box; z-index: 10000;
         }
 
-        /* Minimalist İkonik Buton Stili (index.html ile birebir) */
         .nav-btn-minimal {
             background: none; border: none; color: var(--text);
             cursor: pointer; font-size: 1.2rem; opacity: 0.5;
@@ -49,7 +48,6 @@
             -webkit-tap-highlight-color: transparent;
         }
         .nav-btn-minimal:hover { opacity: 1; }
-
         .nav-controls { display: flex; gap: 10px; }
 
         img {
@@ -59,30 +57,41 @@
             touch-action: none;                      
         }
 
-        .preview-active .gallery img:not(.img-previewing) {
-            filter: blur(12px) grayscale(100%); opacity: 0.2;
-        }
-        .img-previewing {
-            transform: scale(1.05) !important; z-index: 10001;
-            filter: grayscale(0%) !important; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        /* GALERİ - TELEFON AYARI (Senin istediğin 2 sütunlu yapı) */
+        .gallery {
+            column-count: 2; 
+            column-gap: 15px; 
+            width: 100%; 
+            max-width: 1200px; 
+            margin-top: 100px;
         }
 
-        .gallery {
-            column-count: 2; column-gap: 20px; width: 100%; max-width: 1100px; margin-top: 100px;
+        /* BİLGİSAYAR AYARI (Ekran 768px'den büyükse burası çalışır) */
+        @media (min-width: 768px) {
+            .gallery {
+                column-count: 4; /* Bilgisayarda 4 sütun yapalım ki küçülsünler */
+                column-gap: 25px;
+            }
         }
+
         .gallery img {
-            width: 100%; display: block; margin-bottom: 20px; border-radius: 2px;
+            width: 100%; display: block; margin-bottom: 15px; border-radius: 2px;
             cursor: pointer; filter: grayscale(100%); transition: all 0.5s ease;
             opacity: 0; animation: imgFadeUp 1s forwards;
         }
         @keyframes imgFadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* Modal */
         #modal {
             display: none; position: fixed; z-index: 99999; top: 0; left: 0;
             width: 100%; height: 100%; background: var(--bg);
             justify-content: center; align-items: center;
         }
         #modal img { max-width: 88%; max-height: 82vh; object-fit: contain; transition: 0.3s; z-index: 1; }
+
+        @media (min-width: 768px) {
+            #modal img { max-width: 50%; } /* Bilgisayarda modal resmi çok yayılmasın */
+        }
         
         .modal-side {
             position: absolute; top: 0; height: 100%; width: 45%; z-index: 2;
@@ -101,7 +110,6 @@
 
     <header>
         <button class="nav-btn-minimal" onclick="goHome()">←</button>
-        
         <div class="nav-controls">
             <button class="nav-btn-minimal" id="music-toggle" onclick="toggleMusic()">▶</button>
             <button class="nav-btn-minimal" id="theme-toggle" onclick="toggleTheme()">🌙</button>
@@ -127,13 +135,12 @@
     </div>
 
     <script>
-        // ANA SAYFAYA GEÇİŞ
+        // JS kodları yukarıdakiyle birebir aynı kalacak
         function goHome() {
             document.body.style.opacity = "0"; 
             setTimeout(() => { window.location.href = 'index.html'; }, 200);
         }
 
-        // TEMA (index.html ile birebir)
         function toggleTheme() {
             const html = document.documentElement;
             const btn = document.getElementById('theme-toggle');
@@ -148,7 +155,6 @@
             }
         }
 
-        // MÜZİK
         const music = document.getElementById('bgMusic');
         function toggleMusic() {
             const btn = document.getElementById('music-toggle');
@@ -156,7 +162,6 @@
             else { music.pause(); btn.innerHTML = "▶"; }
         }
 
-        // TEMA YÜKLEME
         (function() {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
@@ -166,7 +171,6 @@
             }
         })();
 
-        // MODAL & NAVİGASYON (Tıklama ile İleri/Geri)
         let currentIndex = 0;
         const galleryImgs = Array.from(document.querySelectorAll('.gallery img'));
 
@@ -193,8 +197,6 @@
         }
 
         window.onpopstate = function() { document.getElementById('modal').style.display = 'none'; };
-
-        // LONG PRESS ENGELLEME (Korumalar)
         document.addEventListener('contextmenu', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
     </script>
 </body>
