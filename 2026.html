@@ -39,11 +39,36 @@
             overscroll-behavior-x: none; 
         }
 
+        /* PREMIUM GRAIN EFEKTİ */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Noise_Texture.png');
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
         img {
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             user-select: none;
             -webkit-user-drag: none;
+        }
+
+        /* PREVIEW MODE STİLLERİ */
+        .preview-active .gallery img:not(.img-previewing) {
+            filter: blur(8px) grayscale(100%);
+            opacity: 0.4;
+        }
+
+        .img-previewing {
+            transform: scale(1.08) !important;
+            z-index: 10001;
+            filter: grayscale(0%) !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
 
         .controls {
@@ -53,6 +78,7 @@
             display: flex;
             gap: 15px;
             z-index: 10000;
+            transition: opacity 0.3s;
         }
 
         .back-link {
@@ -82,6 +108,7 @@
             width: 100%;
             max-width: 1100px;
             margin-top: 100px;
+            transition: filter 0.5s ease;
         }
         @media (min-width: 900px) { .gallery { column-count: 3; } }
 
@@ -93,19 +120,9 @@
             cursor: pointer;
             break-inside: avoid;
             filter: grayscale(100%);
-            transition: filter 0.6s ease, transform 0.4s ease;
+            transition: filter 0.6s ease, transform 0.4s ease, opacity 0.4s ease;
             opacity: 0;
             animation: imgFadeUp 1s ease-out forwards;
-        }
-
-        .gallery img:hover {
-            filter: grayscale(0%);
-            transform: scale(1.02);
-        }
-
-        @keyframes imgFadeUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         #modal {
@@ -118,7 +135,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            touch-action: none; /* Modal içinde tarayıcı kaydırmasını kapat */
+            touch-action: none;
         }
         #modal img {
             max-width: 95%;
@@ -151,7 +168,7 @@
         <source src="https://birey31.github.io/askim.mp3" type="audio/mpeg">
     </audio>
 
-    <div class="gallery">
+    <div class="gallery" id="mainGallery">
         <img src="ask.jpg?raw=true" loading="lazy" onclick="openModal(this.src)">
         <img src="ask1.jpg?raw=true" loading="lazy" onclick="openModal(this.src)">
         <img src="ask2.jpeg?raw=true" loading="lazy" onclick="openModal(this.src)">
@@ -164,17 +181,31 @@
     </div>
 
     <script>
-        // --- 1. AYARLAR VE KORUMA ---
-        if (window.location.search) {
-            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-            window.history.replaceState({}, document.title, cleanUrl);
-        }
+        // --- 1. LONG PRESS PREVIEW (Basılı Tutma) ---
+        let pressTimer;
+        const imgs = document.querySelectorAll('.gallery img');
+        
+        imgs.forEach(img => {
+            img.addEventListener('touchstart', (e) => {
+                pressTimer = window.setTimeout(() => {
+                    img.classList.add('img-previewing');
+                    document.body.classList.add('preview-active');
+                    if (navigator.vibrate) navigator.vibrate(15); 
+                }, 400); // 400ms basılı tutunca tetiklenir
+            }, {passive: true});
 
-        document.addEventListener('contextmenu', e => {
-            if (e.target.tagName === 'IMG') e.preventDefault();
-        }, false);
+            img.addEventListener('touchend', () => {
+                clearTimeout(pressTimer);
+                img.classList.remove('img-previewing');
+                document.body.classList.remove('preview-active');
+            });
 
-        // --- 2. MODAL NAVİGASYON (Gelişmiş) ---
+            img.addEventListener('touchmove', () => {
+                clearTimeout(pressTimer);
+            });
+        });
+
+        // --- 2. MODAL NAVİGASYON ---
         let currentImgIndex = 0;
         const images = Array.from(document.querySelectorAll('.gallery img'));
         const modalImg = document.getElementById('modalImg');
@@ -204,18 +235,17 @@
             }, 200);
         }
 
-        // Modal içi kaydırma ve tıklama
         modal.addEventListener('touchstart', e => {
             modalTouchStartX = e.changedTouches[0].screenX;
         }, {passive: true});
 
         modal.addEventListener('touchend', e => {
             let diff = e.changedTouches[0].screenX - modalTouchStartX;
-            if (diff < -50) changeImage(1);  // Sola kaydır -> Sonraki
-            if (diff > 50) changeImage(-1);  // Sağa kaydır -> Önceki
+            if (diff < -50) changeImage(1);
+            if (diff > 50) changeImage(-1);
         }, {passive: true});
 
-        // --- 3. SWIPE TO BACK (Ana Sayfaya Dön) ---
+        // --- 3. SWIPE TO BACK ---
         let touchstartX = 0;
         document.addEventListener('touchstart', e => {
             if (modal.style.display !== 'flex') touchstartX = e.changedTouches[0].screenX;
@@ -231,7 +261,7 @@
             }
         }, {passive: true});
 
-        // --- 4. TEMA VE DİĞER FONKSİYONLAR ---
+        // --- 4. TEMA VE DİĞER ---
         function updateThemeColor(isDark) {
             const meta = document.getElementById('theme-meta');
             if (meta) meta.setAttribute('content', isDark ? '#121212' : '#f5f5f3');
