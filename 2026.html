@@ -3,19 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hmmm</title>
+    <title>Hmmm - Sergi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    
     <link rel="icon" type="image/jpeg" href="logo.png">
     <style>
-        /* 1. RENK DEĞİŞKENLERİ */
+        /* 1. RENK DEĞİŞKENLERİ - Minimalist Palet */
         :root { 
-            --bg: #ffffff; 
-            --text: #333333; 
-            --link-color: #888;
+            --bg: #f5f5f3; 
+            --text: #1a1a1a; 
+            --ui-bg: rgba(255, 255, 255, 0.8);
         }
         [data-theme="dark"] { 
-            --bg: #000000; 
-            --text: #ffffff; 
-            --link-color: #bbb;
+            --bg: #121212; 
+            --text: #e0e0e0; 
+            --ui-bg: rgba(20, 20, 20, 0.8);
         }
 
         /* 2. GENEL SAYFA AYARLARI */
@@ -23,134 +26,122 @@
             background-color: var(--bg); 
             color: var(--text); 
             margin: 0; 
-            padding: 10px;
-            font-family: sans-serif;
+            padding: 20px;
+            font-family: 'Playfair Display', serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: background-color 0.3s, color 0.3s, opacity 0.6s ease;
+            transition: background-color 0.5s ease, color 0.5s ease, opacity 0.6s ease;
             min-height: 100vh;
+            opacity: 1;
         }
 
-        /* 3. KONTROL PANELİ (BUTONLAR VE OK) */
+        /* 3. KONTROL PANELİ VE OK */
         .controls {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 25px;
+            right: 25px;
             display: flex;
-            gap: 12px;
+            gap: 15px;
             z-index: 10000;
-            animation: fadeInUI 0.8s ease-out 0.4s backwards;
         }
 
         .back-link {
             position: fixed;
-            top: 20px;
-            left: 20px;
-            width: 42px;
-            height: 42px;
+            top: 25px;
+            left: 25px;
             text-decoration: none;
-            background: var(--bg);
             color: var(--text);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 22px;
-            font-weight: bold;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 24px;
             z-index: 10000;
-            transition: transform 0.2s, background 0.3s;
-            animation: fadeInUI 0.8s ease-out 0.2s backwards;
+            opacity: 0.6;
+            transition: opacity 0.3s, transform 0.3s;
         }
-
-        @keyframes fadeInUI {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .back-link:hover { opacity: 1; transform: translateX(-5px); }
 
         #theme-toggle, #play-pause {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
+            background: none;
             border: none;
-            outline: none;
-            background: var(--bg);
             color: var(--text);
             cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.2s, background 0.3s;
+            font-size: 20px;
+            opacity: 0.6;
+            transition: opacity 0.3s;
         }
+        #theme-toggle:hover, #play-pause:hover { opacity: 1; }
 
-        #theme-toggle:active, #play-pause:active, .back-link:active {
-            transform: scale(0.9);
-        }
-
-        /* 4. GALERİ VE RESİM ANİMASYONLARI */
+        /* 4. GALERİ VE SANATSAL EFEKTLER */
         .gallery {
             column-count: 2;
-            column-gap: 10px;
+            column-gap: 20px;
             width: 100%;
-            max-width: 1000px;
-            margin-top: 80px;
+            max-width: 1100px;
+            margin-top: 100px;
         }
-        @media (min-width: 900px) { .gallery { column-count: 4; } }
+        @media (min-width: 900px) { .gallery { column-count: 3; } }
 
         .gallery img {
             width: 100%;
             display: block;
-            margin-bottom: 10px;
-            border-radius: 8px;
+            margin-bottom: 20px;
+            border-radius: 2px; /* Keskin köşeler daha ciddi durur */
             cursor: pointer;
             break-inside: avoid;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            filter: grayscale(100%); /* Siyah beyaz başlangıç */
+            transition: filter 0.6s ease, transform 0.4s ease, box-shadow 0.4s ease;
             opacity: 0;
-            animation: imgFadeUp 0.8s ease-out forwards;
+            animation: imgFadeUp 1s ease-out forwards;
+        }
+
+        .gallery img:hover {
+            filter: grayscale(0%); /* Üzerine gelince renklenir */
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
         @keyframes imgFadeUp {
-            from { opacity: 0; transform: translateY(30px); }
+            from { opacity: 0; transform: translateY(40px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Resimlerin sırayla gelmesi için gecikmeler */
+        /* Sıralı animasyon */
         .gallery img:nth-child(1) { animation-delay: 0.1s; }
-        .gallery img:nth-child(2) { animation-delay: 0.2s; }
-        .gallery img:nth-child(3) { animation-delay: 0.3s; }
-        .gallery img:nth-child(4) { animation-delay: 0.4s; }
-        .gallery img:nth-child(5) { animation-delay: 0.5s; }
+        .gallery img:nth-child(2) { animation-delay: 0.3s; }
+        .gallery img:nth-child(3) { animation-delay: 0.5s; }
+        .gallery img:nth-child(4) { animation-delay: 0.7s; }
 
-        /* 5. MODAL */
+        /* 5. MODAL (FOTOĞRAF ODAK) */
         #modal {
             display: none;
             position: fixed;
             z-index: 9999;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
+            background: var(--bg); /* Siyah yerine tema rengi odaklı */
             flex-direction: column;
             justify-content: center;
             align-items: center;
         }
         #modal img {
-            max-width: 95%;
-            max-height: 80vh;
+            max-width: 90%;
+            max-height: 85vh;
             object-fit: contain;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
         }
         .close-btn {
-            margin-top: 20px;
-            padding: 12px 30px;
-            background: #fff;
-            color: #000;
-            border: none;
-            border-radius: 25px;
-            font-weight: bold;
+            margin-top: 30px;
+            padding: 10px 25px;
+            background: none;
+            border: 1px solid var(--text);
+            color: var(--text);
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+        .close-btn:hover {
+            background: var(--text);
+            color: var(--bg);
         }
     </style>
 </head>
@@ -163,7 +154,7 @@
         <button id="theme-toggle" onclick="toggleTheme()">☀️</button>
     </div>
 
-    <audio id="myAudio">
+    <audio id="myAudio" loop>
         <source src="https://birey31.github.io/askim.mp3" type="audio/mpeg">
     </audio>
 
@@ -177,7 +168,7 @@
 
     <div id="modal">
         <img id="modalImg">
-        <button class="close-btn" onclick="closeModal()">Geri Dön</button>
+        <button class="close-btn" onclick="closeModal()">kapat</button>
     </div>
 
     <script>
@@ -186,7 +177,7 @@
         const controls = document.getElementById('main-controls');
         const backArrow = document.getElementById('back-arrow');
 
-        // YUMUŞAK ÇIKIŞ ANİMASYONU
+        // YUMUŞAK ÇIKIŞ
         backArrow.addEventListener('click', function(e) {
             e.preventDefault();
             const targetUrl = this.href;
@@ -209,14 +200,14 @@
         function openModal(src) {
             document.getElementById('modal').style.display = 'flex';
             document.getElementById('modalImg').src = src;
-            controls.style.display = 'none'; 
-            backArrow.style.display = 'none'; 
+            controls.style.opacity = '0'; 
+            backArrow.style.opacity = '0'; 
         }
 
         function closeModal() {
             document.getElementById('modal').style.display = 'none';
-            controls.style.display = 'flex'; 
-            backArrow.style.display = 'flex'; 
+            controls.style.opacity = '1'; 
+            backArrow.style.opacity = '1'; 
         }
 
         function toggleTheme() {
@@ -237,9 +228,9 @@
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
                 document.documentElement.setAttribute('data-theme', 'dark');
-                window.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => {
                     document.getElementById('theme-toggle').innerHTML = '🌙';
-                });
+                }, 10);
             }
         })();
 
