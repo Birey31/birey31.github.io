@@ -5,60 +5,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reeha</title>
     <style>
-        /* Temel sayfa ayarları */
+        /* Temel Ayarlar */
+        :root {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --logo-filter: invert(0);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --logo-filter: invert(1);
+        }
+
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #000; /* Saf siyah arka plan */
+            background-color: var(--bg-color);
+            color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
+            transition: background-color 0.5s ease, color 0.5s ease;
             overflow: hidden;
             font-family: serif;
         }
 
         /* Merkezdeki Logo */
-        .logo-container {
-            text-align: center;
-            transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        .logo-container img {
+            width: 200px; /* Logo boyutunu buradan ayarlayabilirsin */
+            height: auto;
+            filter: var(--logo-filter);
+            transition: filter 0.5s ease, transform 0.5s ease;
+            cursor: pointer;
         }
 
-        .logo-container a {
-            text-decoration: none;
-            color: white;
-            font-size: 24px;
-            letter-spacing: 12px;
-            font-weight: 300;
-            text-transform: uppercase;
-            transition: 0.5s;
-            opacity: 0.8;
+        .logo-container img:hover {
+            transform: scale(1.05);
         }
 
-        /* Logo Hover Efekti */
-        .logo-container a:hover {
-            opacity: 1;
-            letter-spacing: 16px; /* Hafif genişleme efekti */
-        }
-
-        /* Alt bilgi (Opsiyonel) */
-        .footer {
+        /* Sağ Üst Gece/Gündüz Modu Butonu */
+        .theme-toggle {
             position: absolute;
-            bottom: 30px;
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 10px;
+            top: 30px;
+            right: 30px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 11px;
             letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.5;
+            transition: 0.3s;
+            outline: none;
+        }
+
+        .theme-toggle:hover {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
 
+    <button class="theme-toggle" id="themeBtn">GÜNDÜZ</button>
+
     <div class="logo-container">
-        <a href="index.html">REEHA</a>
+        <a href="index.html">
+            <img src="logo.png" alt="Reeha Logo">
+        </a>
     </div>
 
-    <div class="footer">2026</div>
+    <script>
+        const themeBtn = document.getElementById('themeBtn');
+        const body = document.documentElement;
+
+        themeBtn.addEventListener('click', () => {
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                themeBtn.innerText = 'GÜNDÜZ';
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeBtn.innerText = 'GECE';
+            }
+        });
+    </script>
 
 </body>
 </html>
