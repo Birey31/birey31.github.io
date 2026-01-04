@@ -5,6 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reeha</title>
  <link rel="icon" type="image/jpeg" href="logo.jpeg">
+ <style>
+/* Renk Değişkenleri */
+:root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+}
+[data-theme="dark"] {
+    --bg-color: #000000;
+    --text-color: #ffffff;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    transition: 0.3s;
+}
+
+/* Başlık ve Buton Hizalaması */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+}
+
+#theme-toggle {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    background: transparent;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+</style>
  <head>
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -55,8 +94,13 @@
             display: block;
         }
     </style>
+ 
 </head>
 <body>
+ <div class="header-container">
+    <h1 style="margin:0;">2026</h1>
+    <button id="theme-toggle" onclick="toggleTheme()">☀️</button>
+</div>
 
     <a href="2026.html" class="title-link">2026</a>
 
@@ -65,6 +109,32 @@
             <source src="shitty scrap.mp4" type="video/mp4">
         </video>
     </div>
+ <script>
+function toggleTheme() {
+    const html = document.documentElement;
+    const btn = document.getElementById('theme-toggle');
+    
+    if (html.getAttribute('data-theme') === 'dark') {
+        html.removeAttribute('data-theme');
+        btn.innerHTML = '☀️';
+        localStorage.setItem('theme', 'light');
+    } else {
+        html.setAttribute('data-theme', 'dark');
+        btn.innerHTML = '🌙';
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Sayfa yüklendiğinde hafızadaki modu kontrol et
+window.onload = function() {
+    const savedTheme = localStorage.getItem('theme');
+    const btn = document.getElementById('theme-toggle');
+    if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        btn.innerHTML = '🌙';
+    }
+}
+</script>
 
 </body>
 </html>
