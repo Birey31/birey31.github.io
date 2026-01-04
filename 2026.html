@@ -26,6 +26,8 @@
             font-family: 'Playfair Display', serif;
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh;
+            /* Kaydırmayı engellemeden menüleri kısıtlar */
+            -webkit-overflow-scrolling: touch;
         }
 
         /* Grain Efekti */
@@ -35,16 +37,25 @@
             opacity: 0.04; pointer-events: none; z-index: 9999;
         }
 
+        /* TARAYICI MENÜLERİNİ ENGELLEME (Kritik Kısım) */
+        img {
+            -webkit-touch-callout: none !important; /* iOS Safari uzun basma menüsü */
+            -webkit-user-select: none !important;    /* Metin seçimi */
+            user-select: none !important;
+            -webkit-user-drag: none !important;      /* Görseli sürükleme */
+            touch-action: none;                      /* Varsayılan dokunma hareketleri */
+        }
+
         /* Long Press Preview Stilleri */
         .preview-active .gallery img:not(.img-previewing) {
-            filter: blur(8px) grayscale(100%);
-            opacity: 0.3;
+            filter: blur(12px) grayscale(100%);
+            opacity: 0.2;
         }
         .img-previewing {
             transform: scale(1.1) !important;
             z-index: 10001;
             filter: grayscale(0%) !important;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
             position: relative;
         }
 
@@ -53,7 +64,7 @@
         }
         .gallery img {
             width: 100%; display: block; margin-bottom: 20px; border-radius: 2px;
-            cursor: pointer; filter: grayscale(100%); transition: all 0.4s ease;
+            cursor: pointer; filter: grayscale(100%); transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             opacity: 0; animation: imgFadeUp 1s forwards;
         }
         @keyframes imgFadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -77,38 +88,65 @@
 
     <div id="modal">
         <img id="modalImg">
-        <button onclick="closeModal()" style="margin-top:20px; background:none; border:1px solid var(--text); color:var(--text); padding:10px 20px;">Kapat</button>
+        <button onclick="closeModal()" style="margin-top:20px; background:none; border:1px solid var(--text); color:var(--text); padding:10px 20px; cursor:pointer;">Kapat</button>
     </div>
 
     <script>
-        // Long Press Preview Mantığı
+        // 1. SAĞ TIK VE MENÜ ENGELLEME (JavaScript)
+        document.addEventListener('contextmenu', event => {
+            if (event.target.tagName === 'IMG') {
+                event.preventDefault();
+            }
+        });
+
+        // 2. LONG PRESS PREVIEW MANTIĞI
         let pressTimer;
+        let isLongPress = false;
         const galleryImgs = document.querySelectorAll('.gallery img');
 
         galleryImgs.forEach(img => {
             img.addEventListener('touchstart', (e) => {
+                isLongPress = false;
                 pressTimer = setTimeout(() => {
+                    isLongPress = true;
                     img.classList.add('img-previewing');
                     document.body.classList.add('preview-active');
-                    if (navigator.vibrate) navigator.vibrate(20);
+                    if (navigator.vibrate) navigator.vibrate(15);
                 }, 400);
-            });
+            }, {passive: true});
 
-            img.addEventListener('touchend', () => {
+            img.addEventListener('touchend', (e) => {
                 clearTimeout(pressTimer);
                 img.classList.remove('img-previewing');
                 document.body.classList.remove('preview-active');
+                
+                // Eğer uzun basıldıysa, tıklama olayını (modal açılmasını) engelle
+                if (isLongPress) {
+                    e.preventDefault();
+                }
             });
 
-            img.addEventListener('touchmove', () => clearTimeout(pressTimer));
+            img.addEventListener('touchmove', () => {
+                clearTimeout(pressTimer);
+            }, {passive: true});
         });
 
+        // 3. MODAL FONKSİYONLARI
         function openModal(src) {
-            document.getElementById('modal').style.display = 'flex';
-            document.getElementById('modalImg').src = src;
+            // Sadece uzun basılmadıysa modalı aç
+            if (!isLongPress) {
+                document.getElementById('modal').style.display = 'flex';
+                document.getElementById('modalImg').src = src;
+            }
         }
         function closeModal() {
             document.getElementById('modal').style.display = 'none';
+        }
+
+        // Boşluğa tıklayınca kapat
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target == modal) closeModal();
         }
     </script>
 </body>
