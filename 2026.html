@@ -16,8 +16,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
 
     <style>
-        :root { --bg: #f5f5f3; --text: #1a1a1a; --accent: #888; }
-        [data-theme="dark"] { --bg: #121212; --text: #e0e0e0; --accent: #444; }
+        :root { --bg: #f5f5f3; --text: #1a1a1a; }
+        [data-theme="dark"] { --bg: #121212; --text: #e0e0e0; }
 
         body { 
             background-color: var(--bg); color: var(--text); 
@@ -34,21 +34,27 @@
             opacity: 0.04; pointer-events: none; z-index: 9999;
         }
 
-        /* Üst Kontroller */
-        .controls {
-            position: fixed; top: 20px; right: 20px; display: flex; gap: 15px; z-index: 10000;
-        }
-        .btn {
-            background: none; border: 1px solid var(--text); color: var(--text);
-            padding: 8px 12px; cursor: pointer; border-radius: 50px; font-size: 14px;
+        /* Header / Logo Kısmı */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; 
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 40px; box-sizing: border-box; z-index: 10000;
+            background: linear-gradient(to bottom, var(--bg) 60%, transparent);
         }
 
-        /* Görsel Koruma & Menü Engelleme */
+        .logo { font-size: 24px; font-style: italic; letter-spacing: 2px; }
+
+        .nav-controls { display: flex; gap: 20px; }
+        .nav-btn { 
+            background: none; border: none; color: var(--text); 
+            cursor: pointer; font-size: 18px; font-family: inherit;
+        }
+
+        /* Görsel Koruma */
         img {
             -webkit-touch-callout: none !important; 
             -webkit-user-select: none !important;    
             user-select: none !important;
-            -webkit-user-drag: none !important;      
             touch-action: none;                      
         }
 
@@ -57,16 +63,16 @@
             filter: blur(12px) grayscale(100%); opacity: 0.2;
         }
         .img-previewing {
-            transform: scale(1.1) !important; z-index: 10001;
+            transform: scale(1.05) !important; z-index: 10001;
             filter: grayscale(0%) !important; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
         }
 
         .gallery {
-            column-count: 2; column-gap: 20px; width: 100%; max-width: 1100px; margin-top: 80px;
+            column-count: 2; column-gap: 20px; width: 100%; max-width: 1100px; margin-top: 120px;
         }
         .gallery img {
             width: 100%; display: block; margin-bottom: 20px; border-radius: 2px;
-            cursor: pointer; filter: grayscale(100%); transition: all 0.4s ease;
+            cursor: pointer; filter: grayscale(100%); transition: all 0.5s ease;
             opacity: 0; animation: imgFadeUp 1s forwards;
         }
         @keyframes imgFadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -77,15 +83,24 @@
             width: 100%; height: 100%; background: var(--bg);
             flex-direction: column; justify-content: center; align-items: center;
         }
-        #modal img { max-width: 90%; max-height: 80vh; object-fit: contain; transition: 0.3s; }
+        #modal img { max-width: 85%; max-height: 75vh; object-fit: contain; transition: 0.3s; }
+        
+        .modal-nav {
+            margin-top: 30px; display: flex; gap: 40px; font-size: 14px; letter-spacing: 2px;
+        }
+        .modal-nav span { cursor: pointer; border-bottom: 1px solid transparent; transition: 0.3s; }
+        .modal-nav span:hover { border-bottom: 1px solid var(--text); }
     </style>
 </head>
-<body data-theme="light">
+<body>
 
-    <div class="controls">
-        <button class="btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
-        <button class="btn" onclick="toggleMusic()" id="musicBtn">🎵 Oynat</button>
-    </div>
+    <header>
+        <div class="logo">Hmmm</div>
+        <div class="nav-controls">
+            <button class="nav-btn" onclick="toggleMusic()" id="musicBtn">Müzik</button>
+            <button class="nav-btn" onclick="toggleTheme()" id="themeBtn">Karanlık</button>
+        </div>
+    </header>
 
     <audio id="bgMusic" loop>
         <source src="ask.mp3" type="audio/mpeg">
@@ -100,27 +115,22 @@
 
     <div id="modal">
         <img id="modalImg">
-        <div style="margin-top: 20px; display: flex; gap: 20px;">
-            <button class="btn" onclick="navigate(-1)">← Geri</button>
-            <button class="btn" onclick="closeModal()">Kapat</button>
-            <button class="btn" onclick="navigate(1)">İleri →</button>
+        <div class="modal-nav">
+            <span onclick="navigate(-1)">GERİ</span>
+            <span onclick="closeModal()">KAPAT</span>
+            <span onclick="navigate(1)">İLERİ</span>
         </div>
     </div>
 
     <script>
-        // 1. TEMA VE MÜZİK KONTROLÜ
+        // 1. TEMA VE MÜZİK
         function toggleTheme() {
             const body = document.body;
             const btn = document.getElementById('themeBtn');
-            if (body.getAttribute('data-theme') === 'light') {
-                body.setAttribute('data-theme', 'dark');
-                btn.innerText = '☀️';
-                localStorage.setItem('theme', 'dark');
-            } else {
-                body.setAttribute('data-theme', 'light');
-                btn.innerText = '🌙';
-                localStorage.setItem('theme', 'light');
-            }
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            btn.innerText = isDark ? 'Karanlık' : 'Aydınlık';
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
         }
 
         const music = document.getElementById('bgMusic');
@@ -128,20 +138,17 @@
             const btn = document.getElementById('musicBtn');
             if (music.paused) {
                 music.play();
-                btn.innerText = '⏸ Durdur';
+                btn.style.textDecoration = "underline";
             } else {
                 music.pause();
-                btn.innerText = '🎵 Oynat';
+                btn.style.textDecoration = "none";
             }
         }
-
-        // Sayfa açıldığında tema hafızasını kontrol et
         if (localStorage.getItem('theme') === 'dark') toggleTheme();
 
-        // 2. MENÜ ENGELLEME
+        // 2. LONG PRESS VE MENÜ ENGELLEME
         document.addEventListener('contextmenu', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
-
-        // 3. LONG PRESS PREVIEW
+        
         let pressTimer, isLongPress = false;
         const galleryImgs = Array.from(document.querySelectorAll('.gallery img'));
 
@@ -155,7 +162,6 @@
                     if (navigator.vibrate) navigator.vibrate(15);
                 }, 400);
             }, {passive: true});
-
             img.addEventListener('touchend', () => {
                 clearTimeout(pressTimer);
                 img.classList.remove('img-previewing');
@@ -164,27 +170,21 @@
             img.addEventListener('touchmove', () => clearTimeout(pressTimer), {passive: true});
         });
 
-        // 4. MODAL, SWIPE VE GERİ TUŞU
-        let currentIndex = 0;
-        let touchStartX = 0;
+        // 3. MODAL, SWIPE VE GERİ TUŞU
+        let currentIndex = 0, touchStartX = 0;
 
         function openModal(src) {
             if (!isLongPress) {
-                const modal = document.getElementById('modal');
-                const modalImg = document.getElementById('modalImg');
                 currentIndex = galleryImgs.findIndex(img => img.src === src);
-                modalImg.src = src;
-                modal.style.display = 'flex';
+                document.getElementById('modalImg').src = src;
+                document.getElementById('modal').style.display = 'flex';
                 history.pushState({modalOpen: true}, "");
             }
         }
 
         function closeModal() {
-            const modal = document.getElementById('modal');
-            if (modal.style.display === 'flex') {
-                modal.style.display = 'none';
-                if (history.state && history.state.modalOpen) history.back();
-            }
+            document.getElementById('modal').style.display = 'none';
+            if (history.state && history.state.modalOpen) history.back();
         }
 
         function navigate(direction) {
@@ -197,20 +197,16 @@
             }, 200);
         }
 
-        // Swipe (Kaydırma)
-        const modalArea = document.getElementById('modal');
-        modalArea.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
-        modalArea.addEventListener('touchend', e => {
+        const modalDiv = document.getElementById('modal');
+        modalDiv.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+        modalDiv.addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX;
-            if (touchStartX - touchEndX > 50) navigate(1);
-            if (touchEndX - touchStartX > 50) navigate(-1);
+            if (touchStartX - touchEndX > 60) navigate(1);
+            if (touchEndX - touchStartX > 60) navigate(-1);
         }, {passive: true});
 
-        // Geri Tuşu
         window.onpopstate = function() { document.getElementById('modal').style.display = 'none'; };
-
-        // Modal dışına tıklayınca kapat
-        window.onclick = function(e) { if (e.target == modalArea) closeModal(); }
+        window.onclick = function(e) { if (e.target == modalDiv) closeModal(); }
     </script>
 </body>
 </html>
