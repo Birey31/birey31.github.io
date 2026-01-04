@@ -39,13 +39,17 @@
             padding: 20px 40px; box-sizing: border-box; z-index: 10000;
         }
 
-        .logo { font-size: 24px; font-style: italic; letter-spacing: 2px; }
+        .logo { font-size: 24px; font-style: italic; letter-spacing: 2px; cursor: default; }
 
-        .nav-controls { display: flex; gap: 20px; }
-        .nav-btn { 
-            background: none; border: none; color: var(--text); 
-            cursor: pointer; font-size: 18px; font-family: inherit;
+        .nav-controls { display: flex; gap: 15px; }
+        
+        /* index.html ile aynı buton stilleri */
+        .btn {
+            background: none; border: 1px solid var(--text); color: var(--text);
+            padding: 8px 16px; cursor: pointer; border-radius: 50px;
+            font-family: inherit; font-size: 14px; transition: all 0.3s ease;
         }
+        .btn:hover { background: var(--text); color: var(--bg); }
 
         img {
             -webkit-touch-callout: none !important; 
@@ -72,7 +76,7 @@
         }
         @keyframes imgFadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Modal ve Ekranın Yanlarına Basma Alanları */
+        /* Modal ve Tıklama Alanları */
         #modal {
             display: none; position: fixed; z-index: 99999; top: 0; left: 0;
             width: 100%; height: 100%; background: var(--bg);
@@ -80,18 +84,16 @@
         }
         #modal img { max-width: 85%; max-height: 80vh; object-fit: contain; transition: 0.3s; z-index: 1; }
         
-        /* Ekranın Sol ve Sağ Tıklama Alanları */
         .modal-side {
-            position: absolute; top: 0; height: 100%; width: 40%; z-index: 2;
+            position: absolute; top: 0; height: 100%; width: 45%; z-index: 2;
             cursor: pointer; -webkit-tap-highlight-color: transparent;
         }
         .side-left { left: 0; }
         .side-right { right: 0; }
 
-        /* Kapatma Butonu (Üstte şık bir çarpı veya alan) */
         .close-area {
-            position: absolute; top: 20px; width: 100%; text-align: center;
-            z-index: 3; font-size: 12px; letter-spacing: 2px; cursor: pointer; opacity: 0.5;
+            position: absolute; top: 25px; z-index: 3;
+            font-size: 11px; letter-spacing: 3px; cursor: pointer; opacity: 0.6;
         }
     </style>
 </head>
@@ -100,8 +102,8 @@
     <header>
         <div class="logo">Hmmm</div>
         <div class="nav-controls">
-            <button class="nav-btn" onclick="toggleMusic()" id="musicBtn">Müzik</button>
-            <button class="nav-btn" onclick="toggleTheme()" id="themeBtn">Karanlık</button>
+            <button class="btn" onclick="toggleMusic()" id="musicBtn">Oynat</button>
+            <button class="btn" onclick="toggleTheme()" id="themeBtn">Karanlık</button>
         </div>
     </header>
 
@@ -124,7 +126,7 @@
     </div>
 
     <script>
-        // 1. TEMA VE MÜZİK
+        // 1. TEMA VE MÜZİK (index.html mantığına çekildi)
         function toggleTheme() {
             const body = document.body;
             const btn = document.getElementById('themeBtn');
@@ -137,8 +139,13 @@
         const music = document.getElementById('bgMusic');
         function toggleMusic() {
             const btn = document.getElementById('musicBtn');
-            if (music.paused) { music.play(); btn.style.textDecoration = "underline"; }
-            else { music.pause(); btn.style.textDecoration = "none"; }
+            if (music.paused) { 
+                music.play(); 
+                btn.innerText = "Durdur";
+            } else { 
+                music.pause(); 
+                btn.innerText = "Oynat";
+            }
         }
         if (localStorage.getItem('theme') === 'dark') toggleTheme();
 
@@ -198,6 +205,7 @@
             if (document.getElementById('modal').style.display === 'flex') {
                 if (e.key === "ArrowRight") navigate(1);
                 if (e.key === "ArrowLeft") navigate(-1);
+                if (e.key === "Escape") closeModal();
             }
         });
 
