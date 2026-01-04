@@ -30,7 +30,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* YENİ MİNİMAL TEMA TUŞU */
+        /* TEMA TUŞU */
         .theme-toggle {
             position: absolute; top: 40px; right: 40px;
             background: none; border: 1px solid var(--text-color); 
@@ -51,27 +51,43 @@
             background: transparent;
         }
 
-        /* LOGO AYARLARI */
+        /* GENEL LOGO AYARLARI */
         .logo-container img {
-            width: 250px; height: auto; cursor: pointer;
-            filter: grayscale(100%) opacity(0.6);
+            height: auto; cursor: pointer;
             transition: filter 0.5s ease, transform 0.5s ease, opacity 0.5s ease;
             -webkit-tap-highlight-color: transparent;
             outline: none;
         }
 
-        .logo-container img:hover {
+        /* BİLGİSAYAR LOGOSU (Siyah-Beyaz Başlar) */
+        .desktop-only { 
+            display: block; 
+            width: 250px;
+            filter: grayscale(100%) opacity(0.6); 
+        }
+        .desktop-only:hover {
             filter: grayscale(0%) opacity(1);
             transform: scale(1.03);
         }
 
-        /* LOGO GÖSTERİM MANTIĞI */
-        .mobile-only { display: none; }
-        .desktop-only { display: block; }
+        /* MOBİL LOGO (Her zaman renkli ve sabit) */
+        .mobile-only { 
+            display: none; 
+            filter: none !important; 
+            opacity: 1 !important; 
+        }
 
+        /* MOBİL GÖRÜNÜM AYARLARI */
         @media (max-width: 768px) {
             .desktop-only { display: none; }
-            .mobile-only { display: block; width: 200px; } /* Mobilde gerekirse boyutu buradan ayarla */
+            .mobile-only { 
+                display: block; 
+                width: 200px; /* Mobildeki genişlik */
+            }
+            /* Mobilde üzerine gelme efekti yerine hafif dokunma tepkisi */
+            .mobile-only:active {
+                transform: scale(0.97);
+            }
         }
 
         a {
