@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Reeha - Keşif</title>
+<title>Reeha - Kesintisiz Keşif</title>
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
@@ -13,82 +13,72 @@
     /* Geri Dön Butonu */
     .back-btn {
         position: absolute; top: 25px; left: 25px; z-index: 100;
-        color: white; text-decoration: none; font-family: 'Times New Roman', serif;
-        background: rgba(0,0,0,0.6); padding: 12px 20px;
-        letter-spacing: 3px; font-size: 11px; transition: 0.4s;
-        border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px);
+        color: white; text-decoration: none; font-family: serif;
+        background: rgba(0,0,0,0.7); padding: 12px 25px;
+        letter-spacing: 2px; font-size: 11px; transition: 0.4s;
+        border: 1px solid rgba(255,255,255,0.1);
     }
     .back-btn:hover { background: #fff; color: #000; }
-
-    /* Alt Bilgi */
-    .ui-overlay {
-        position: absolute; bottom: 30px; width: 100%; text-align: center;
-        color: white; font-family: serif; letter-spacing: 4px;
-        z-index: 10; pointer-events: none; text-transform: uppercase;
-        font-size: 10px; opacity: 0.5;
-    }
 </style>
 </head>
 <body>
 
-<div class="ui-overlay">Dünyayı çevir ve bir sokağa dokun</div>
 <a href="index.html" class="back-btn">← ANA SAYFA</a>
 <div id="map"></div>
 
 <script>
-	// TOKUNINI BURAYA EKLE
 	mapboxgl.accessToken = 'pk.eyJ1IjoiYWRlbTk5MTciLCJhIjoiY21rMDF6YXNjNmNtYzNlczU5YTUyYXUzMCJ9.mjaJaz3MfODoSZrL2wVKJw';
     
     const map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/mapbox/satellite-streets-v12', // Uydu ve sokak isimleri bir arada
+        // 'satellite-streets' yerine daha hafif ve stabil olan 'satellite-v9' deneyelim
+        style: 'mapbox://styles/mapbox/satellite-v9', 
         projection: 'globe', 
-        zoom: 1.8,
-        center: [28.97, 41.00], // İstanbul koordinatları
-        antialias: true
+        zoom: 1.5,
+        center: [28.97, 41.00],
+        antialias: true, // Kenar yumuşatma (bozulmaları engeller)
+        optimizeForTerrain: true // Performans iyileştirmesi
     });
 
     map.on('style.load', () => {
-        // Uzay derinliği ve yıldız efekti
+        // Katmanların titremesini engellemek için sis ve atmosfer ayarını sabitleyelim
         map.setFog({
-            color: 'rgb(10, 10, 20)', 
-            'high-color': 'rgb(0, 0, 0)', 
-            'horizon-blend': 0.05,
-            'star-intensity': 0.9
+            'range': [0.5, 10],
+            'color': '#000000',
+            'high-color': '#000000',
+            'space-color': '#000000',
+            'horizon-blend': 0.02
         });
     });
 
-    // TIKLAYINCA O NOKTAYA SÜZÜLME (FlyTo)
+    // Tıklayınca süzülme (Daha yavaş ve pürüzsüz)
     map.on('click', (e) => {
-        const coords = e.lngLat;
-        
         map.flyTo({
-            center: [coords.lng, coords.lat],
-            zoom: 18, // Sokakları ve binaları net görecek kadar yakın
-            pitch: 65, // Yan bakış açısı
-            bearing: Math.random() * 80, 
-            duration: 9000, // 9 saniyelik sinematik iniş
+            center: [e.lngLat.lng, e.lngLat.lat],
+            zoom: 16, // Çok aşırı yakınlaşma yapıp parçalanmayı tetiklemeyelim
+            pitch: 45, // Daha az eğim daha stabil görüntü verir
+            duration: 8000, 
             essential: true
         });
     });
 
-    // Otomatik Yavaş Dünya Dönüşü (Keşif Hissi)
-    let isUserInteracting = false;
-    function rotateGlobe() {
-        if (!isUserInteracting && map.getZoom() < 5) {
-            const center = map.getCenter();
-            center.lng -= 0.15;
-            map.easeTo({ center, duration: 0, easing: (n) => n });
+    // Otomatik Dönüş (Stabil hızda)
+    let isInteracting = false;
+    function rotate() {
+        if (!isInteracting && map.getZoom() < 5) {
+            map.easeTo({
+                center: [map.getCenter().lng - 0.5, map.getCenter().lat],
+                duration: 100,
+                easing: n => n
+            });
         }
+        requestAnimationFrame(rotate);
     }
 
-    map.on('mousedown', () => { isUserInteracting = true; });
-    map.on('mouseup', () => { isUserInteracting = false; });
-    map.on('dragstart', () => { isUserInteracting = true; });
-    map.on('moveend', () => { rotateGlobe(); });
+    map.on('dragstart', () => isInteracting = true);
+    map.on('dragend', () => isInteracting = false);
 
-    rotateGlobe();
+    rotate();
 </script>
-
 </body>
 </html>
