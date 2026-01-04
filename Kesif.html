@@ -19,14 +19,15 @@
     }
     .back-btn:hover { background: #fff; color: #000; }
 
-    /* Sağ alttaki reklamları senin için soluklaştırdım */
-    .mapboxgl-ctrl-attrib, .mapboxgl-ctrl-logo {
-        opacity: 0.2 !important;
-        transition: 0.5s;
+    /* Sağ tarafa kontrol butonları ekledik */
+    .mapboxgl-ctrl-group {
+        background: rgba(255,255,255,0.1) !important;
+        border: 1px solid rgba(255,255,255,0.2) !important;
+        backdrop-filter: blur(5px);
     }
-    .mapboxgl-ctrl-attrib:hover, .mapboxgl-ctrl-logo:hover {
-        opacity: 1 !important;
-    }
+    .mapboxgl-ctrl-icon { filter: invert(1); } /* Butonları beyaz yapar */
+
+    .mapboxgl-ctrl-attrib, .mapboxgl-ctrl-logo { opacity: 0.1; }
 </style>
 </head>
 <body>
@@ -35,7 +36,6 @@
 <div id="map"></div>
 
 <script>
-    // Token'ın buraya sabitlendi
     mapboxgl.accessToken = 'pk.eyJ1IjoiYWRlbTk5MTciLCJhIjoiY21rMDF6YXNjNmNtYzNlczU5YTUyYXUzMCJ9.mjaJaz3MfODoSZrL2wVKJw';
     
     const map = new mapboxgl.Map({
@@ -44,21 +44,23 @@
         projection: 'globe', 
         zoom: 2,
         center: [28.97, 41.00],
-        antialias: true
+        antialias: true,
+        // Trackpad hassasiyeti ayarları
+        wheelZoomRate: 1/150, // Zoom'u daha pürüzsüz yapar
+        dragRotate: true
     });
 
-    // Kontrolleri zorla aktif et (Sürükleme, Döndürme, Zoom)
-    map.dragPan.enable();
-    map.scrollZoom.enable();
-    map.dragRotate.enable();
-    map.touchZoomRotate.enable();
+    // MacBook kullanıcıları için ekrana kontrol butonları ekliyoruz
+    map.addControl(new mapboxgl.NavigationControl({
+        visualizePitch: true // Dünyayı eğmek için buton ekler
+    }), 'top-right');
 
     map.on('style.load', () => {
         map.setFog({
             'range': [0.5, 10],
-            'color': '#000000',
-            'high-color': '#000000',
-            'space-color': '#000000',
+            'color': '#000',
+            'high-color': '#000',
+            'space-color': '#000',
             'horizon-blend': 0.02
         });
     });
@@ -67,24 +69,23 @@
     map.on('click', (e) => {
         map.flyTo({
             center: [e.lngLat.lng, e.lngLat.lat],
-            zoom: 16,
+            zoom: 17,
             pitch: 60,
             duration: 8000,
             essential: true
         });
     });
 
-    // Otomatik Dünya Dönüşü (Etkileşim yoksa çalışır)
+    // Otomatik Dönüş Mantığı
     let isUserInteracting = false;
     function rotateGlobe() {
         if (!isUserInteracting && map.getZoom() < 5) {
             const center = map.getCenter();
-            center.lng -= 0.2; // Dönüş hızı
+            center.lng -= 0.2;
             map.easeTo({ center, duration: 0, easing: (n) => n });
         }
     }
 
-    // Kullanıcı dokunduğunda otomatiği durdur, bırakınca başlat
     map.on('mousedown', () => { isUserInteracting = true; });
     map.on('mouseup', () => { isUserInteracting = false; });
     map.on('touchstart', () => { isUserInteracting = true; });
