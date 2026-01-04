@@ -4,155 +4,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hmmm</title>
-    <link rel="icon" type="image/jpeg" href="logo.jpeg">
     <style>
         body { 
             background-color: #f4f4f4; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            padding: 20px; 
             margin: 0; 
-            font-family: sans-serif; 
+            padding: 10px;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        /* Müzik Barı - Geniş ve Görünür */
+        /* Müzik Barı Mobilde Taşıyıcıyı Aşmasın */
         .music-container {
             width: 100%;
             display: flex;
             justify-content: center;
-            margin-top: 20px;
-            margin-bottom: 20px;
+            margin: 20px 0;
         }
         audio { 
-            width: 500px; /* Daha geniş bar */
-            height: 45px; 
+            width: 90%; 
+            max-width: 500px; 
         }
 
         .back-link {
             text-decoration: none;
             color: #888;
-            font-size: 14px;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
+            display: block;
         }
 
-        /* Galeri - Fotoğrafları Orijinal Oranında Tutar */
+        /* GALERİ - GRİD SİSTEMİ (KESİN ÇÖZÜM) */
         .gallery {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Yan yana kesinlikle 2 adet */
+            gap: 10px; /* Aralarındaki boşluk */
             width: 100%;
-            max-width: 1200px;
+            max-width: 1000px;
+            padding: 5px;
+        }
+
+        /* Bilgisayarda (Geniş Ekran) 4'lü görünsün dersen */
+        @media (min-width: 900px) {
+            .gallery {
+                grid-template-columns: repeat(4, 1fr);
+            }
         }
 
         .gallery img {
-        width: auto;
-        max-width: 280px;
-        height: auto;
-        max-height: 280px;
-        object-fit: contain;
-        cursor: pointer;
-        
-        /* NETLİK AYARLARI */
-        image-rendering: -webkit-optimize-contrast; /* Safari ve Chrome için keskinlik */
-        image-rendering: crisp-edges;               /* Firefox için keskinlik */
-        -ms-interpolation-mode: nearest-neighbor;   /* IE için */
-    }
+            width: 100%; /* Kendi kutusuna tam sığsın */
+            aspect-ratio: 1 / 1; /* Kare yapar */
+            object-fit: cover; /* Bozulmadan sığdırır */
+            cursor: pointer;
+            border-radius: 8px;
+            image-rendering: -webkit-optimize-contrast;
+        }
 
-        /* TAM EKRAN MODU - KALİTEYİ KORUYAN AYARLAR */
+        /* Modal (Büyütme) */
         #modal {
             display: none;
             position: fixed;
             z-index: 9999;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.98); /* Daha koyu arka plan detayı artırır */
+            background: rgba(0,0,0,0.95);
             justify-content: center;
             align-items: center;
-            cursor: zoom-out;
         }
-
-        /* TAM EKRAN MODU - MAKSİMUM KALİTE */
-    #modal img {
-        max-width: 100%; /* Fotoğrafın taşmasını engeller ama küçültmez */
-        max-height: 100vh;
-        object-fit: contain;
-        
-        /* KALİTE KAYBINI ÖNLEYEN KRİTİK KOMUTLAR */
-        image-rendering: auto; 
-        image-rendering: -webkit-optimize-contrast;
-        image-rendering: high-quality; /* En yüksek render kalitesi */
-        
-        /* Piksellenmeyi önlemek için donanım hızlandırma */
-        transform: translateZ(0);
-        backface-visibility: hidden;
         #modal img {
-    max-width: 95%;
-    max-height: 95%;
-    object-fit: contain;
-    /* Görüntüye hafif bir keskinlik (sharpness) verir */
-    filter: contrast(1.05) saturate(1.05) brightness(1.02);
-    image-rendering: -webkit-optimize-contrast;
-            /* Galeri Temel Düzeni */
-.gallery {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px; /* Fotoğraflar arası boşluk */
-    width: 100%;
-    max-width: 1200px;
-    padding: 10px;
-    box-sizing: border-box;
-}
-
-/* Masaüstü (Bilgisayar) Boyutu */
-.gallery img {
-    width: 250px; /* Bilgisayarda sabit genişlik */
-    height: 250px;
-    object-fit: cover; /* Kare ve düzgün görünmesi için */
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-/* MOBİL ÖZEL AYAR (Telefonlar için) */
-@media (max-width: 600px) {
-    .gallery {
-        gap: 8px; /* Mobilde boşluğu biraz daralttık */
-    }
-
-    .gallery img {
-        /* Yan yana 2 tane olması için (Boşlukları düşerek %45 civarı yapıyoruz) */
-        width: calc(50% - 10px); 
-        height: 180px; /* Mobilde yükseklik biraz daha az olsun ki ekrana sığsın */
-        max-width: none; /* Önceki sınırlamaları kaldırır */
-        object-fit: cover;
-    }
-    
-    /* Müzik barını mobilde ekrana sığdır */
-    audio {
-        width: 100% !important;
-        max-width: 300px;
-}
-    }
-</style>
+            max-width: 95%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+    </style>
 </head>
 <body>
 
     <div class="music-container">
         <audio id="myAudio" controls>
-            <source src="https://birey31.github.io/askim.mp3" type="audio/mpeg">
+            <source src="https://birey31.github.io/muzik.mp3" type="audio/mpeg">
         </audio>
     </div>
 
     <a href="index.html" class="back-link">← Dön Tatlım</a>
 
     <div class="gallery">
-        <img src="ask.jpg" onclick="openModal(this.src)">
-        <img src="ask1.jpg" onclick="openModal(this.src)">
-        <img src="ask2.jpeg" onclick="openModal(this.src)">
-        <img src="ask3.jpeg" onclick="openModal(this.src)">
-        <img src="pexels-pixabay-33045.jpg" onclick="openModal(this.src)">
+        <img src="ask.jpg?raw=true" onclick="openModal(this.src)">
+        <img src="ask1.jpg?raw=true" onclick="openModal(this.src)">
+        <img src="ask2.jpeg?raw=true" onclick="openModal(this.src)">
+        <img src="ask3.jpeg?raw=true" onclick="openModal(this.src)">
+        <img src="pexels-pixabay-33045.jpg?raw=true" onclick="openModal(this.src)">
     </div>
 
     <div id="modal" onclick="this.style.display='none'">
@@ -161,10 +102,7 @@
 
     <script>
         var audio = document.getElementById('myAudio');
-        var playlist = [
-            "https://birey31.github.io/askim.mp3",
-            "https://birey31.github.io/askim2.mp3"
-        ];
+        var playlist = ["https://birey31.github.io/askim.mp3", "https://birey31.github.io/askim2.mp3"];
         var currentTrack = 0;
 
         audio.onended = function() {
