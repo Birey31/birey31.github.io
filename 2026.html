@@ -2,93 +2,105 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Hmmm</title>
+    <title>2026 Hatıraları</title>
     <link rel="icon" type="image/jpeg" href="logo.jpeg">
     <style>
-    body { 
-        background-color: #f4f4f4; 
-        margin: 0; 
-        padding: 20px; 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        font-family: sans-serif; 
-    }
-
-    /* Galeriyi ortalayan ve boşlukları yöneten ana kutu */
-    .gallery {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center; /* Fotoğrafları merkeze toplar */
-        gap: 15px; /* Fotoğraflar arasındaki o istediğin boşluk */
-        width: 100%;
-        max-width: 1200px;
-        margin-top: 20px;
-    }
-
-    .gallery img {
-        width: auto; /* Genişliği zorlamaz, orijinalini korur */
-        max-width: 45%; /* Yan yana 2 tane sığacak şekilde sınırlar */
-        height: auto; /* Oranı bozmaz */
-        border-radius: 8px; /* Köşeleri hafif yumuşatır, daha şık durur */
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Hafif derinlik verir */
-        object-fit: contain;
-    }
-
-    /* Telefonlarda fotoğraflar tek tek ve daha büyük görünür */
-    @media (max-width: 600px) {
-        .gallery img {
-            max-width: 100%;
-        
-    /* Mobilde fotoğraflar tek tek görünsün */
-    @media (max-width: 600px) {
-        .gallery img {
-            width: 100%;
+        body { 
+            background-color: #f4f4f4; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 20px; 
+            margin: 0; 
+            font-family: sans-serif; 
         }
-    }
-</style>    
+
+        /* Müzik Çalar Bölümü - Sade ve Merkezde */
+        .music-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        audio {
+            width: 80%;
+            height: 35px;
+            filter: contrast(90%) brightness(105%); 
+        }
+
+        /* Dön Tatlım Yazısı - Eski Gri ve Şık Hali */
+        .back-link {
+            text-decoration: none;
+            color: #888; /* İstediğimiz o gri renk */
+            font-size: 14px;
+            margin-bottom: 30px;
+            transition: 0.3s;
+        }
+
+        .back-link:hover {
+            color: #000;
+        }
+
+        /* Galeri - Orijinal Boyut ve Aralıklı */
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px; /* Fotoğraflar arası boşluk */
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .gallery img {
+            max-width: 45%; /* Yan yana dizilmeleri için */
+            height: auto; /* Orijinal oran */
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 600px) {
+            .gallery img {
+                max-width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
 
-   <div class="music-container">
-    <audio id="myAudio" controls>
-        <source src="https://birey31.github.io/askim.mp3" type="audio/mpeg">
-    </audio>
-</div> 
-    <script>
-    var audio = document.getElementById('myAudio');
-    
-    // Çalacak şarkıların listesi
-    var playlist = [
-        "https://birey31.github.io/askim.mp3",
-        "https://birey31.github.io/askim2.mp3"
-    ];
-    
-    var currentTrack = 0;
-
-    // Şarkı bittiğinde bu fonksiyon çalışır
-    audio.onended = function() {
-        currentTrack++; // Bir sonraki şarkıya geç
-        if (currentTrack < playlist.length) {
-            audio.src = playlist[currentTrack];
-            audio.play(); // Otomatik olarak ikinciyi başlatır
-        } else {
-            // Liste bittiğinde istersen başa dönebilirsin:
-            currentTrack = 0;
-            audio.src = playlist[currentTrack];
-            // audio.play(); // Başa dönüp tekrar çalmasını istersen burayı aç
-        }
-    };
-</script>
+    <div class="music-container">
+        <audio id="myAudio" controls>
+            <source src="https://birey31.github.io/muzik.mp3" type="audio/mpeg">
+        </audio>
+    </div>
 
     <a href="index.html" class="back-link">← Dön Tatlım</a>
 
-<div class="gallery">
-    <img src="ask.jpg">
-    <img src="ask1.jpg">
-    <img src="ask2.jpeg">
-    <img src="ask3.jpeg">
-</div>
+    <div class="gallery">
+        <img src="ask.jpg">
+        <img src="ask1.jpg">
+        <img src="ask2.jpeg">
+        <img src="ask3.jpeg">
+    </div>
+
+    <script>
+        var audio = document.getElementById('myAudio');
+        var playlist = [
+            "https://birey31.github.io/muzik.mp3",
+            "https://birey31.github.io/ask1.jpg", // Not: Eğer bu bir müzikse .mp3 olmalı
+            "https://birey31.github.io/askim2.mp3"
+        ];
+        var currentTrack = 0;
+
+        audio.onended = function() {
+            currentTrack++;
+            if (currentTrack < playlist.length) {
+                audio.src = playlist[currentTrack];
+                audio.play();
+            }
+        };
+    </script>
 
 </body>
 </html>
