@@ -13,8 +13,6 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Reeha - Sergi</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
@@ -39,66 +37,66 @@
         }
 
         .top-bar {
-            position: absolute; 
-            top: 0; right: 0;
+            position: absolute; top: 0; right: 0;
             display: flex; gap: 15px; align-items: center;
             padding: 25px 30px; z-index: 1000;
         }
 
         .back-btn {
-            position: fixed; 
-            top: 25px; left: 30px;
+            position: fixed; top: 25px; left: 30px;
             background: none; border: none; color: var(--text);
             font-size: 24px; cursor: pointer; opacity: 0.6;
             transition: 0.3s; padding: 10px; line-height: 1;
-            z-index: 10001; 
-            -webkit-tap-highlight-color: transparent;
+            z-index: 10001; -webkit-tap-highlight-color: transparent;
         }
-        .back-btn:hover { opacity: 1; transform: translateX(-3px); }
 
         .nav-btn-minimal {
             background: none; border: none; color: var(--text);
-            cursor: pointer; font-size: 1.2rem; 
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
-            padding: 10px; outline: none;
-            -webkit-tap-highlight-color: transparent;
+            cursor: pointer; font-size: 1.2rem; transition: 0.3s;
+            padding: 10px; outline: none; -webkit-tap-highlight-color: transparent;
         }
-        .nav-btn-minimal:active { transform: scale(0.8); }
 
         .theme-toggle .sun-emoji { display: none; }
         .theme-toggle .moon-emoji { display: block; }
         [data-theme="dark"] .sun-emoji { display: block; }
         [data-theme="dark"] .moon-emoji { display: none; }
 
+        /* GALERİ AYARLARI */
         .gallery {
             column-count: 2; column-gap: 15px; 
             width: 100%; max-width: 1200px; 
-            margin-top: 100px;
-            margin-bottom: 50px;
+            margin-top: 100px; margin-bottom: 50px;
+            transition: filter 0.5s ease;
         }
         @media (min-width: 768px) { .gallery { column-count: 4; column-gap: 25px; } }
 
         .gallery img {
             width: 100%; display: block; margin-bottom: 15px; border-radius: 2px;
             cursor: pointer; filter: grayscale(100%); 
-            transition: filter 0.8s ease, transform 0.5s ease, box-shadow 0.5s ease;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 0; animation: imgFadeUp 1s forwards;
             -webkit-touch-callout: none !important;
             user-select: none !important;
         }
 
-        .gallery img:active, .gallery img:hover {
-            transform: scale(1.04); z-index: 10;
+        /* ODAKLANAN FOTOĞRAF (RENKLİ VE BÜYÜK) */
+        .gallery img.focused {
             filter: grayscale(0%) !important;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transform: scale(1.08);
+            z-index: 100;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
 
-        .gallery:has(img:active) img:not(:active) {
-            filter: grayscale(100%) blur(4px); opacity: 0.6;
+        /* DİĞERLERİNİ BULANIKLAŞTIRMA */
+        .gallery.has-focus img:not(.focused) {
+            filter: grayscale(100%) blur(5px);
+            opacity: 0.4;
+            transform: scale(0.95);
         }
 
         @keyframes imgFadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* MODAL */
         #modal {
             display: none; position: fixed; z-index: 10002; top: 0; left: 0;
             width: 100%; height: 100%; background: var(--bg);
@@ -118,11 +116,9 @@
         .modal-side { position: absolute; top: 0; height: 100%; width: 45%; z-index: 2; cursor: pointer; }
         .side-left { left: 0; }
         .side-right { right: 0; }
-
-        .gallery img.reveal { filter: grayscale(0%) !important; }
     </style>
 </head>
-<body>
+<body onclick="resetFocus(event)">
 
 <button class="back-btn" onclick="goHome()">←</button>
 
@@ -134,19 +130,19 @@
     </button>
 </div>
 
-<audio id="bgMusic">
+<audio id="bgMusic" loop>
     <source src="askim.mp3" type="audio/mpeg">
+    <source src="askim2.mp3" type="audio/mpeg">
 </audio>
 
-<div class="gallery">
-    <img src="ask.jpg" onclick="openModal(this.src)">
-    <img src="ask1.jpg" onclick="openModal(this.src)">
-    <img src="ask2.jpeg" onclick="openModal(this.src)">
-    <img src="ask3.jpeg" onclick="openModal(this.src)">
-    <img src="ask4.jpeg" onclick="openModal(this.src)">
-    <img src="ask5.jpeg" onclick="openModal(this.src)">
-    <img src="ask6.jpeg" onclick="openModal(this.src)">
-    <img src="ask7.jpeg" onclick="openModal(this.src)">
+<div class="gallery" id="mainGallery">
+    <img src="ask.jpg" onclick="handleImageClick(event, this)">
+    <img src="ask1.jpg" onclick="handleImageClick(event, this)">
+    <img src="ask2.jpeg" onclick="handleImageClick(event, this)">
+    <img src="ask3.jpeg" onclick="handleImageClick(event, this)">
+    <img src="ask4.jpeg" onclick="handleImageClick(event, this)">
+    <img src="ask5.jpeg" onclick="openModal(this.src)"> <img src="ask6.jpeg" onclick="handleImageClick(event, this)">
+    <img src="ask7.jpeg" onclick="handleImageClick(event, this)">
 </div>
 
 <div id="modal">
@@ -158,7 +154,9 @@
 
 <script>
     const body = document.documentElement;
+    const gallery = document.getElementById('mainGallery');
 
+    // TEMA AYARLARI
     function applyTheme() {
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'light') body.removeAttribute('data-theme');
@@ -176,76 +174,40 @@
         }
     }
 
+    // FOTOĞRAF TIKLAMA MANTIĞI (İstediğin Yeni Özellik)
+    function handleImageClick(event, img) {
+        event.stopPropagation(); // Body'deki resetFocus'u engeller
+        
+        if (img.classList.contains('focused')) {
+            // Eğer zaten seçiliyse 2. basışta modalı açar
+            openModal(img.src);
+        } else {
+            // İlk basışta odaklanır
+            document.querySelectorAll('.gallery img').forEach(i => i.classList.remove('focused'));
+            img.classList.add('focused');
+            gallery.classList.add('has-focus');
+        }
+    }
+
+    // Boşluğa basınca odaklanmayı sıfırla
+    function resetFocus(event) {
+        document.querySelectorAll('.gallery img').forEach(i => i.classList.remove('focused'));
+        gallery.classList.remove('has-focus');
+    }
+
     function goHome() {
         document.body.style.opacity = "0"; 
         setTimeout(() => { window.location.href = 'index.html'; }, 300);
     }
 
-    // PREMIUM MÜZİK SİSTEMİ (Çift Şarkı Destekli)
     const music = document.getElementById('bgMusic');
-    const tracks = ["askim.mp3", "askim2.mp3"];
-    let currentTrackIndex = 0;
-
     function toggleMusic() {
         const btn = document.getElementById('music-toggle');
-        if (music.paused) { 
-            music.play(); 
-            btn.innerHTML = "⏸"; 
-        } else { 
-            changeTrackPremium(btn);
-        }
+        if (music.paused) { music.play(); btn.innerHTML = "⏸"; } 
+        else { music.pause(); btn.innerHTML = "▶"; }
     }
 
-    function changeTrackPremium(btn) {
-        btn.style.opacity = "0.4";
-        // Fade Out
-        let fadeOut = setInterval(() => {
-            if (music.volume > 0.1) {
-                music.volume -= 0.1;
-            } else {
-                clearInterval(fadeOut);
-                // Sıradaki şarkıya geç
-                currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-                music.src = tracks[currentTrackIndex];
-                music.play();
-                // Fade In
-                let fadeIn = setInterval(() => {
-                    if (music.volume < 0.9) {
-                        music.volume += 0.1;
-                    } else {
-                        music.volume = 1;
-                        btn.style.opacity = "1";
-                        btn.innerHTML = "⏸";
-                        clearInterval(fadeIn);
-                    }
-                }, 50);
-            }
-        }, 50);
-    }
-
-    // Şarkı bittiğinde otomatik sonraki şarkıya geç
-    music.onended = function() {
-        const btn = document.getElementById('music-toggle');
-        changeTrackPremium(btn);
-    };
-
-    const observerOptions = { root: null, rootMargin: '-20% 0px -20% 0px', threshold: 0.2 };
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (window.innerWidth < 1024) {
-                if (entry.isIntersecting) entry.target.classList.add('reveal');
-                else entry.target.classList.remove('reveal');
-            }
-        });
-    }, observerOptions);
-
-    window.onload = () => {
-        document.querySelectorAll('.gallery img').forEach(img => {
-            observer.observe(img);
-            img.oncontextmenu = (e) => e.preventDefault();
-        });
-    };
-
+    // MODAL İŞLEMLERİ
     let currentIndex = 0;
     const galleryImgs = Array.from(document.querySelectorAll('.gallery img'));
 
@@ -273,6 +235,12 @@
 
     window.onpopstate = function() { document.getElementById('modal').style.display = 'none'; };
     document.addEventListener('contextmenu', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
+
+    window.onload = () => {
+        document.querySelectorAll('.gallery img').forEach(img => {
+            img.oncontextmenu = (e) => e.preventDefault();
+        });
+    };
 </script>
 
 </body>
