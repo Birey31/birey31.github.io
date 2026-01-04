@@ -2,6 +2,13 @@
 <html lang="tr">
 <head>
     <link rel="icon" type="image/png" href="mobillogo.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Reeha">
+
+    <meta name="theme-color" content="#0e0e0e" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#fcfcfc" media="(prefers-color-scheme: light)">
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RJ71VQXBKJ"></script>
     <script>
@@ -18,9 +25,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
 
     <style>
-        :root { --bg: #fcfcfc; --text: #1a1a1a; }
+        :root { 
+            --bg: #fcfcfc; 
+            --text: #1a1a1a; 
+            /* Sistem arayüzünü (yükleme çubuğu dahil) karartır */
+            color-scheme: light dark;
+        }
         [data-theme="dark"] { --bg: #0e0e0e; --text: #e0e0e0; }
 
+        /* Sayfa daha yüklenmeden arka planın beyazlamasını önle */
+        html {
+            background-color: #0e0e0e; /* Varsayılan koyu başlar */
+        }
+        
         body { 
             background-color: var(--bg); color: var(--text); 
             margin: 0; padding: 0 20px; transition: background-color 0.8s ease;
@@ -28,6 +45,11 @@
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh; -webkit-overflow-scrolling: touch;
             -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Yükleme barı ve scrollbar gizleme */
+        ::-webkit-scrollbar {
+            display: none;
         }
 
         body::before {
@@ -89,7 +111,7 @@
             .arrow-btn { font-size: 1rem; }
         }
 
-        /* GALERİ VE MODAL - AKICILIK GÜNCELLEMESİ */
+        /* GALERİ VE MODAL */
         .gallery { column-count: 2; column-gap: 15px; width: 100%; max-width: 1200px; margin-top: 100px; margin-bottom: 120px; }
         @media (min-width: 768px) { .gallery { column-count: 4; column-gap: 25px; } }
         
@@ -98,14 +120,12 @@
             filter: grayscale(100%); transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
             opacity: 0; 
             animation: imgFadeUp 0.8s ease-out forwards;
-            
-            /* DONANIM HIZLANDIRMA (Kasmayı önler) */
             will-change: transform, opacity;
             transform: translateZ(0);
             backface-visibility: hidden;
         }
 
-        /* KADEMELİ GEÇİŞ (STAGGER) */
+        /* STAGGER EFECT */
         .gallery img:nth-child(1) { animation-delay: 0.1s; }
         .gallery img:nth-child(2) { animation-delay: 0.2s; }
         .gallery img:nth-child(3) { animation-delay: 0.3s; }
@@ -175,8 +195,13 @@
 
     function applyTheme() {
         const savedTheme = localStorage.getItem('theme') || 'dark';
-        if (savedTheme === 'light') body.removeAttribute('data-theme');
-        else body.setAttribute('data-theme', 'dark');
+        if (savedTheme === 'light') {
+            body.removeAttribute('data-theme');
+            document.querySelector('html').style.backgroundColor = "#fcfcfc";
+        } else {
+            body.setAttribute('data-theme', 'dark');
+            document.querySelector('html').style.backgroundColor = "#0e0e0e";
+        }
     }
     applyTheme();
 
@@ -184,9 +209,11 @@
         if (body.hasAttribute('data-theme')) {
             body.removeAttribute('data-theme');
             localStorage.setItem('theme', 'light');
+            document.querySelector('html').style.backgroundColor = "#fcfcfc";
         } else {
             body.setAttribute('data-theme', 'dark');
             localStorage.setItem('theme', 'dark');
+            document.querySelector('html').style.backgroundColor = "#0e0e0e";
         }
     }
 
@@ -238,7 +265,6 @@
         document.getElementById('modalImg').src = src;
         document.getElementById('modal').style.display = 'flex';
         
-        // MÜZİK BARINI GİZLE
         playerBar.style.opacity = "0";
         playerBar.style.pointerEvents = "none";
         
@@ -247,8 +273,6 @@
 
     function closeModal() {
         document.getElementById('modal').style.display = 'none';
-        
-        // MÜZİK BARINI TEKRAR GÖSTER
         playerBar.style.opacity = "1";
         playerBar.style.pointerEvents = "auto";
         
