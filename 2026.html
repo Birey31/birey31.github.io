@@ -57,7 +57,7 @@
             transition: 0.3s; padding: 10px; z-index: 10001;
         }
 
-        /* YENİ NESİL PLAYER PANEL (RAFİNE EDİLMİŞ) */
+        /* PLAYER PANEL */
         .player-container {
             position: fixed; bottom: 35px; left: 50%;
             transform: translateX(-50%);
@@ -68,7 +68,7 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             z-index: 10005;
             box-shadow: 0 15px 45px rgba(0,0,0,0.12);
-            transition: all 0.3s ease;
+            transition: opacity 0.5s ease, transform 0.3s ease; /* Yumuşak gizlenme için */
         }
         [data-theme="dark"] .player-container { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); }
 
@@ -77,14 +77,12 @@
         .arrow-btn:hover { opacity: 1; transform: scale(1.1); }
         .play-pause-btn { font-family: 'Playfair Display', serif; font-weight: bold; letter-spacing: 4px; }
 
-        /* MASAÜSTÜ BOYUTLARI - KÜÇÜLTÜLDÜ */
         @media (min-width: 769px) {
             .player-container { gap: 25px; padding: 10px 30px; min-width: 200px; }
             .play-pause-btn { font-size: 0.8rem; min-width: 70px; }
             .arrow-btn { font-size: 1.1rem; }
         }
 
-        /* TELEFON BOYUTLARI */
         @media (max-width: 768px) {
             .player-container { gap: 20px; padding: 10px 25px; bottom: 25px; min-width: 160px; }
             .play-pause-btn { font-size: 0.75rem; min-width: 60px; letter-spacing: 3px; }
@@ -97,11 +95,12 @@
         .gallery img { width: 100%; display: block; margin-bottom: 15px; border-radius: 2px; cursor: pointer; filter: grayscale(100%); transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; animation: imgFadeUp 1s forwards; }
         .gallery img.focused { filter: grayscale(0%) !important; transform: scale(1.08); z-index: 100; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
         .gallery.has-focus img:not(.focused) { filter: grayscale(100%) blur(5px); opacity: 0.4; transform: scale(0.95); }
+        
         @keyframes imgFadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         #modal { display: none; position: fixed; z-index: 10002; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); justify-content: center; align-items: center; backdrop-filter: blur(10px); }
-        #modal img { max-width: 88%; max-height: 82vh; object-fit: contain; }
-        .close-btn { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); font-size: 11px; letter-spacing: 3px; cursor: pointer; opacity: 0.4; }
+        #modal img { max-width: 88%; max-height: 82vh; object-fit: contain; transition: opacity 0.15s ease; }
+        .close-btn { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); font-size: 11px; letter-spacing: 3px; cursor: pointer; opacity: 0.4; z-index: 10003; }
         .modal-side { position: absolute; top: 0; height: 100%; width: 45%; z-index: 2; cursor: pointer; }
     </style>
 </head>
@@ -113,7 +112,7 @@
     <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()"></button>
 </div>
 
-<div class="player-container" onclick="event.stopPropagation()">
+<div class="player-container" id="playerBar" onclick="event.stopPropagation()">
     <button class="player-btn arrow-btn" onclick="changeTrack(-1)">←</button>
     <button class="player-btn play-pause-btn" id="music-toggle" onclick="toggleMusic()"><span>▶</span></button>
     <button class="player-btn arrow-btn" onclick="changeTrack(1)">→</button>
@@ -145,6 +144,7 @@
     const body = document.documentElement;
     const gallery = document.getElementById('mainGallery');
     const music = document.getElementById('bgMusic');
+    const playerBar = document.getElementById('playerBar');
     const tracks = ["askim.mp3", "askim2.mp3"];
     let currentTrackIndex = 0;
 
@@ -186,8 +186,9 @@
 
     function handleImageClick(event, img) {
         event.stopPropagation();
-        if (img.classList.contains('focused')) { openModal(img.src); } 
-        else {
+        if (img.classList.contains('focused')) { 
+            openModal(img.src); 
+        } else {
             document.querySelectorAll('.gallery img').forEach(i => i.classList.remove('focused'));
             img.classList.add('focused');
             gallery.classList.add('has-focus');
@@ -211,11 +212,21 @@
         currentIndex = galleryImgs.findIndex(img => img.src === src);
         document.getElementById('modalImg').src = src;
         document.getElementById('modal').style.display = 'flex';
+        
+        // MÜZİK BARINI GİZLE
+        playerBar.style.opacity = "0";
+        playerBar.style.pointerEvents = "none";
+        
         history.pushState({modalOpen: true}, "");
     }
 
     function closeModal() {
         document.getElementById('modal').style.display = 'none';
+        
+        // MÜZİK BARINI TEKRAR GÖSTER
+        playerBar.style.opacity = "1";
+        playerBar.style.pointerEvents = "auto";
+        
         if (history.state && history.state.modalOpen) history.back();
     }
 
