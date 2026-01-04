@@ -23,18 +23,20 @@ const tracks = ["askim.mp3", "askim2.mp3"];
 let currentTrack = 0;
 
 function toggleMusic() {
-    const btn = document.getElementById('music-toggle'); // Butonu seçiyoruz
+    const btn = document.getElementById('music-toggle');
 
     if (!music.src || music.src === "") {
         music.src = tracks[currentTrack];
     }
 
     if (music.paused) {
-        music.play().catch(e => console.log("Müzik hatası:", e));
-        btn.innerHTML = "⏸"; // Çalarken her yerde bu simge gözüksün
+        music.play().catch(e => console.log("Hata:", e));
+        btn.innerHTML = "⏸";
+        btn.style.color = "var(--text)"; // Rengi burada da zorla body rengi yapıyoruz
     } else {
         music.pause();
-        btn.innerHTML = "▶"; // Durunca her yerde bu simge gözüksün
+        btn.innerHTML = "▶";
+        btn.style.color = "var(--text)"; // Rengi burada da zorla body rengi yapıyoruz
     }
 }
 
