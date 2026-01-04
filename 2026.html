@@ -99,9 +99,10 @@
         <img src="pexels-pixabay-33045.jpg?raw=true" onclick="openModal(this.src)">
     </div>
 
-    <div id="modal" onclick="this.style.display='none'">
-        <img id="modalImg">
-    </div>
+   <div id="modal">
+    <img id="modalImg">
+    <button class="close-btn" onclick="closeModal()">Geri</button>
+</div>
 
     <script>
         var audio = document.getElementById('myAudio');
