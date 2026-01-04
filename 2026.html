@@ -21,13 +21,13 @@
 
         body { 
             background-color: var(--bg); color: var(--text); 
-            margin: 0; padding: 20px; transition: background-color 0.4s ease;
+            margin: 0; padding: 20px; transition: background-color 0.4s ease, opacity 0.3s ease;
             font-family: 'Playfair Display', serif;
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh; -webkit-overflow-scrolling: touch;
+            opacity: 1;
         }
 
-        /* Grain Efekti */
         body::before {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Noise_Texture.png');
@@ -36,29 +36,21 @@
 
         header {
             position: fixed; top: 0; left: 0; width: 100%; 
-            display: flex; justify-content: flex-end; align-items: center;
-            padding: 30px; box-sizing: border-box; z-index: 10000;
+            display: flex; justify-content: space-between; 
+            align-items: center; padding: 30px; box-sizing: border-box; z-index: 10000;
         }
 
-        .nav-controls { display: flex; gap: 15px; }
-
-        /* index.html'deki buton stili */
-        #theme-toggle, #music-toggle {
-            background: none;
-            border: none;
-            color: var(--text);
-            cursor: pointer;
-            font-size: 1.2rem;
-            opacity: 0.5;
-            transition: opacity 0.3s ease;
-            padding: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Minimalist İkonik Buton Stili (index.html ile birebir) */
+        .nav-btn-minimal {
+            background: none; border: none; color: var(--text);
+            cursor: pointer; font-size: 1.2rem; opacity: 0.5;
+            transition: opacity 0.3s ease; padding: 10px;
+            display: flex; align-items: center; justify-content: center;
             -webkit-tap-highlight-color: transparent;
         }
+        .nav-btn-minimal:hover { opacity: 1; }
 
-        #theme-toggle:hover, #music-toggle:hover { opacity: 1; }
+        .nav-controls { display: flex; gap: 10px; }
 
         img {
             -webkit-touch-callout: none !important; 
@@ -67,7 +59,6 @@
             touch-action: none;                      
         }
 
-        /* Long Press Preview */
         .preview-active .gallery img:not(.img-previewing) {
             filter: blur(12px) grayscale(100%); opacity: 0.2;
         }
@@ -86,7 +77,6 @@
         }
         @keyframes imgFadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Modal */
         #modal {
             display: none; position: fixed; z-index: 99999; top: 0; left: 0;
             width: 100%; height: 100%; background: var(--bg);
@@ -110,9 +100,11 @@
 <body>
 
     <header>
+        <button class="nav-btn-minimal" onclick="goHome()">←</button>
+        
         <div class="nav-controls">
-            <button id="music-toggle" onclick="toggleMusic()">▶</button>
-            <button id="theme-toggle" onclick="toggleTheme()">🌙</button>
+            <button class="nav-btn-minimal" id="music-toggle" onclick="toggleMusic()">▶</button>
+            <button class="nav-btn-minimal" id="theme-toggle" onclick="toggleTheme()">🌙</button>
         </div>
     </header>
 
@@ -135,7 +127,13 @@
     </div>
 
     <script>
-        // 1. TEMA KONTROLÜ (index.html ile birebir)
+        // ANA SAYFAYA GEÇİŞ
+        function goHome() {
+            document.body.style.opacity = "0"; 
+            setTimeout(() => { window.location.href = 'index.html'; }, 200);
+        }
+
+        // TEMA (index.html ile birebir)
         function toggleTheme() {
             const html = document.documentElement;
             const btn = document.getElementById('theme-toggle');
@@ -150,20 +148,15 @@
             }
         }
 
-        // 2. MÜZİK KONTROLÜ
+        // MÜZİK
         const music = document.getElementById('bgMusic');
         function toggleMusic() {
             const btn = document.getElementById('music-toggle');
-            if (music.paused) { 
-                music.play(); 
-                btn.innerHTML = "⏸";
-            } else { 
-                music.pause(); 
-                btn.innerHTML = "▶";
-            }
+            if (music.paused) { music.play(); btn.innerHTML = "⏸"; } 
+            else { music.pause(); btn.innerHTML = "▶"; }
         }
 
-        // Sayfa yüklendiğinde tema ayarı
+        // TEMA YÜKLEME
         (function() {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
@@ -173,38 +166,15 @@
             }
         })();
 
-        // 3. LONG PRESS PREVIEW & ENGELLEME
-        document.addEventListener('contextmenu', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
-        let pressTimer, isLongPress = false;
+        // MODAL & NAVİGASYON (Tıklama ile İleri/Geri)
+        let currentIndex = 0;
         const galleryImgs = Array.from(document.querySelectorAll('.gallery img'));
 
-        galleryImgs.forEach(img => {
-            img.addEventListener('touchstart', () => {
-                isLongPress = false;
-                pressTimer = setTimeout(() => {
-                    isLongPress = true;
-                    img.classList.add('img-previewing');
-                    document.body.classList.add('preview-active');
-                    if (navigator.vibrate) navigator.vibrate(15);
-                }, 400);
-            }, {passive: true});
-            img.addEventListener('touchend', () => {
-                clearTimeout(pressTimer);
-                img.classList.remove('img-previewing');
-                document.body.classList.remove('preview-active');
-            });
-            img.addEventListener('touchmove', () => clearTimeout(pressTimer), {passive: true});
-        });
-
-        // 4. MODAL & NAVİGASYON
-        let currentIndex = 0;
         function openModal(src) {
-            if (!isLongPress) {
-                currentIndex = galleryImgs.findIndex(img => img.src === src);
-                document.getElementById('modalImg').src = src;
-                document.getElementById('modal').style.display = 'flex';
-                history.pushState({modalOpen: true}, "");
-            }
+            currentIndex = galleryImgs.findIndex(img => img.src === src);
+            document.getElementById('modalImg').src = src;
+            document.getElementById('modal').style.display = 'flex';
+            history.pushState({modalOpen: true}, "");
         }
 
         function closeModal() {
@@ -223,6 +193,9 @@
         }
 
         window.onpopstate = function() { document.getElementById('modal').style.display = 'none'; };
+
+        // LONG PRESS ENGELLEME (Korumalar)
+        document.addEventListener('contextmenu', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
     </script>
 </body>
 </html>
