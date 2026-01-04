@@ -5,9 +5,27 @@
     <title>Hmmm</title>
     <link rel="icon" type="image/jpeg" href="logo.jpeg">
     <style>
-        body { background-color: #f4f4f4; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: sans-serif; }
-        .year-link { font-size: 100px; color: #2b2826; text-decoration: none; font-weight: bold; transition: 0.3s; }
-        .year-link:hover { color: #ff5500; }
+        body { 
+    background-color: #f4f4f4; 
+    margin: 0; 
+    font-family: sans-serif; 
+}
+
+.year-link { 
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 24px; /* Yazıyı küçülttük */
+    color: #2b2826; 
+    text-decoration: none; 
+    font-weight: bold;
+    opacity: 0.8; /* Hafif transparan, daha estetik durur */
+}
+
+.year-link:hover {
+    opacity: 1; /* Sadece üzerine gelince netleşir, efekt yok */
+}
+        
     </style>
 </head>
 <body>
