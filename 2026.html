@@ -16,23 +16,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
 
     <style>
-        :root { --bg: #f5f5f3; --text: #1a1a1a; }
-        [data-theme="dark"] { --bg: #121212; --text: #e0e0e0; }
+        :root { --bg: #f5f5f3; --text: #1a1a1a; --accent: #888; }
+        [data-theme="dark"] { --bg: #121212; --text: #e0e0e0; --accent: #444; }
 
         body { 
             background-color: var(--bg); color: var(--text); 
-            margin: 0; padding: 20px;
+            margin: 0; padding: 20px; transition: background 0.5s ease;
             font-family: 'Playfair Display', serif;
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh; -webkit-overflow-scrolling: touch;
         }
 
+        /* Grain Efekti */
         body::before {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Noise_Texture.png');
             opacity: 0.04; pointer-events: none; z-index: 9999;
         }
 
+        /* Üst Kontroller */
+        .controls {
+            position: fixed; top: 20px; right: 20px; display: flex; gap: 15px; z-index: 10000;
+        }
+        .btn {
+            background: none; border: 1px solid var(--text); color: var(--text);
+            padding: 8px 12px; cursor: pointer; border-radius: 50px; font-size: 14px;
+        }
+
+        /* Görsel Koruma & Menü Engelleme */
         img {
             -webkit-touch-callout: none !important; 
             -webkit-user-select: none !important;    
@@ -41,42 +52,46 @@
             touch-action: none;                      
         }
 
+        /* Long Press Preview */
         .preview-active .gallery img:not(.img-previewing) {
-            filter: blur(12px) grayscale(100%);
-            opacity: 0.2;
+            filter: blur(12px) grayscale(100%); opacity: 0.2;
         }
         .img-previewing {
-            transform: scale(1.1) !important;
-            z-index: 10001;
-            filter: grayscale(0%) !important;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-            position: relative;
+            transform: scale(1.1) !important; z-index: 10001;
+            filter: grayscale(0%) !important; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
         }
 
         .gallery {
-            column-count: 2; column-gap: 20px; width: 100%; max-width: 1100px; margin-top: 100px;
+            column-count: 2; column-gap: 20px; width: 100%; max-width: 1100px; margin-top: 80px;
         }
         .gallery img {
             width: 100%; display: block; margin-bottom: 20px; border-radius: 2px;
-            cursor: pointer; filter: grayscale(100%); transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            cursor: pointer; filter: grayscale(100%); transition: all 0.4s ease;
             opacity: 0; animation: imgFadeUp 1s forwards;
         }
         @keyframes imgFadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* Modal */
         #modal {
             display: none; position: fixed; z-index: 99999; top: 0; left: 0;
             width: 100%; height: 100%; background: var(--bg);
             flex-direction: column; justify-content: center; align-items: center;
         }
-        #modal img { 
-            max-width: 90%; max-height: 80vh; object-fit: contain; 
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
+        #modal img { max-width: 90%; max-height: 80vh; object-fit: contain; transition: 0.3s; }
     </style>
 </head>
-<body>
+<body data-theme="light">
 
-    <div class="gallery" id="mainGallery">
+    <div class="controls">
+        <button class="btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        <button class="btn" onclick="toggleMusic()" id="musicBtn">🎵 Oynat</button>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="ask.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="gallery">
         <img src="ask.jpg" onclick="openModal(this.src)">
         <img src="ask1.jpg" onclick="openModal(this.src)">
         <img src="ask2.jpeg" onclick="openModal(this.src)">
@@ -85,16 +100,49 @@
 
     <div id="modal">
         <img id="modalImg">
-        <button onclick="closeModal()" style="margin-top:20px; background:none; border:1px solid var(--text); color:var(--text); padding:10px 20px; cursor:pointer; font-family: inherit;">Kapat</button>
+        <div style="margin-top: 20px; display: flex; gap: 20px;">
+            <button class="btn" onclick="navigate(-1)">← Geri</button>
+            <button class="btn" onclick="closeModal()">Kapat</button>
+            <button class="btn" onclick="navigate(1)">İleri →</button>
+        </div>
     </div>
 
     <script>
-        // 1. MENÜ ENGELLEME
+        // 1. TEMA VE MÜZİK KONTROLÜ
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('themeBtn');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.setAttribute('data-theme', 'dark');
+                btn.innerText = '☀️';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                btn.innerText = '🌙';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        const music = document.getElementById('bgMusic');
+        function toggleMusic() {
+            const btn = document.getElementById('musicBtn');
+            if (music.paused) {
+                music.play();
+                btn.innerText = '⏸ Durdur';
+            } else {
+                music.pause();
+                btn.innerText = '🎵 Oynat';
+            }
+        }
+
+        // Sayfa açıldığında tema hafızasını kontrol et
+        if (localStorage.getItem('theme') === 'dark') toggleTheme();
+
+        // 2. MENÜ ENGELLEME
         document.addEventListener('contextmenu', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
 
-        // 2. LONG PRESS PREVIEW
-        let pressTimer;
-        let isLongPress = false;
+        // 3. LONG PRESS PREVIEW
+        let pressTimer, isLongPress = false;
         const galleryImgs = Array.from(document.querySelectorAll('.gallery img'));
 
         galleryImgs.forEach(img => {
@@ -108,16 +156,15 @@
                 }, 400);
             }, {passive: true});
 
-            img.addEventListener('touchend', (e) => {
+            img.addEventListener('touchend', () => {
                 clearTimeout(pressTimer);
                 img.classList.remove('img-previewing');
                 document.body.classList.remove('preview-active');
             });
-
             img.addEventListener('touchmove', () => clearTimeout(pressTimer), {passive: true});
         });
 
-        // 3. MODAL, SWIPE VE GERİ TUŞU
+        // 4. MODAL, SWIPE VE GERİ TUŞU
         let currentIndex = 0;
         let touchStartX = 0;
 
@@ -150,27 +197,20 @@
             }, 200);
         }
 
-        // Swipe (Kaydırma) Kontrolü
-        const modal = document.getElementById('modal');
-        modal.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
-        modal.addEventListener('touchend', e => {
+        // Swipe (Kaydırma)
+        const modalArea = document.getElementById('modal');
+        modalArea.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+        modalArea.addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX;
-            if (touchStartX - touchEndX > 50) navigate(1); // Sola kaydır -> İleri
-            if (touchEndX - touchStartX > 50) navigate(-1); // Sağa kaydır -> Geri
+            if (touchStartX - touchEndX > 50) navigate(1);
+            if (touchEndX - touchStartX > 50) navigate(-1);
         }, {passive: true});
 
-        // Klavye Ok Tuşları
-        document.addEventListener('keydown', e => {
-            if (modal.style.display === 'flex') {
-                if (e.key === "ArrowRight") navigate(1);
-                if (e.key === "ArrowLeft") navigate(-1);
-                if (e.key === "Escape") closeModal();
-            }
-        });
-
+        // Geri Tuşu
         window.onpopstate = function() { document.getElementById('modal').style.display = 'none'; };
 
-        window.onclick = function(e) { if (e.target == modal) closeModal(); }
+        // Modal dışına tıklayınca kapat
+        window.onclick = function(e) { if (e.target == modalArea) closeModal(); }
     </script>
 </body>
 </html>
