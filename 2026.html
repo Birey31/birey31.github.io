@@ -72,14 +72,21 @@
             width: 100%; display: block; margin-bottom: 15px; border-radius: 2px;
             cursor: pointer; 
             filter: grayscale(100%); /* Başlangıç siyah beyaz */
-            transition: all 0.5s ease;
+            transition: filter 0.8s ease, transform 0.5s ease;
             opacity: 0; animation: imgFadeUp 1s forwards;
         }
 
-        /* Üstüne gelince renklenme özelliği */
-        .gallery img:hover {
-            filter: grayscale(0%);
-            transform: scale(1.02);
+        /* BİLGİSAYARA ÖZEL: Üstüne gelince renklenme */
+        @media (hover: hover) {
+            .gallery img:hover {
+                filter: grayscale(0%);
+                transform: scale(1.02);
+            }
+        }
+
+        /* TELEFONA ÖZEL: JS ile eklenecek 'reveal' sınıfı */
+        .gallery img.reveal {
+            filter: grayscale(0%) !important;
         }
 
         @keyframes imgFadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -96,7 +103,6 @@
             #modal img { max-width: 50%; } 
         }
         
-        /* Sağ-Sol Tıklama Alanları */
         .modal-side {
             position: absolute; top: 0; height: 100%; width: 45%; z-index: 2;
             cursor: pointer; -webkit-tap-highlight-color: transparent;
@@ -129,7 +135,7 @@
         <img src="ask1.jpg" onclick="openModal(this.src)">
         <img src="ask2.jpeg" onclick="openModal(this.src)">
         <img src="ask3.jpeg" onclick="openModal(this.src)">
-        </div>
+    </div>
 
     <div id="modal">
         <div class="close-btn" onclick="closeModal()">KAPAT</div>
@@ -168,6 +174,26 @@
             else { music.pause(); btn.innerHTML = "▶"; }
         }
 
+        // 4. TELEFONDA KAYDIRARAK RENKLENME (Scroll-Reveal)
+        const observerOptions = {
+            root: null,
+            threshold: 0.6 // Resmin %60'ı göründüğünde renklenir
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (window.innerWidth < 1024) { // Sadece telefon ve tabletlerde çalışsın
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('reveal');
+                    } else {
+                        entry.target.classList.remove('reveal');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.gallery img').forEach(img => observer.observe(img));
+
         // Sayfa yüklendiğinde tema kontrolü
         (function() {
             const savedTheme = localStorage.getItem('theme');
@@ -178,7 +204,7 @@
             }
         })();
 
-        // 4. MODAL VE NAVİGASYON
+        // 5. MODAL VE NAVİGASYON
         let currentIndex = 0;
         const galleryImgs = Array.from(document.querySelectorAll('.gallery img'));
 
@@ -206,8 +232,6 @@
         }
 
         window.onpopstate = function() { document.getElementById('modal').style.display = 'none'; };
-
-        // Güvenlik: Sağ tık engelleme
         document.addEventListener('contextmenu', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
     </script>
 </body>
