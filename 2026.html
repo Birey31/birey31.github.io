@@ -36,11 +36,23 @@
             opacity: 0.04; pointer-events: none; z-index: 9999;
         }
 
+        /* TEMA BUTONU DÜZELTME */
         .top-bar {
             position: absolute; top: 0; right: 0;
             display: flex; gap: 15px; align-items: center;
             padding: 25px 30px; z-index: 1000;
         }
+
+        .nav-btn-minimal {
+            background: none; border: none; color: var(--text);
+            cursor: pointer; font-size: 1.3rem; transition: 0.3s;
+            padding: 10px; outline: none; -webkit-tap-highlight-color: transparent;
+        }
+
+        .theme-toggle .sun-emoji { display: none; }
+        .theme-toggle .moon-emoji { display: block; }
+        [data-theme="dark"] .sun-emoji { display: block; }
+        [data-theme="dark"] .moon-emoji { display: none; }
 
         .back-btn {
             position: fixed; top: 25px; left: 30px;
@@ -50,17 +62,17 @@
             z-index: 10001; -webkit-tap-highlight-color: transparent;
         }
 
-        /* MODERN MÜZİK KONTROL PANELİ (SİMGELİ) */
+        /* PREMIUM MÜZİK KONTROL PANELİ */
         .player-container {
-            position: fixed; bottom: 30px; left: 50%;
+            position: fixed; bottom: 35px; left: 50%;
             transform: translateX(-50%);
-            display: flex; align-items: center; gap: 30px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            padding: 12px 35px; border-radius: 50px;
+            display: flex; align-items: center; gap: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(25px);
+            padding: 12px 35px; border-radius: 100px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 10005;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 45px rgba(0,0,0,0.2);
         }
 
         [data-theme="dark"] .player-container {
@@ -70,18 +82,24 @@
 
         .player-btn {
             background: none; border: none; color: var(--text);
-            font-size: 1.1rem; cursor: pointer;
-            opacity: 0.5; transition: 0.3s;
+            cursor: pointer; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             outline: none; -webkit-tap-highlight-color: transparent;
             display: flex; align-items: center; justify-content: center;
         }
-        .player-btn:hover { opacity: 1; }
+
+        /* Premium İleri-Geri Butonları */
+        .side-btn { font-size: 0.9rem; opacity: 0.35; letter-spacing: 2px; }
+        .side-btn:hover { opacity: 1; transform: scale(1.1); }
         
+        /* Başlat / Sus Butonu */
         .play-pause-btn { 
-            font-size: 1.5rem; opacity: 1; min-width: 40px; 
+            font-family: 'Playfair Display', serif;
+            font-size: 0.8rem; font-weight: bold; 
+            text-transform: uppercase; letter-spacing: 3px;
+            min-width: 130px; opacity: 1;
         }
 
-        /* GALERİ AYARLARI */
+        /* GALERİ */
         .gallery {
             column-count: 2; column-gap: 15px; 
             width: 100%; max-width: 1200px; 
@@ -95,19 +113,10 @@
             cursor: pointer; filter: grayscale(100%); 
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 0; animation: imgFadeUp 1s forwards;
-            -webkit-touch-callout: none !important;
         }
 
-        .gallery img.focused {
-            filter: grayscale(0%) !important;
-            transform: scale(1.08); z-index: 100;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-
-        .gallery.has-focus img:not(.focused) {
-            filter: grayscale(100%) blur(5px);
-            opacity: 0.4; transform: scale(0.95);
-        }
+        .gallery img.focused { filter: grayscale(0%) !important; transform: scale(1.08); z-index: 100; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .gallery.has-focus img:not(.focused) { filter: grayscale(100%) blur(5px); opacity: 0.4; transform: scale(0.95); }
 
         @keyframes imgFadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -135,9 +144,9 @@
 </div>
 
 <div class="player-container" onclick="event.stopPropagation()">
-    <button class="player-btn" onclick="changeTrack(-1)">⏮</button>
-    <button class="player-btn play-pause-btn" id="music-toggle" onclick="toggleMusic()">▶</button>
-    <button class="player-btn" onclick="changeTrack(1)">⏭</button>
+    <button class="player-btn side-btn" onclick="changeTrack(-1)">PREV</button>
+    <button class="player-btn play-pause-btn" id="music-toggle" onclick="toggleMusic()">RUHUMU DOYUR</button>
+    <button class="player-btn side-btn" onclick="changeTrack(1)">NEXT</button>
 </div>
 
 <audio id="bgMusic">
@@ -170,20 +179,39 @@
     let currentTrackIndex = 0;
 
     function applyTheme() {
-        const savedTheme = localStorage.getItem('theme');
+        const savedTheme = localStorage.getItem('theme') || 'dark';
         if (savedTheme === 'light') body.removeAttribute('data-theme');
         else body.setAttribute('data-theme', 'dark');
     }
     applyTheme();
 
     function toggleTheme() {
-        if (body.getAttribute('data-theme') === 'dark') {
+        if (body.hasAttribute('data-theme')) {
             body.removeAttribute('data-theme');
             localStorage.setItem('theme', 'light');
         } else {
             body.setAttribute('data-theme', 'dark');
             localStorage.setItem('theme', 'dark');
         }
+    }
+
+    function toggleMusic() {
+        const btn = document.getElementById('music-toggle');
+        if (music.paused) {
+            music.play();
+            btn.innerHTML = "SUS";
+        } else {
+            music.pause();
+            btn.innerHTML = "RUHUMU DOYUR";
+        }
+    }
+
+    function changeTrack(direction) {
+        const btn = document.getElementById('music-toggle');
+        currentTrackIndex = (currentTrackIndex + direction + tracks.length) % tracks.length;
+        music.src = tracks[currentTrackIndex];
+        music.play();
+        btn.innerHTML = "SUS";
     }
 
     function handleImageClick(event, img) {
@@ -197,33 +225,14 @@
         }
     }
 
-    function resetFocus(event) {
+    function resetFocus() {
         document.querySelectorAll('.gallery img').forEach(i => i.classList.remove('focused'));
         gallery.classList.remove('has-focus');
     }
 
     function goHome() {
         document.body.style.opacity = "0"; 
-        setTimeout(() => { window.location.href = 'index.html'; }, 300);
-    }
-
-    function toggleMusic() {
-        const btn = document.getElementById('music-toggle');
-        if (music.paused) {
-            music.play();
-            btn.innerHTML = "⏸";
-        } else {
-            music.pause();
-            btn.innerHTML = "▶";
-        }
-    }
-
-    function changeTrack(direction) {
-        const btn = document.getElementById('music-toggle');
-        currentTrackIndex = (currentTrackIndex + direction + tracks.length) % tracks.length;
-        music.src = tracks[currentTrackIndex];
-        music.play();
-        btn.innerHTML = "⏸";
+        setTimeout(() => { window.location.href = 'index.html'; }, 400);
     }
 
     music.onended = () => changeTrack(1);
