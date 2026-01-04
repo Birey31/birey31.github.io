@@ -1,159 +1,178 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html>
 <head>
-     <link rel="icon" type="image/png" href="logo.png">
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-RJ71VQXBKJ"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-RJ71VQXBKJ');
-</script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reeha</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
-    <a href="Kesif.html" class="nav-link" style="text-decoration: none; color: inherit; opacity: 0.5; transition: 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.5'">DÜNYA KEŞFİ</a>
-    <link rel="preload" as="image" href="logo.png">
-    
-    <meta name="theme-color" content="#121212">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
-    <link rel="icon" type="image/png" href="logo.png">
+    <meta charset="utf-8">
+    <title>Reeha - Şahsi Keşif Günlüğü</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
 
     <style>
-        :root { 
-            --bg: #f5f5f3; /* Müze duvarı beyazı */
-            --text: #1a1a1a; 
-            --accent: #8c8c8c;
-        }
-        [data-theme="dark"] { 
-            --bg: #121212; /* Derin gece siyahı */
-            --text: #e0e0e0; 
-            --accent: #404040;
+        body { margin: 0; padding: 0; background: #000; overflow: hidden; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+        
+        .top-bar {
+            position: absolute; top: 0; left: 0; width: 100%; height: 80px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
+            z-index: 100; display: flex; align-items: center; padding: 0 25px;
         }
 
-        body { 
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: var(--bg); 
-            color: var(--text);
-            font-family: 'Playfair Display', serif;
-            transition: background-color 0.4s ease, opacity 0.2s ease;
-            overflow: hidden;
-            opacity: 1;
+        .back-btn {
+            color: white; text-decoration: none; font-family: serif;
+            letter-spacing: 2px; font-size: 11px; opacity: 0.6; transition: 0.3s;
+            margin-right: 30px;
         }
 
-        .logo-link {
-            display: block;
-            text-decoration: none;
-            -webkit-tap-highlight-color: transparent;
-            animation: quickShow 0.5s ease-out forwards;
-            filter: grayscale(100%); /* Cool siyah-beyaz başlangıç */
-            transition: filter 0.5s ease, transform 0.3s ease;
+        /* PREMIUM POPUP TASARIMI */
+        .mapboxgl-popup-content {
+            background: rgba(0,0,0,0.95) !important;
+            color: white !important;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 0 !important;
+            padding: 5px !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-
-        .logo-link:hover {
-            filter: grayscale(0%); /* Üzerine gelince renklenir */
-            transform: scale(1.02);
-        }
-
-        .image-container {
-            width: 240px; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .image-container img {
-            width: 100%;
-            height: auto;
+        .popup-img { 
+            width: 100%; 
+            max-width: 400px; /* Fotoğrafı biraz daha büyük açar */
+            height: auto; 
             display: block;
         }
 
-
-
-        #theme-toggle {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            background: none;
-            border: none;
-            color: var(--text);
+        /* PREMIUM MİNYATÜR PİN TASARIMI */
+        .custom-marker {
+            width: 45px;
+            height: 45px;
+            border: 2px solid white;
+            background-size: cover;
+            background-position: center;
+            border-radius: 4px; /* Hafif yuvarlatılmış kare (Polaroid tarzı) */
             cursor: pointer;
-            z-index: 10000;
-            font-size: 1.2rem;
-            opacity: 0.5;
-            transition: opacity 0.3s ease;
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        .custom-marker:hover {
+            transform: scale(1.2) rotate(5deg);
+            box-shadow: 0 0 25px rgba(255,255,255,0.6);
+            z-index: 1000;
+        }
+        /* Pin'in altındaki küçük üçgen uç */
+        .custom-marker::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid white;
         }
 
-        #theme-toggle:hover { opacity: 1; }
-
-        @keyframes quickShow {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .mapboxgl-ctrl-geocoder { background-color: rgba(255, 255, 255, 0.05) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; }
+        .mapboxgl-ctrl-geocoder--input { color: white !important; font-family: serif; }
+        .mapboxgl-ctrl-bottom-right, .mapboxgl-ctrl-bottom-left { display: none; }
     </style>
 </head>
 <body>
 
-    <button id="theme-toggle" onclick="toggleTheme()">🌙</button>
+<div class="top-bar">
+    <a href="index.html" class="back-btn">← ANA SAYFA</a>
+    <div id="geocoder"></div>
+</div>
 
-    <a href="2026.html" class="logo-link" id="main-logo-link">
-        <div class="image-container">
-            <img src="logo.png" alt="Reeha Photography">
-        </div>
-    </a>
+<input type="file" id="photoInput" accept="image/*" style="display:none;">
+
+<div id="map"></div>
+
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYWRlbTk5MTciLCJhIjoiY21rMDF6YXNjNmNtYzNlczU5YTUyYXUzMCJ9.mjaJaz3MfODoSZrL2wVKJw';
     
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/satellite-v9', 
+        projection: 'globe', 
+        zoom: 2,
+        center: [28.97, 41.00],
+        antialias: true
+    });
 
-    <script>
-        document.getElementById('main-logo-link').addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetUrl = this.href; // href değerini direkt alır (2026.html)
-            document.body.style.opacity = "0"; 
-            setTimeout(() => {
-                window.location.href = targetUrl;
-            }, 150); 
-        });
+    const geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        mapboxgl: mapboxgl,
+        marker: false,
+        placeholder: 'KEŞİF NOKTASI ARA...',
+        zoom: 16
+    });
 
-        window.onpageshow = function(event) {
-            document.body.style.opacity = "1";
-        };
+    document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
 
-        function toggleTheme() {
-            const html = document.documentElement;
-            const btn = document.getElementById('theme-toggle');
-            if (html.getAttribute('data-theme') === 'dark') {
-                html.removeAttribute('data-theme');
-                btn.innerHTML = '🌙';
-                localStorage.setItem('theme', 'light');
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                btn.innerHTML = '☀️';
-                localStorage.setItem('theme', 'dark');
-            }
+    let selectedCoords = null;
+    let savedMarkers = JSON.parse(localStorage.getItem('myMarkers')) || [];
+
+    map.on('click', (e) => {
+        // Sadece harita katmanına tıklandığında (butonlara vs değil)
+        if (e.originalEvent.target.className.includes('mapboxgl-canvas')) {
+            selectedCoords = e.lngLat;
+            document.getElementById('photoInput').click();
         }
+    });
 
-        (function() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                const btn = document.getElementById('theme-toggle');
-                if(btn) btn.innerHTML = '☀️';
-            }
-        })();
-        // URL Temizleme: Instagram'dan gelen gereksiz takip kodlarını siler
-if (window.location.search) {
-    const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-    window.history.replaceState({}, document.title, cleanUrl);
-}
-    </script>
+    document.getElementById('photoInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const imageUrl = event.target.result;
+            const newMarker = { lng: selectedCoords.lng, lat: selectedCoords.lat, img: imageUrl };
+            
+            addMarkerToMap(newMarker);
+            savedMarkers.push(newMarker);
+            localStorage.setItem('myMarkers', JSON.stringify(savedMarkers));
+        };
+        reader.readAsDataURL(file);
+    });
+
+    function addMarkerToMap(data) {
+        const el = document.createElement('div');
+        el.className = 'custom-marker';
+        // Küçük önizleme resmi pinin içinde görünür
+        el.style.backgroundImage = `url(${data.img})`;
+
+        const popup = new mapboxgl.Popup({ offset: 30, maxWidth: 'none' })
+            .setHTML(`<img src="${data.img}" class="popup-img">`);
+
+        new mapboxgl.Marker(el)
+            .setLngLat([data.lng, data.lat])
+            .setPopup(popup)
+            .addTo(map);
+    }
+
+    map.on('load', () => {
+        savedMarkers.forEach(m => addMarkerToMap(m));
+    });
+
+    // Otomatik Dönüş Kontrolü
+    let isSpinning = true;
+    map.on('mousedown', () => isSpinning = false);
+    geocoder.on('result', () => isSpinning = false);
+
+    function rotateGlobe() {
+        if (isSpinning && map.getZoom() < 5) {
+            const center = map.getCenter();
+            center.lng -= 0.15;
+            map.easeTo({ center, duration: 0, easing: (n) => n });
+        }
+    }
+    map.on('moveend', () => { if (isSpinning) rotateGlobe(); });
+    map.on('style.load', () => {
+        map.setFog({ 'color': '#000', 'high-color': '#000', 'space-color': '#000' });
+        rotateGlobe();
+    });
+</script>
+
 </body>
 </html>
