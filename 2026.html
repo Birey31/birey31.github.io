@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hmmm</title>
-    <link rel="icon" type="image/jpeg" href="logo.jpeg">
+    <title>2026</title>
     <style>
-        /* Genel Sayfa Düzeni */
         body { 
             background-color: #f4f4f4; 
             display: flex; 
@@ -17,7 +15,7 @@
             font-family: sans-serif; 
         }
 
-        /* Müzik Çalar - Sade Tasarım */
+        /* Müzik Barı */
         .music-container {
             width: 100%;
             display: flex;
@@ -25,74 +23,100 @@
             margin-top: 20px;
             margin-bottom: 15px;
         }
+        audio { width: 280px; height: 35px; }
 
-        audio {
-            width: 300px;
-            height: 35px;
-            filter: contrast(90%) brightness(105%); 
-        }
-
-        /* Dön Tatlım Linki - Eski Gri ve Sade Hali */
+        /* Dön Tatlım Yazısı */
         .back-link {
             text-decoration: none;
             color: #888;
             font-size: 14px;
             margin-bottom: 40px;
-            transition: 0.3s;
         }
 
-        .back-link:hover {
-            color: #000;
-        }
-
-        /* Galeri - Fotoğrafların Şeklini Bozmayan Kare Dizilim */
+        /* Galeri Düzeni */
         .gallery {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 10px; /* Fotoğraflar arası ince boşluk */
+            gap: 10px;
             width: 100%;
             max-width: 1000px;
         }
 
+        /* Fotoğrafların Orijinal Şekli Bozulmadan Kare Görünmesi */
         .gallery img {
-            width: 150px; /* Önizleme genişliği */
-            height: 150px; /* Önizleme yüksekliği */
-            object-fit: cover; /* Fotoğrafı kutuya sığdırır, asla ezmez */
+            width: 150px;
+            height: 150px;
+            object-fit: cover; /* Kare kutuya sığdırır */
             cursor: pointer;
             border-radius: 4px;
-            transition: transform 0.2s;
-            border: none; /* Kenar beyazlıklarını siler */
+            border: none;
             display: block;
         }
 
-        .gallery img:hover {
-            transform: scale(1.05);
-        }
-
-        /* Tam Ekran Açılan Fotoğraf Modu (Modal) */
+        /* Tam Ekran Modu Arka Planı */
         #modal {
-            display: none; /* Başlangıçta gizli */
+            display: none;
             position: fixed;
-            z-index: 10000;
+            z-index: 9999;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); /* Siyah şeffaf arka plan */
+            background: rgba(0,0,0,0.9);
             justify-content: center;
             align-items: center;
-            cursor: zoom-out;
         }
 
+        /* Tam Ekran Fotoğrafın Kendisi */
         #modal img {
             max-width: 95%;
             max-height: 95%;
-            object-fit: contain; /* Orijinal boyut ve oran */
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            object-fit: contain; /* Fotoğrafın orijinal boyutunu korur */
         }
+    </style>
+</head>
+<body>
 
-        /* Mobil Uyumluluk */
-        @media (max-width: 600px) {
-            .gallery img {
-                width: 45%; /* Yan yana 2 küçük kare */
-                height: 150px;
+    <div class="music-container">
+        <audio id="myAudio" controls>
+            <source src="https://birey31.github.io/muzik.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <a href="index.html" class="back-link">← Dön Tatlım</a>
+
+    <div class="gallery">
+        <img src="ask.jpg" onclick="openModal(this.src)">
+        <img src="ask1.jpg" onclick="openModal(this.src)">
+        <img src="ask2.jpeg" onclick="openModal(this.src)">
+        <img src="ask3.jpeg" onclick="openModal(this.src)">
+    </div>
+
+    <div id="modal" onclick="this.style.display='none'">
+        <img id="modalImg">
+    </div>
+
+    <script>
+        // Playlist Sistemi
+        var audio = document.getElementById('myAudio');
+        var playlist = [
+            "https://birey31.github.io/muzik.mp3",
+            "https://birey31.github.io/askim2.mp3"
+        ];
+        var currentTrack = 0;
+
+        audio.onended = function() {
+            currentTrack++;
+            if (currentTrack < playlist.length) {
+                audio.src = playlist[currentTrack];
+                audio.play();
             }
+        };
+
+        // Modal Açma Fonksiyonu
+        function openModal(src) {
+            document.getElementById('modal').style.display = 'flex';
+            document.getElementById('modalImg').src = src;
+        }
+    </script>
+</body>
+</html>
