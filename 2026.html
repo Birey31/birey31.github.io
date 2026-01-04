@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Reeha - Keşif ve Kayıt</title>
+<title>Reeha - Şahsi Galeri</title>
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
@@ -25,40 +25,31 @@
         margin-right: 30px;
     }
 
-    /* Fotoğraf Penceresi (Popup) Tasarımı */
+    /* Fotoğraf Popup Tasarımı */
     .mapboxgl-popup-content {
-        background: rgba(0, 0, 0, 0.9) !important;
+        background: #000 !important;
         color: white !important;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid #333;
         border-radius: 0 !important;
-        padding: 15px !important;
-        font-family: serif;
+        padding: 10px !important;
     }
-    .mapboxgl-popup-close-button { color: white !important; }
-    
     .popup-img {
-        width: 100%;
-        max-width: 250px;
-        height: auto;
-        display: block;
-        margin-bottom: 10px;
-        border: 1px solid rgba(255,255,255,0.1);
+        width: 100%; max-width: 300px; height: auto;
+        display: block; border: 1px solid #222;
     }
 
-    /* Özel İşaretçi (Pin) Tasarımı */
+    /* Özel Pin Tasarımı */
     .custom-marker {
-        width: 15px;
-        height: 15px;
-        border: 2px solid white;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.2);
-        cursor: pointer;
-        box-shadow: 0 0 15px rgba(255,255,255,0.5);
+        width: 12px; height: 12px;
+        background: #fff; border-radius: 50%;
+        cursor: pointer; box-shadow: 0 0 15px #fff;
     }
 
-    .mapboxgl-ctrl-geocoder { background-color: rgba(255, 255, 255, 0.05) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; border-radius: 0 !important; }
+    /* Dosya Seçme Inputu (Gizli) */
+    #photoInput { display: none; }
+
+    .mapboxgl-ctrl-geocoder { background-color: rgba(255, 255, 255, 0.05) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; }
     .mapboxgl-ctrl-geocoder--input { color: white !important; }
-    .mapboxgl-ctrl-bottom-right, .mapboxgl-ctrl-bottom-left { display: none; }
 </style>
 </head>
 <body>
@@ -67,6 +58,8 @@
     <a href="index.html" class="back-btn">← ANA SAYFA</a>
     <div id="geocoder"></div>
 </div>
+
+<input type="file" id="photoInput" accept="image/*">
 
 <div id="map"></div>
 
@@ -86,43 +79,56 @@
         accessToken: mapboxgl.accessToken,
         mapboxgl: mapboxgl,
         marker: false,
-        placeholder: 'FOTOĞRAF EKLEMEK İSTEDİĞİN YERİ ARA...',
+        placeholder: 'KONUM ARA VE TIKLAYIP FOTO EKLE...',
         zoom: 16
     });
 
     document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
 
-    // Manuel olarak fotoğraf ekleme fonksiyonu (Örnek Data)
-    function addPhotoMarker(lng, lat, imageUrl, title) {
+    let selectedCoords = null;
+
+    // 1. Haritaya tıklandığında konumu al ve dosya seçiciyi aç
+    map.on('click', (e) => {
+        selectedCoords = e.lngLat;
+        document.getElementById('photoInput').click(); // Dosya seçme penceresini açar
+    });
+
+    // 2. Dosya seçildiğinde haritaya yerleştir
+    document.getElementById('photoInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file || !selectedCoords) return;
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const imageUrl = event.target.result;
+            createMarker(selectedCoords.lng, selectedCoords.lat, imageUrl);
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // 3. Pin ve Popup Oluşturma
+    function createMarker(lng, lat, imageUrl) {
         const el = document.createElement('div');
         el.className = 'custom-marker';
 
         const popup = new mapboxgl.Popup({ offset: 25 })
-            .setHTML(`
-                <img src="${imageUrl}" class="popup-img">
-                <div style="text-align:center; letter-spacing:1px;">${title}</div>
-            `);
+            .setHTML(`<img src="${imageUrl}" class="popup-img"><p style="text-align:center; font-size:10px; margin-top:5px;">${new Date().toLocaleDateString()}</p>`);
 
         new mapboxgl.Marker(el)
             .setLngLat([lng, lat])
             .setPopup(popup)
             .addTo(map);
+            
+        console.log("Fotoğraf başarıyla konuma işlendi.");
     }
 
-    // Haritaya tıklandığında oraya bir pin at (Şimdilik örnek fotoğraf koyar)
-    map.on('click', (e) => {
-        const lngLat = e.lngLat;
-        // Burada normalde bir dosya seçme penceresi açılabilir
-        // Şimdilik sistemin nasıl çalıştığını görmen için rastgele bir görsel koyuyoruz
-        addPhotoMarker(lngLat.lng, lngLat.lat, 'https://picsum.photos/400/300', 'YENİ KEŞİF');
-    });
-
-    // Otomatik Dönüş Durdurma
+    // Atmosfer ve Dönüş Ayarları
     let isSpinning = true;
-    const stopSpinning = () => { isSpinning = false; };
-    map.on('mousedown', stopSpinning);
-    map.on('wheel', stopSpinning);
-    geocoder.on('result', stopSpinning);
+    map.on('mousedown', () => isSpinning = false);
+    map.on('style.load', () => {
+        map.setFog({ 'color': '#000', 'high-color': '#000', 'space-color': '#000' });
+        rotateGlobe();
+    });
 
     function rotateGlobe() {
         if (isSpinning && map.getZoom() < 5) {
@@ -132,13 +138,6 @@
         }
     }
     map.on('moveend', () => { if (isSpinning) rotateGlobe(); });
-    map.on('style.load', () => {
-        map.setFog({ 'color': '#000', 'high-color': '#000', 'space-color': '#000' });
-        rotateGlobe();
-        
-        // BAŞLANGIÇTA ÖRNEK BİR NOKTA EKLEYELİM (İstanbul)
-        addPhotoMarker(28.97, 41.00, 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200', 'İSTANBUL KOLEKSİYONU');
-    });
 </script>
 
 </body>
