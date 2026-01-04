@@ -31,14 +31,34 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* 3. SAĞ ÜST KONTROL PANELİ (BUTONLAR) */
+        /* 3. KONTROL PANELİ (BUTONLAR VE OK) */
         .controls {
             position: fixed;
             top: 20px;
             right: 20px;
             display: flex;
-            gap: 12px; /* Butonlar arasındaki boşluk */
+            gap: 12px;
             z-index: 10000;
+        }
+
+        .back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 42px;
+            height: 42px;
+            text-decoration: none;
+            background: var(--bg);
+            color: var(--text);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 10000;
+            transition: transform 0.2s, background 0.3s;
         }
 
         #theme-toggle, #play-pause {
@@ -58,24 +78,17 @@
             transition: transform 0.2s, background 0.3s;
         }
 
-        #theme-toggle:active, #play-pause:active {
+        #theme-toggle:active, #play-pause:active, .back-link:active {
             transform: scale(0.9);
         }
 
-        /* 4. DÖN TATLIM LİNKİ VE GALERİ */
-        .back-link {
-            text-decoration: none;
-            color: var(--link-color);
-            margin-top: 80px; /* Butonların altına düşmemesi için boşluk */
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-
+        /* 4. GALERİ */
         .gallery {
             column-count: 2;
             column-gap: 10px;
             width: 100%;
             max-width: 1000px;
+            margin-top: 80px; /* Butonların altına inmesi için */
         }
         @media (min-width: 900px) { .gallery { column-count: 4; } }
 
@@ -121,6 +134,8 @@
 </head>
 <body>
 
+    <a href="index.html" class="back-link" id="back-arrow">←</a>
+
     <div class="controls" id="main-controls">
         <button id="play-pause" onclick="togglePlay()">▶</button>
         <button id="theme-toggle" onclick="toggleTheme()">☀️</button>
@@ -129,8 +144,6 @@
     <audio id="myAudio">
         <source src="https://birey31.github.io/askim.mp3" type="audio/mpeg">
     </audio>
-
-    <a href="index.html" class="back-link">← Dön Tatlım</a>
 
     <div class="gallery">
         <img src="ask.jpg?raw=true" onclick="openModal(this.src)">
@@ -149,31 +162,31 @@
         const audio = document.getElementById('myAudio');
         const playBtn = document.getElementById('play-pause');
         const controls = document.getElementById('main-controls');
+        const backArrow = document.getElementById('back-arrow');
 
-        // Müzik Oynatıcı Fonksiyonu
         function togglePlay() {
             if (audio.paused) {
                 audio.play();
-                playBtn.innerHTML = "||"; // Duraklat ikonu
+                playBtn.innerHTML = "||";
             } else {
                 audio.pause();
-                playBtn.innerHTML = "▶"; // Oynat ikonu
+                playBtn.innerHTML = "▶";
             }
         }
 
-        // Modal (Fotoğraf Büyütme)
         function openModal(src) {
             document.getElementById('modal').style.display = 'flex';
             document.getElementById('modalImg').src = src;
-            controls.style.display = 'none'; // Butonları gizle
+            controls.style.display = 'none'; // Sağdakileri gizle
+            backArrow.style.display = 'none'; // Soldakini gizle
         }
 
         function closeModal() {
             document.getElementById('modal').style.display = 'none';
-            controls.style.display = 'flex'; // Butonları göster
+            controls.style.display = 'flex'; // Sağdakileri göster
+            backArrow.style.display = 'flex'; // Soldakini göster
         }
 
-        // Tema Değiştirme
         function toggleTheme() {
             const html = document.documentElement;
             const btn = document.getElementById('theme-toggle');
@@ -188,7 +201,6 @@
             }
         }
 
-        // Sayfa Açıldığında Tema Kontrolü
         (function() {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
@@ -199,7 +211,6 @@
             }
         })();
 
-        // Dışarı tıklayınca modal kapat
         window.onclick = function(event) {
             if (event.target == document.getElementById('modal')) closeModal();
         }
