@@ -1,159 +1,94 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reeha - Dünya Keşfi</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <style>
-        body { margin: 0; background: #000; overflow: hidden; }
-        canvas { display: block; }
-        .back-btn {
-            position: absolute; top: 30px; left: 30px; color: white;
-            text-decoration: none; font-size: 11px; letter-spacing: 2px;
-            opacity: 0.4; transition: 0.3s; z-index: 20;
-            font-family: serif;
-        }
-        .back-btn:hover { opacity: 1; }
-    </style>
+<meta charset="utf-8">
+<title>Reeha - Keşif</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
+<style>
+    body { margin: 0; padding: 0; background: #000; overflow: hidden; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    
+    /* Geri Dön Butonu */
+    .back-btn {
+        position: absolute; top: 25px; left: 25px; z-index: 100;
+        color: white; text-decoration: none; font-family: 'Times New Roman', serif;
+        background: rgba(0,0,0,0.6); padding: 12px 20px;
+        letter-spacing: 3px; font-size: 11px; transition: 0.4s;
+        border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px);
+    }
+    .back-btn:hover { background: #fff; color: #000; }
+
+    /* Alt Bilgi */
+    .ui-overlay {
+        position: absolute; bottom: 30px; width: 100%; text-align: center;
+        color: white; font-family: serif; letter-spacing: 4px;
+        z-index: 10; pointer-events: none; text-transform: uppercase;
+        font-size: 10px; opacity: 0.5;
+    }
+</style>
 </head>
 <body>
 
-    <a href="index.html" class="back-btn">← ANA SAYFA</a>
+<div class="ui-overlay">Dünyayı çevir ve bir sokağa dokun</div>
+<a href="index.html" class="back-btn">← ANA SAYFA</a>
+<div id="map"></div>
 
-    <script>
-        let scene, camera, renderer, controls, earth;
-        const markers = []; // Tıklanabilir noktalar listesi
-        const raycaster = new THREE.Raycaster();
-        const mouse = new THREE.Vector2();
+<script>
+	// TOKUNINI BURAYA EKLE
+	mapboxgl.accessToken = 'pk.eyJ1IjoiYWRlbTk5MTciLCJhIjoiY21rMDF6YXNjNmNtYzNlczU5YTUyYXUzMCJ9.mjaJaz3MfODoSZrL2wVKJw';
+    
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/satellite-streets-v12', // Uydu ve sokak isimleri bir arada
+        projection: 'globe', 
+        zoom: 1.8,
+        center: [28.97, 41.00], // İstanbul koordinatları
+        antialias: true
+    });
 
-        // Şehirler ve Koordinatları
-        const locations = [
-            { name: "İstanbul", lat: 41.0082, lng: 28.9784 },
-            { name: "Paris", lat: 48.8566, lng: 2.3522 },
-            { name: "New York", lat: 40.7128, lng: -74.0060 },
-            { name: "Tokyo", lat: 35.6762, lng: 139.6503 }
-        ];
-
-        function init() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000);
-            camera.position.z = 10;
-
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            document.body.appendChild(renderer.domElement);
-
-            // 1. Yıldızlar
-            const starGeometry = new THREE.BufferGeometry();
-            const starVertices = [];
-            for (let i = 0; i < 6000; i++) {
-                starVertices.push((Math.random() - 0.5) * 2000, (Math.random() - 0.5) * 2000, (Math.random() - 0.5) * 2000);
-            }
-            starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-            const stars = new THREE.Points(starGeometry, new THREE.PointsMaterial({ color: 0xffffff, size: 0.8 }));
-            scene.add(stars);
-
-            // 2. Dünya
-            const textureLoader = new THREE.TextureLoader();
-            const earthTexture = textureLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_atmos_2048.jpg');
-            
-            earth = new THREE.Mesh(
-                new THREE.SphereGeometry(3, 64, 64),
-                new THREE.MeshPhongMaterial({ map: earthTexture, shininess: 8 })
-            );
-            scene.add(earth);
-
-            // 3. Noktaları (Marker) Ekleme
-            locations.forEach(loc => {
-                const marker = createMarker(loc.lat, loc.lng, loc.name);
-                earth.add(marker); // Noktayı dünyaya bağladık ki dünya ile dönsün
-                markers.push(marker);
-            });
-
-            // 4. Işık
-            scene.add(new THREE.AmbientLight(0xffffff, 0.3));
-            const sunLight = new THREE.DirectionalLight(0xffffff, 1.2);
-                sunLight.position.set(12, 6, 10);
-            scene.add(sunLight);
-
-            // 5. Kontroller
-            controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.autoRotate = true;
-            controls.autoRotateSpeed = 0.5;
-            controls.minDistance = 4;
-            controls.maxDistance = 15;
-
-            // Tıklama Olayı
-            window.addEventListener('click', onMarkerClick);
-
-            animate();
-        }
-
-        // Enlem-Boylamı 3D koordinata çeviren fonksiyon
-        function createMarker(lat, lng, name) {
-            const phi = (90 - lat) * (Math.PI / 180);
-            const theta = (lng + 180) * (Math.PI / 180);
-            const radius = 3.05; // Dünyanın yarıçapından (3) birazcık büyük
-
-            const x = -(radius * Math.sin(phi) * Math.cos(theta));
-            const y = radius * Math.cos(phi);
-            const z = radius * Math.sin(phi) * Math.sin(theta);
-
-            const markerGeo = new THREE.SphereGeometry(0.05, 16, 16);
-            const markerMat = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Kırmızı parlayan nokta
-            const marker = new THREE.Mesh(markerGeo, markerMat);
-            
-            marker.position.set(x, y, z);
-            marker.userData = { name: name };
-            return marker;
-        }
-
-        function onMarkerClick(event) {
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(markers);
-
-            if (intersects.length > 0) {
-                const targetMarker = intersects[0].object;
-                const targetName = targetMarker.userData.name;
-                
-                // Zoom Mantığı
-                controls.autoRotate = false;
-                
-                // Noktanın dünya üzerindeki dünya-merkezi pozisyonunu al
-                const targetPosition = new THREE.Vector3();
-                targetMarker.getWorldPosition(targetPosition);
-                
-                // Kamerayı o noktaya yönlendir ve yaklaştır
-                const zoomPosition = targetPosition.clone().multiplyScalar(2); // 2 katı uzaklıkta dur
-                
-                // Basit bir geçiş (Lerp) - Daha pürüzsüz zoom için
-                camera.position.lerp(zoomPosition, 0.1); 
-                controls.target.lerp(targetPosition, 0.1);
-
-                console.log(targetName + " noktasına yaklaşıldı.");
-            }
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            if(controls) controls.update();
-            renderer.render(scene, camera);
-        }
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+    map.on('style.load', () => {
+        // Uzay derinliği ve yıldız efekti
+        map.setFog({
+            color: 'rgb(10, 10, 20)', 
+            'high-color': 'rgb(0, 0, 0)', 
+            'horizon-blend': 0.05,
+            'star-intensity': 0.9
         });
+    });
 
-        init();
-    </script>
+    // TIKLAYINCA O NOKTAYA SÜZÜLME (FlyTo)
+    map.on('click', (e) => {
+        const coords = e.lngLat;
+        
+        map.flyTo({
+            center: [coords.lng, coords.lat],
+            zoom: 18, // Sokakları ve binaları net görecek kadar yakın
+            pitch: 65, // Yan bakış açısı
+            bearing: Math.random() * 80, 
+            duration: 9000, // 9 saniyelik sinematik iniş
+            essential: true
+        });
+    });
+
+    // Otomatik Yavaş Dünya Dönüşü (Keşif Hissi)
+    let isUserInteracting = false;
+    function rotateGlobe() {
+        if (!isUserInteracting && map.getZoom() < 5) {
+            const center = map.getCenter();
+            center.lng -= 0.15;
+            map.easeTo({ center, duration: 0, easing: (n) => n });
+        }
+    }
+
+    map.on('mousedown', () => { isUserInteracting = true; });
+    map.on('mouseup', () => { isUserInteracting = false; });
+    map.on('dragstart', () => { isUserInteracting = true; });
+    map.on('moveend', () => { rotateGlobe(); });
+
+    rotateGlobe();
+</script>
+
 </body>
 </html>
