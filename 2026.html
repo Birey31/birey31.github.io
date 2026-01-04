@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <link rel="canonical" href="https://reeha.com.tr/">
     <link rel="icon" type="image/png" href="mobillogo.png">
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -297,6 +298,15 @@
     window.onpopstate = closeModal;
     document.addEventListener('contextmenu', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
     music.onended = () => changeTrack(1);
+    // Eğer URL .html ile bitiyorsa, bunu kullanıcıya hissettirmeden temizle
+if (window.location.pathname.endsWith('.html')) {
+    let cleanUrl = window.location.pathname.replace(/\.html$/, '');
+    // Eğer index sayfasındaysak tamamen temizle
+    if (cleanUrl.endsWith('/index')) {
+        cleanUrl = cleanUrl.replace(/\/index$/, '/');
+    }
+    window.history.replaceState(null, '', cleanUrl);
+}
 </script>
 
 </body>
