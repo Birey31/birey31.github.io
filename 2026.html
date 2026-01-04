@@ -49,6 +49,37 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
+        .gallery {
+    display: flex;
+    flex-wrap: wrap; /* Fotoğraflar sığmayınca alt satıra geçer */
+    width: 100%;
+    max-width: 1000px; /* Galerinin toplam genişliği */
+    margin: 0 auto; /* Galeriyi ortalar */
+    padding: 0;
+}
+
+.gallery img {
+    width: 50%; /* Yan yana 2 fotoğraf için (3 tane istersen %33.3 yapabilirsin) */
+    height: auto;
+    display: block; /* Altlarındaki boşluğu siler */
+    margin: 0;
+    padding: 0;
+    transition: transform 0.3s; /* Üzerine gelince hafif hareket için */
+}
+
+/* Pinterest etkisi: Üzerine gelinen fotoğraf hafifçe öne çıksın */
+.gallery img:hover {
+    transform: scale(1.02);
+    z-index: 10;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Mobilde (telefonda) fotoğraflar tek tek alt alta gelsin */
+@media (max-width: 600px) {
+    .gallery img {
+        width: 100%;
+    }
+}
     </style>
 </head>
 <body>
@@ -86,7 +117,12 @@
 
     <a href="index.html" class="back-link">← Dön Tatlım</a>
 
-    <img src="ask.jpg" alt="Aşk" class="main-photo">
+    <div class="gallery">
+    <img src="ask.jpg" alt="Foto 1">
+    <img src="ask1.jpg" alt="Foto 2">
+    <img src="ask2.jpg" alt="Foto 3">
+    <img src="ask3.jpg" alt="Foto 4">
+</div>
 
 </body>
 </html>
