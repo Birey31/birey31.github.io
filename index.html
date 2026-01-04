@@ -44,23 +44,16 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .title-link {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            text-decoration: none !important; 
+        /* 4. LOGO KONTEYNER VE TIKLANABİLİR ALAN */
+        .logo-link {
+            text-decoration: none;
+            cursor: pointer;
             border: none;
             outline: none;
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--text); 
-            transition: opacity 0.3s;
-            animation: contentFadeUp 0.8s ease-out forwards;
+            display: block;
+            -webkit-tap-highlight-color: transparent; /* Mobil tıklama efektini gizler */
         }
 
-        .title-link:hover { opacity: 0.6; }
-
-        /* 4. LOGO KONTEYNER - HALKA VE GÖLGE SİLİNDİ */
         .image-container {
             width: 280px; 
             opacity: 0;
@@ -68,10 +61,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* Halka etkisini yok eden kısımlar */
             border-radius: 0; 
             box-shadow: none; 
             overflow: visible;
+            transition: transform 0.3s ease; /* Üzerine gelince hafif büyüme efekti */
+        }
+
+        .image-container:active {
+            transform: scale(0.95); /* Tıklayınca hafif küçülme hissi */
         }
 
         .image-container img {
@@ -113,13 +110,14 @@
 
     <button id="theme-toggle" onclick="toggleTheme()">☀️</button>
 
-    <a href="2026.html" class="title-link" id="nav-2026">2026</a>
-
-    <div class="image-container">
-        <img id="mainImage" src="logo.png" alt="Logo">
-    </div>
+    <a href="2026.html" class="logo-link" id="main-logo-link">
+        <div class="image-container">
+            <img id="mainImage" src="logo.png" alt="Logo">
+        </div>
+    </a>
 
     <script>
+        // 1. RESİM YÜKLENME KONTROLÜ
         const img = document.getElementById('mainImage');
         if (img.complete) {
             img.style.opacity = "1";
@@ -129,7 +127,8 @@
             };
         }
 
-        document.getElementById('nav-2026').addEventListener('click', function(e) {
+        // 2. LOGOYA TIKLAYINCA YUMUŞAK ÇIKIŞ VE GEÇİŞ
+        document.getElementById('main-logo-link').addEventListener('click', function(e) {
             e.preventDefault();
             const targetUrl = this.href;
             document.body.style.opacity = "0"; 
@@ -138,6 +137,7 @@
             }, 600); 
         });
 
+        // 3. TEMA DEĞİŞTİRME
         function toggleTheme() {
             const html = document.documentElement;
             const btn = document.getElementById('theme-toggle');
@@ -152,6 +152,7 @@
             }
         }
 
+        // 4. KAYITLI TEMA KONTROLÜ
         (function() {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
