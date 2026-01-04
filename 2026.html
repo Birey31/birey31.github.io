@@ -146,12 +146,22 @@
     <script>
         // MODAL FONKSİYONLARI
         function openModal(src) {
-            document.getElementById('modal').style.display = 'flex';
-            document.getElementById('modalImg').src = src;
-        }
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-        }
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modalImg');
+    const themeBtn = document.getElementById('theme-toggle'); // Butonu seçiyoruz
+
+    modal.style.display = 'flex';
+    modalImg.src = src;
+    themeBtn.style.display = 'none'; // Fotoğraf açılınca butonu GİZLE
+}
+
+function closeModal() {
+    const modal = document.getElementById('modal');
+    const themeBtn = document.getElementById('theme-toggle'); // Butonu seçiyoruz
+
+    modal.style.display = 'none';
+    themeBtn.style.display = 'flex'; // Fotoğraf kapanınca butonu GÖSTER
+}
         window.onclick = function(event) {
             const modal = document.getElementById('modal');
             if (event.target == modal) closeModal();
