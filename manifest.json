@@ -7,10 +7,10 @@
   "theme_color": "#000000",
   "icons": [
     {
-      "src": "giris.foto.jpeg",
+      "src": "logo.jpeg",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "maskable"
     }
   ]
 }
