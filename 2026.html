@@ -15,30 +15,27 @@
             font-family: sans-serif; 
         }
 
-        /* Müzik Çalar - Boyutu ve Rengi Düzenlendi */
+        /* Müzik Barı - Geniş ve Görünür */
         .music-container {
             width: 100%;
             display: flex;
             justify-content: center;
             margin-top: 20px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         audio { 
-            width: 320px; /* Standart şık boyut */
-            height: 40px; 
-            border-radius: 5px;
+            width: 500px; /* Daha geniş bar */
+            height: 45px; 
         }
 
-        /* Dön Tatlım Yazısı */
         .back-link {
             text-decoration: none;
             color: #888;
             font-size: 14px;
             margin-bottom: 40px;
-            display: block;
         }
 
-        /* Galeri Düzeni */
+        /* Galeri - Fotoğrafları Orijinal Oranında Tutar */
         .gallery {
             display: flex;
             flex-wrap: wrap;
@@ -48,38 +45,39 @@
             max-width: 1200px;
         }
 
-        /* Fotoğraflar: Kesilmeden, Orijinal Oranında Küçük Hali */
         .gallery img {
             width: auto;
-            max-width: 250px; /* Küçük önizleme genişliği */
+            max-width: 280px;
             height: auto; 
-            max-height: 250px;
-            object-fit: contain; /* Kesme yapmaz, orijinal şekli korur */
+            max-height: 280px;
+            object-fit: contain; 
             cursor: pointer;
             border: none;
-            background-color: transparent; /* Kenar beyazlıklarını yok eder */
-            transition: transform 0.2s;
+            /* Netlik Ayarları */
+            image-rendering: -webkit-optimize-contrast; 
+            image-rendering: high-quality;
         }
 
-        .gallery img:hover { transform: scale(1.03); }
-
-        /* Tam Ekran Modu (Kalite Kayıpsız) */
+        /* TAM EKRAN MODU - KALİTEYİ KORUYAN AYARLAR */
         #modal {
             display: none;
             position: fixed;
             z-index: 9999;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.98); /* Daha koyu arka plan detayı artırır */
             justify-content: center;
             align-items: center;
             cursor: zoom-out;
         }
 
         #modal img {
-            max-width: 98%;
-            max-height: 98%;
-            object-fit: contain; /* Orijinal kalite ve oran */
+            max-width: 95%;
+            max-height: 95%;
+            object-fit: contain;
+            /* Fotoğrafın piksellenmesini engeller */
+            image-rendering: auto;
+            -ms-interpolation-mode: bicubic;
         }
     </style>
 </head>
@@ -87,7 +85,7 @@
 
     <div class="music-container">
         <audio id="myAudio" controls>
-            <source src="https://birey31.github.io/muzik.mp3" type="audio/mpeg">
+            <source src="https://birey31.github.io/askim.mp3" type="audio/mpeg">
         </audio>
     </div>
 
@@ -105,7 +103,6 @@
     </div>
 
     <script>
-        // Şarkı Listesi ve Sıralı Çalma
         var audio = document.getElementById('myAudio');
         var playlist = [
             "https://birey31.github.io/askim.mp3",
@@ -119,12 +116,11 @@
                 audio.src = playlist[currentTrack];
                 audio.play();
             } else {
-                currentTrack = 0; // Liste bitince başa dön
+                currentTrack = 0;
                 audio.src = playlist[currentTrack];
             }
         };
 
-        // Modal Açma Fonksiyonu
         function openModal(src) {
             document.getElementById('modal').style.display = 'flex';
             document.getElementById('modalImg').src = src;
