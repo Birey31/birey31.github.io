@@ -94,6 +94,45 @@
     /* Görüntüye hafif bir keskinlik (sharpness) verir */
     filter: contrast(1.05) saturate(1.05) brightness(1.02);
     image-rendering: -webkit-optimize-contrast;
+            /* Galeri Temel Düzeni */
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px; /* Fotoğraflar arası boşluk */
+    width: 100%;
+    max-width: 1200px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Masaüstü (Bilgisayar) Boyutu */
+.gallery img {
+    width: 250px; /* Bilgisayarda sabit genişlik */
+    height: 250px;
+    object-fit: cover; /* Kare ve düzgün görünmesi için */
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* MOBİL ÖZEL AYAR (Telefonlar için) */
+@media (max-width: 600px) {
+    .gallery {
+        gap: 8px; /* Mobilde boşluğu biraz daralttık */
+    }
+
+    .gallery img {
+        /* Yan yana 2 tane olması için (Boşlukları düşerek %45 civarı yapıyoruz) */
+        width: calc(50% - 10px); 
+        height: 180px; /* Mobilde yükseklik biraz daha az olsun ki ekrana sığsın */
+        max-width: none; /* Önceki sınırlamaları kaldırır */
+        object-fit: cover;
+    }
+    
+    /* Müzik barını mobilde ekrana sığdır */
+    audio {
+        width: 100% !important;
+        max-width: 300px;
 }
     }
 </style>
