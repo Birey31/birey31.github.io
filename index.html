@@ -3,7 +3,7 @@
 <head>
     <link rel="icon" type="image/png" href="logo.png">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Reeha</title>
     <style>
         /* 2026.html ile Senkronize Renk Paleti */
@@ -24,6 +24,8 @@
             transition: background-color 0.6s ease;
             overflow: hidden;
             font-family: serif;
+            /* Mobildeki mavi seçimi (tap highlight) engellemek için */
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* Logo: Gri başlar, Hover'da renklenir */
@@ -31,6 +33,9 @@
             width: 250px; height: auto; cursor: pointer;
             filter: grayscale(100%) opacity(0.6);
             transition: filter 0.5s ease, transform 0.5s ease, opacity 0.5s ease;
+            /* Mobilde logoya basınca mavi renk çıkmasını engeller */
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
         }
 
         .logo-container img:hover {
@@ -45,6 +50,8 @@
             font-size: 20px; /* Emoji büyüklüğü */
             z-index: 100; outline: none;
             transition: transform 0.3s ease;
+            /* Mobilde butona basınca mavi renk çıkmasını engeller */
+            -webkit-tap-highlight-color: transparent;
         }
 
         .theme-toggle:hover { transform: scale(1.2); }
@@ -54,6 +61,13 @@
         .moon-emoji { display: none; }
         [data-theme="light"] .sun-emoji { display: none; }
         [data-theme="light"] .moon-emoji { display: block; }
+
+        /* Link üzerindeki mavi kutucuğu engellemek için */
+        a {
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            text-decoration: none;
+        }
 
     </style>
 </head>
