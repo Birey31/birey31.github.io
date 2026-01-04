@@ -34,6 +34,14 @@
             opacity: 1;
         }
 
+        /* FOTOĞRAF KORUMA: Basılı tutmayı engeller */
+        img {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
         .controls {
             position: fixed;
             top: 25px;
@@ -153,6 +161,19 @@
     </div>
 
     <script>
+        // URL TEMİZLEME: Instagram uzantılarını siler
+        if (window.location.search) {
+            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            window.history.replaceState({}, document.title, cleanUrl);
+        }
+
+        // FOTOĞRAF KORUMA: Sağ tık ve uzun basış menüsünü engelle
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.tagName === 'IMG') {
+                e.preventDefault();
+            }
+        }, false);
+
         const audio = document.getElementById('myAudio');
         const playBtn = document.getElementById('play-pause');
         const controls = document.getElementById('main-controls');
@@ -209,7 +230,8 @@
             if (savedTheme === 'dark') {
                 document.documentElement.setAttribute('data-theme', 'dark');
                 setTimeout(() => {
-                    document.getElementById('theme-toggle').innerHTML = '🌙';
+                    const toggleBtn = document.getElementById('theme-toggle');
+                    if(toggleBtn) toggleBtn.innerHTML = '🌙';
                 }, 10);
             }
         })();
