@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Reeha - Sabit Keşif</title>
+<title>Reeha - Keşif ve Kayıt</title>
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
@@ -24,18 +24,41 @@
         letter-spacing: 2px; font-size: 11px; opacity: 0.6; transition: 0.3s;
         margin-right: 30px;
     }
-    .back-btn:hover { opacity: 1; }
 
-    .mapboxgl-ctrl-geocoder {
-        background-color: rgba(255, 255, 255, 0.05) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        backdrop-filter: blur(10px);
-        box-shadow: none !important;
+    /* Fotoğraf Penceresi (Popup) Tasarımı */
+    .mapboxgl-popup-content {
+        background: rgba(0, 0, 0, 0.9) !important;
+        color: white !important;
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 0 !important;
-        width: 300px !important;
+        padding: 15px !important;
+        font-family: serif;
     }
+    .mapboxgl-popup-close-button { color: white !important; }
+    
+    .popup-img {
+        width: 100%;
+        max-width: 250px;
+        height: auto;
+        display: block;
+        margin-bottom: 10px;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Özel İşaretçi (Pin) Tasarımı */
+    .custom-marker {
+        width: 15px;
+        height: 15px;
+        border: 2px solid white;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        cursor: pointer;
+        box-shadow: 0 0 15px rgba(255,255,255,0.5);
+    }
+
+    .mapboxgl-ctrl-geocoder { background-color: rgba(255, 255, 255, 0.05) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; border-radius: 0 !important; }
     .mapboxgl-ctrl-geocoder--input { color: white !important; }
-    .mapboxgl-ctrl-bottom-right, .mapboxgl-ctrl-bottom-left { opacity: 0.1; }
+    .mapboxgl-ctrl-bottom-right, .mapboxgl-ctrl-bottom-left { display: none; }
 </style>
 </head>
 <body>
@@ -56,30 +79,50 @@
         projection: 'globe', 
         zoom: 2,
         center: [28.97, 41.00],
-        antialias: true,
-        // Trackpad için kaydırma hissiyatı
-        dragPan: true,
-        scrollZoom: true,
-        boxZoom: false,
-        dragRotate: true,
-        keyboard: true,
-        doubleClickZoom: false,
-        touchZoomRotate: true
+        antialias: true
     });
 
     const geocoder = new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
         mapboxgl: mapboxgl,
         marker: false,
-        placeholder: 'BİR ŞEHİR VEYA ÜLKE YAZ...',
-        zoom: 15,
-        flyTo: { duration: 6000, essential: true }
+        placeholder: 'FOTOĞRAF EKLEMEK İSTEDİĞİN YERİ ARA...',
+        zoom: 16
     });
 
     document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
 
-    // OTOMATİK DÖNÜŞ MANTIĞI - DÜZELTİLDİ
-    let isSpinning = true; // Başlangıçta dönsün
+    // Manuel olarak fotoğraf ekleme fonksiyonu (Örnek Data)
+    function addPhotoMarker(lng, lat, imageUrl, title) {
+        const el = document.createElement('div');
+        el.className = 'custom-marker';
+
+        const popup = new mapboxgl.Popup({ offset: 25 })
+            .setHTML(`
+                <img src="${imageUrl}" class="popup-img">
+                <div style="text-align:center; letter-spacing:1px;">${title}</div>
+            `);
+
+        new mapboxgl.Marker(el)
+            .setLngLat([lng, lat])
+            .setPopup(popup)
+            .addTo(map);
+    }
+
+    // Haritaya tıklandığında oraya bir pin at (Şimdilik örnek fotoğraf koyar)
+    map.on('click', (e) => {
+        const lngLat = e.lngLat;
+        // Burada normalde bir dosya seçme penceresi açılabilir
+        // Şimdilik sistemin nasıl çalıştığını görmen için rastgele bir görsel koyuyoruz
+        addPhotoMarker(lngLat.lng, lngLat.lat, 'https://picsum.photos/400/300', 'YENİ KEŞİF');
+    });
+
+    // Otomatik Dönüş Durdurma
+    let isSpinning = true;
+    const stopSpinning = () => { isSpinning = false; };
+    map.on('mousedown', stopSpinning);
+    map.on('wheel', stopSpinning);
+    geocoder.on('result', stopSpinning);
 
     function rotateGlobe() {
         if (isSpinning && map.getZoom() < 5) {
@@ -88,29 +131,13 @@
             map.easeTo({ center, duration: 0, easing: (n) => n });
         }
     }
-
-    // Kullanıcı müdahale ettiği an döndürmeyi EBEDİYEN DURDUR
-    const stopSpinning = () => {
-        if (isSpinning) {
-            isSpinning = false; // Döngüyü kır
-            console.log("Otomatik dönüş durduruldu. Artık serbestsin.");
-        }
-    };
-
-    // Her türlü etkileşimde dönmeyi kapat
-    map.on('mousedown', stopSpinning);
-    map.on('touchstart', stopSpinning);
-    map.on('wheel', stopSpinning);
-    map.on('dragstart', stopSpinning);
-    geocoder.on('result', stopSpinning); // Arama yapınca da durdur
-
-    map.on('moveend', () => {
-        if (isSpinning) rotateGlobe();
-    });
-
+    map.on('moveend', () => { if (isSpinning) rotateGlobe(); });
     map.on('style.load', () => {
         map.setFog({ 'color': '#000', 'high-color': '#000', 'space-color': '#000' });
         rotateGlobe();
+        
+        // BAŞLANGIÇTA ÖRNEK BİR NOKTA EKLEYELİM (İstanbul)
+        addPhotoMarker(28.97, 41.00, 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200', 'İSTANBUL KOLEKSİYONU');
     });
 </script>
 
