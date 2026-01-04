@@ -258,6 +258,14 @@ music.onended = function() {
     music.src = tracks[currentTrack];
     music.play();
 };
+        const body = document.documentElement;
+// Sayfa açıldığında hafızaya bak
+if (localStorage.getItem('theme') === 'light') {
+    body.setAttribute('data-theme', 'light');
+}
+
+// Tema değiştirme butonun varsa onun içine de şunu ekle:
+// localStorage.setItem('theme', 'light'); (veya dark)
     </script>
 </body>
 </html>
