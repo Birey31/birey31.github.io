@@ -26,7 +26,7 @@
             font-family: "Courier New", Courier, monospace;
             transition: background-color 0.5s ease;
             height: 100vh;
-            overflow: hidden;
+            overflow: hidden; /* Ana sayfa kaymaz */
             display: flex;
             flex-direction: column;
         }
@@ -63,7 +63,53 @@
 
         .nav-link:hover { text-decoration: underline; }
 
-        /* --- ALT YASAL MENÜ (FOOTER) --- */
+        /* --- ÜRÜN ALANI (KAYDIRILABİLİR PENCERE) --- */
+        .products-container {
+            position: fixed;
+            top: 100px;
+            bottom: 120px; /* Footer'a çarpmaması için */
+            left: 250px; /* Menüden uzaklık */
+            right: 40px;
+            overflow-y: auto; /* Sadece burası kayar */
+            padding-right: 15px;
+            z-index: 1;
+        }
+
+        /* Scrollbar'ı gizle veya minimalist yap */
+        .products-container::-webkit-scrollbar { width: 2px; }
+        .products-container::-webkit-scrollbar-thumb { background: var(--text-color); opacity: 0.3; }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 40px 25px;
+            padding-bottom: 50px;
+        }
+
+        .product-card {
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .product-card:hover { opacity: 0.7; }
+
+        .product-box {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background-color: var(--text-color);
+            opacity: 0.05; /* Çok hafif minimalist kutu */
+            margin-bottom: 10px;
+        }
+
+        .product-info {
+            font-size: 11px;
+            line-height: 1.4;
+            text-transform: lowercase;
+        }
+
+        .price { opacity: 0.5; margin-left: 5px; }
+
+        /* --- ALT YASAL MENÜ --- */
         .legal-footer {
             position: fixed;
             bottom: 40px;
@@ -86,7 +132,7 @@
 
         .legal-link:hover { opacity: 1; text-decoration: underline; }
 
-        /* --- SAĞ ALT PANEL (DİL & SAAT) --- */
+        /* --- SAĞ ALT PANEL --- */
         .bottom-right-panel {
             position: fixed;
             right: 40px;
@@ -105,59 +151,30 @@
             gap: 8px;
         }
 
-        .flag-box {
-            width: 22px;
-            height: 14px;
-            display: inline-block;
-            background-size: cover;
-            background-position: center;
-        }
-
+        .flag-box { width: 22px; height: 14px; background-size: cover; background-position: center; }
         .flag-tr { background-image: url('https://flagcdn.com/w40/tr.png'); }
         .flag-en { background-image: url('https://flagcdn.com/w40/gb.png'); }
 
-        .arrow-down {
-            width: 0; height: 0; 
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-top: 6px solid var(--text-color);
-        }
+        .arrow-down { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid var(--text-color); }
 
         .lang-dropdown {
-            position: absolute;
-            bottom: 150%;
-            left: 0;
-            display: none;
-            flex-direction: column;
-            background-color: var(--bg-color);
-            gap: 12px;
-            padding: 5px 0;
+            position: absolute; bottom: 150%; left: 0; display: none;
+            flex-direction: column; background-color: var(--bg-color); gap: 12px; padding: 5px 0;
         }
-
         .lang-dropdown.active { display: flex; }
 
-        .lang-option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            opacity: 0.6;
-            transition: 0.2s;
-        }
-
+        .lang-option { display: flex; align-items: center; gap: 10px; opacity: 0.6; transition: 0.2s; }
         .lang-option:hover { opacity: 1; }
 
-        .date-info {
-            font-size: 13px;
-            letter-spacing: 1px;
-            opacity: 0.8;
-            white-space: nowrap;
-        }
+        .date-info { font-size: 13px; letter-spacing: 1px; opacity: 0.8; white-space: nowrap; }
 
         /* --- MOBİL --- */
         @media (max-width: 768px) {
-            nav#main-nav { left: 20px; top: 40px; transform: none; }
+            nav#main-nav { left: 20px; top: 30px; transform: none; flex-direction: row; flex-wrap: wrap; }
+            .products-container { left: 20px; right: 20px; top: 120px; bottom: 150px; }
+            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
             .legal-footer { left: 20px; bottom: 80px; width: 90%; }
-            .bottom-right-panel { right: 20px; bottom: 20px; flex-direction: column; align-items: flex-end; }
+            .bottom-right-panel { right: 20px; bottom: 20px; }
         }
     </style>
 </head>
@@ -172,6 +189,21 @@
         <a href="accessories.html" class="nav-link" data-tr="aksesuar" data-en="accessories">aksesuar</a>
     </nav>
 
+    <main class="products-container">
+        <div class="products-grid">
+            <div class="product-card"> <div class="product-box"></div> <div class="product-info">reeha basic tee <span class="price">45€</span></div> </div>
+            <div class="product-card"> <div class="product-box"></div> <div class="product-info">heavy hoodie <span class="price">120€</span></div> </div>
+            <div class="product-card"> <div class="product-box"></div> <div class="product-info">loose denim <span class="price">85€</span></div> </div>
+            <div class="product-card"> <div class="product-box"></div> <div class="product-info">logo beanie <span class="price">30€</span></div> </div>
+            <div class="product-card"> <div class="product-box"></div> <div class="product-info">cargo pants <span class="price">95€</span></div> </div>
+            <div class="product-card"> <div class="product-box"></div> <div class="product-info">zip-up jacket <span class="price">150€</span></div> </div>
+            <div class="product-card"> <div class="product-box"></div> <div class="product-info">canvas bag <span class="price">40€</span></div> </div>
+            <div class="product-card"> <div class="product-box"></div> <div class="product-info">graphic shirt <span class="price">55€</span></div> </div>
+            <div class="product-card"> <div class="product-box"></div> <div class="product-info">work vest <span class="price">110€</span></div> </div>
+            <div class="product-card"> <div class="product-box"></div> <div class="product-info">knit sweater <span class="price">130€</span></div> </div>
+        </div>
+    </main>
+
     <footer class="legal-footer">
         <a href="mesafeli-satis.html" class="legal-link" data-tr="mesafeli satış sözleşmesi" data-en="distance sales agreement">mesafeli satış sözleşmesi</a>
         <a href="teslimat-iade.html" class="legal-link" data-tr="teslimat ve iade" data-en="shipping & returns">teslimat ve iade</a>
@@ -184,17 +216,11 @@
         <div class="lang-wrapper" onclick="toggleLangDropdown()">
             <div id="selected-flag-box" class="flag-box flag-tr"></div>
             <div class="arrow-down"></div>
-            
             <div class="lang-dropdown" id="lang-dropdown">
-                <div class="lang-option" onclick="setLanguage('tr', 'flag-tr')">
-                    <div class="flag-box flag-tr"></div> tr
-                </div>
-                <div class="lang-option" onclick="setLanguage('en', 'flag-en')">
-                    <div class="flag-box flag-en"></div> en
-                </div>
+                <div class="lang-option" onclick="setLanguage('tr', 'flag-tr')"> <div class="flag-box flag-tr"></div> tr </div>
+                <div class="lang-option" onclick="setLanguage('en', 'flag-en')"> <div class="flag-box flag-en"></div> en </div>
             </div>
         </div>
-        
         <div class="date-info" id="current-time"></div>
     </div>
 
@@ -203,33 +229,25 @@
         const body = document.documentElement;
         let currentLang = 'tr';
 
-        // Dil Değiştirme ve Menü/Footer Güncelleme
-        function toggleLangDropdown() {
-            document.getElementById('lang-dropdown').classList.toggle('active');
-        }
+        function toggleLangDropdown() { document.getElementById('lang-dropdown').classList.toggle('active'); }
 
         function setLanguage(lang, flagClass) {
             currentLang = lang;
             document.getElementById('selected-flag-box').className = 'flag-box ' + flagClass;
-            
-            // Tüm linkleri (ana menü + footer) güncelle
             document.querySelectorAll('[data-tr]').forEach(el => {
                 el.textContent = el.getAttribute(`data-${lang}`);
             });
-
             updateTime();
             event.stopPropagation(); 
             document.getElementById('lang-dropdown').classList.remove('active');
         }
 
-        // Dropdown dışına basınca kapat
         window.onclick = function(event) {
             if (!event.target.closest('.lang-wrapper')) {
                 document.getElementById('lang-dropdown').classList.remove('active');
             }
         }
 
-        // Dinamik Tarih ve Ülke Suffix
         function updateTime() {
             const now = new Date();
             const date = now.toLocaleDateString(currentLang === 'tr' ? 'tr-TR' : 'en-GB');
@@ -241,7 +259,6 @@
         setInterval(updateTime, 1000);
         updateTime();
 
-        // Tema Ayarı
         const savedTheme = localStorage.getItem('theme') || 'dark';
         if (savedTheme === 'light') body.setAttribute('data-theme', 'light');
 
