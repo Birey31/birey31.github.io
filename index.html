@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Reeha</title>
     <style>
-        /* --- GENEL AYARLAR & MAVİ KARE SİLME --- */
+        /* --- GENEL AYARLAR --- */
         * {
             -webkit-tap-highlight-color: transparent;
             outline: none;
@@ -24,7 +24,6 @@
             --text-color: #000000;
         }
 
-        /* --- HIZLI AÇILIŞ ANİMASYONU (0.5s) --- */
         @keyframes fadeInPage {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -56,17 +55,16 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative;
         }
 
         .content-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px; /* Store yazısı ile logolar arasındaki boşluk */
+            gap: 25px;
         }
 
-        /* --- STORE YAZISI (SUPREME ESİNTİSİ) --- */
+        /* --- STORE YAZISI --- */
         .store-link {
             text-decoration: none;
             color: var(--text-color);
@@ -77,31 +75,21 @@
             letter-spacing: 2px;
             opacity: 0.5;
             transition: 0.4s ease;
-            padding: 5px 10px;
+            padding: 10px;
         }
         .store-link:hover {
             opacity: 1;
-            letter-spacing: 4px; /* Üzerine gelince hafif genişleme efekti */
+            letter-spacing: 5px;
         }
 
-        .logo-container {
-            display: flex; align-items: center; justify-content: center; gap: 40px;
-        }
-
-        .logo-link { 
-            text-decoration: none; display: flex; align-items: center; justify-content: center; position: relative;
+        /* --- 2027 GÖRSELİ (YAKINDA) --- */
+        .logo-static { 
+            display: flex; align-items: center; justify-content: center; position: relative;
         }
         
         .desktop-only { 
+            width: 250px; /* Logo 2 boyutu */
             filter: grayscale(100%) opacity(0.6); transition: 0.6s ease;
-        }
-
-        .logo-link:nth-of-type(1) .desktop-only { width: 185px; }
-        .logo-link:nth-of-type(2) .desktop-only { width: 250px; }
-
-        .logo-link:nth-of-type(1):hover .desktop-only {
-            filter: grayscale(0%) opacity(1);
-            transform: scale(1.02);
         }
 
         .coming-soon {
@@ -111,41 +99,29 @@
             pointer-events: none;
         }
 
-        .logo-link:nth-of-type(2):hover .desktop-only {
+        .logo-static:hover .desktop-only {
             filter: grayscale(100%) opacity(0.2) blur(8px);
         }
-        .logo-link:nth-of-type(2):hover .coming-soon { opacity: 0.8; }
+        .logo-static:hover .coming-soon { opacity: 0.8; }
 
-        /* --- FOOTER --- */
+        /* --- FOOTER & SAAT --- */
         footer {
             height: 60px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 10px;
-            letter-spacing: 2px;
-            color: var(--text-color);
-            opacity: 0.3;
-            text-transform: uppercase;
-            z-index: 100;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 10px; letter-spacing: 2px; color: var(--text-color);
+            opacity: 0.3; text-transform: uppercase;
         }
 
-        /* --- CANLI SAAT --- */
         #live-clock {
             position: absolute; bottom: 22px; right: 30px;
             font-size: 11px; color: var(--text-color); opacity: 0.4; font-family: monospace;
         }
 
-        /* --- MOBİL AYARLAR --- */
-        .mobile-only-link { display: none; }
-        
+        /* --- MOBİL --- */
         @media (max-width: 768px) {
-            .logo-link { display: none !important; }
-            .mobile-only-link { display: flex !important; }
-            .mobile-only-link img { width: 160px; }
+            .logo-static { display: none !important; }
             #live-clock { display: none; } 
             footer { opacity: 0.5; }
-            .content-wrapper { gap: 10px; }
         }
     </style>
 </head>
@@ -157,19 +133,9 @@
         <div class="content-wrapper">
             <a href="store.html" class="store-link">Store</a>
 
-            <div class="logo-container">
-                <a href="2026.html" class="logo-link">
-                    <img src="media/logo.webp" alt="2026" class="desktop-only">
-                </a>
-                
-                <a href="javascript:void(0)" class="logo-link" id="lockedLink">
-                    <img src="media/logo2.webp" alt="2027" class="desktop-only">
-                    <span class="coming-soon">Yakında</span>
-                </a>
-
-                <a href="2026.html" class="mobile-only-link">
-                    <img src="media/mobillogo.webp" alt="Reeha">
-                </a>
+            <div class="logo-static">
+                <img src="media/logo2.webp" alt="2027" class="desktop-only">
+                <span class="coming-soon">Yakında</span>
             </div>
         </div>
     </div>
@@ -216,18 +182,6 @@
                 localStorage.setItem('theme', 'light');
             }
         });
-
-        if (window.location.pathname.endsWith('.html')) {
-            let newPath = window.location.pathname.replace(/\.html$/, '');
-            if (newPath.endsWith('/index')) {
-                newPath = newPath.replace(/\/index$/, '/');
-            }
-            window.history.replaceState(null, '', newPath);
-        }
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js').then(reg => reg.update());
-        }
     </script>
 </body>
 </html>
