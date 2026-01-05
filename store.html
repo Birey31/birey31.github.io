@@ -26,7 +26,7 @@
             font-family: "Courier New", Courier, monospace;
             transition: background-color 0.5s ease;
             height: 100vh;
-            overflow: hidden; /* Ana sayfa kaymaz */
+            overflow: hidden; 
             display: flex;
             flex-direction: column;
         }
@@ -59,23 +59,24 @@
             text-transform: lowercase;
             transition: 0.2s;
             width: max-content;
+            cursor: pointer;
         }
 
         .nav-link:hover { text-decoration: underline; }
+        .nav-link.active { font-weight: bold; text-decoration: underline; }
 
         /* --- ÜRÜN ALANI (KAYDIRILABİLİR PENCERE) --- */
         .products-container {
             position: fixed;
             top: 100px;
-            bottom: 120px; /* Footer'a çarpmaması için */
-            left: 250px; /* Menüden uzaklık */
+            bottom: 120px; 
+            left: 250px; 
             right: 40px;
-            overflow-y: auto; /* Sadece burası kayar */
+            overflow-y: auto; 
             padding-right: 15px;
             z-index: 1;
         }
 
-        /* Scrollbar'ı gizle veya minimalist yap */
         .products-container::-webkit-scrollbar { width: 2px; }
         .products-container::-webkit-scrollbar-thumb { background: var(--text-color); opacity: 0.3; }
 
@@ -97,7 +98,7 @@
             width: 100%;
             aspect-ratio: 1 / 1;
             background-color: var(--text-color);
-            opacity: 0.05; /* Çok hafif minimalist kutu */
+            opacity: 0.05; 
             margin-bottom: 10px;
         }
 
@@ -183,25 +184,15 @@
     <button class="theme-toggle" id="themeBtn"></button>
 
     <nav id="main-nav">
-        <a href="news.html" class="nav-link" data-tr="news" data-en="news">news</a>
-        <a href="tops.html" class="nav-link" data-tr="üst giyim" data-en="tops">üst giyim</a>
-        <a href="bottoms.html" class="nav-link" data-tr="alt giyim" data-en="bottoms">alt giyim</a>
-        <a href="accessories.html" class="nav-link" data-tr="aksesuar" data-en="accessories">aksesuar</a>
+        <a onclick="loadProducts('news')" class="nav-link" data-tr="news" data-en="news">news</a>
+        <a onclick="loadProducts('tops')" class="nav-link" data-tr="üst giyim" data-en="tops">üst giyim</a>
+        <a onclick="loadProducts('bottoms')" class="nav-link" data-tr="alt giyim" data-en="bottoms">alt giyim</a>
+        <a onclick="loadProducts('accessories')" class="nav-link" data-tr="aksesuar" data-en="accessories">aksesuar</a>
     </nav>
 
     <main class="products-container">
-        <div class="products-grid">
-            <div class="product-card"> <div class="product-box"></div> <div class="product-info">reeha basic tee <span class="price">45€</span></div> </div>
-            <div class="product-card"> <div class="product-box"></div> <div class="product-info">heavy hoodie <span class="price">120€</span></div> </div>
-            <div class="product-card"> <div class="product-box"></div> <div class="product-info">loose denim <span class="price">85€</span></div> </div>
-            <div class="product-card"> <div class="product-box"></div> <div class="product-info">logo beanie <span class="price">30€</span></div> </div>
-            <div class="product-card"> <div class="product-box"></div> <div class="product-info">cargo pants <span class="price">95€</span></div> </div>
-            <div class="product-card"> <div class="product-box"></div> <div class="product-info">zip-up jacket <span class="price">150€</span></div> </div>
-            <div class="product-card"> <div class="product-box"></div> <div class="product-info">canvas bag <span class="price">40€</span></div> </div>
-            <div class="product-card"> <div class="product-box"></div> <div class="product-info">graphic shirt <span class="price">55€</span></div> </div>
-            <div class="product-card"> <div class="product-box"></div> <div class="product-info">work vest <span class="price">110€</span></div> </div>
-            <div class="product-card"> <div class="product-box"></div> <div class="product-info">knit sweater <span class="price">130€</span></div> </div>
-        </div>
+        <div class="products-grid" id="productGrid">
+            </div>
     </main>
 
     <footer class="legal-footer">
@@ -225,10 +216,62 @@
     </div>
 
     <script>
+        // ÜRÜN VERİ TABANI (Buradan yeni ürün ekleyip silebilirsin)
+        const productsData = {
+            news: [
+                { name: "reeha seasonal tee", price: "45€" },
+                { name: "limited hoodie v1", price: "125€" },
+                { name: "puffer jacket", price: "190€" },
+                { name: "new era beanies", price: "35€" }
+            ],
+            tops: [
+                { name: "basic t-shirt white", price: "40€" },
+                { name: "heavy cotton hoodie", price: "110€" },
+                { name: "oversize shirt", price: "75€" },
+                { name: "long sleeve polo", price: "85€" }
+            ],
+            bottoms: [
+                { name: "loose fit denim", price: "95€" },
+                { name: "cargo work pants", price: "105€" },
+                { name: "nylon track pants", price: "80€" },
+                { name: "straight cut chinos", price: "90€" }
+            ],
+            accessories: [
+                { name: "canvas tote bag", price: "30€" },
+                { name: "logo embroidery cap", price: "45€" },
+                { name: "utility belt", price: "55€" },
+                { name: "silver ring set", price: "70€" }
+            ]
+        };
+
         const themeBtn = document.getElementById('themeBtn');
         const body = document.documentElement;
         let currentLang = 'tr';
 
+        // ÜRÜN YÜKLEME FONKSİYONU
+        function loadProducts(category) {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = ''; // Havuzu boşalt
+
+            productsData[category].forEach(product => {
+                const card = `
+                    <div class="product-card">
+                        <div class="product-box"></div>
+                        <div class="product-info">${product.name} <span class="price">${product.price}</span></div>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+
+            // Aktif linki işaretle
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Havuzu en yukarı kaydır
+            document.querySelector('.products-container').scrollTop = 0;
+        }
+
+        // Dil ve Saat Ayarları
         function toggleLangDropdown() { document.getElementById('lang-dropdown').classList.toggle('active'); }
 
         function setLanguage(lang, flagClass) {
@@ -257,8 +300,8 @@
         }
 
         setInterval(updateTime, 1000);
-        updateTime();
 
+        // Tema Ayarı
         const savedTheme = localStorage.getItem('theme') || 'dark';
         if (savedTheme === 'light') body.setAttribute('data-theme', 'light');
 
@@ -271,6 +314,12 @@
                 localStorage.setItem('theme', 'light');
             }
         });
+
+        // Sayfa açıldığında varsayılan olarak 'news' yükle
+        window.onload = () => {
+            loadProducts('news');
+            updateTime();
+        };
     </script>
 </body>
 </html>
