@@ -26,7 +26,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: "Courier New", Courier, monospace;
-            transition: background-color 0.5s ease;
+            transition: background-color 0.4s ease, color 0.4s ease;
             height: 100vh;
             overflow: hidden; 
             display: flex;
@@ -57,24 +57,25 @@
         }
         .theme-toggle {
             background: none; border: 1px solid var(--text-color);
-            width: 12px; height: 12px; border-radius: 50%; cursor: pointer; opacity: 0.4;
+            width: 14px; height: 14px; border-radius: 50%; cursor: pointer;
         }
         body:not([data-theme="light"]) .theme-toggle { background: var(--text-color); }
+        [data-theme="light"] .theme-toggle { background: transparent; }
+
         .cart-toggle {
             background: none; border: none; color: var(--text-color);
             font-family: inherit; font-size: 13px; cursor: pointer; text-transform: lowercase;
         }
 
-        /* --- BİLGİLENDİRME HAVUZU (MODAL) --- */
+        /* --- HAVUZ (INFO POOL) --- */
         #infoPool {
             position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0.95);
-            width: 80%; height: 70%;
+            width: 80%; height: 75%;
             background-color: var(--bg-color);
             border: 1px solid var(--text-color);
             z-index: 2500; display: none; opacity: 0;
             transition: all 0.3s ease;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
         #infoPool.active { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
@@ -83,11 +84,19 @@
             padding: 40px; display: flex; flex-direction: column; gap: 20px;
         }
         .info-content { flex: 1; padding: 40px; overflow-y: auto; font-size: 12px; line-height: 1.8; }
-        .info-nav-link { 
-            font-size: 12px; cursor: pointer; opacity: 0.4; transition: 0.2s; text-transform: lowercase;
-        }
+        .info-nav-link { font-size: 12px; cursor: pointer; opacity: 0.4; text-transform: lowercase; }
         .info-nav-link.active { opacity: 1; text-decoration: underline; font-weight: bold; }
-        .close-btn { position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 10px; opacity: 0.5; }
+
+        /* --- İLETİŞİM FORMU --- */
+        .contact-form { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        .contact-form input, .contact-form textarea {
+            background: transparent; border: 1px solid var(--text-color);
+            color: var(--text-color); padding: 12px; font-family: inherit; font-size: 11px; outline: none;
+        }
+        .contact-form button {
+            background: var(--text-color); color: var(--bg-color); border: none;
+            padding: 15px; cursor: pointer; font-family: inherit; text-transform: lowercase;
+        }
 
         /* --- SEPET --- */
         .side-cart {
@@ -102,19 +111,23 @@
 
         /* --- ANA NAV --- */
         nav#main-nav { position: fixed; left: 40px; top: 180px; display: flex; flex-direction: column; gap: 12px; z-index: 10; }
-        .nav-link { text-decoration: none; color: var(--text-color); font-size: 14px; text-transform: lowercase; cursor: pointer; opacity: 0.6; }
+        .nav-link { text-decoration: none; color: var(--text-color); font-size: 14px; text-transform: lowercase; cursor: pointer; opacity: 0.5; }
         .nav-link.active { opacity: 1; font-weight: bold; text-decoration: underline; }
 
         /* --- ÜRÜNLER --- */
         .products-container { position: fixed; top: 100px; bottom: 120px; left: 280px; right: 40px; overflow-y: auto; }
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 40px 25px; }
         .product-box { width: 100%; aspect-ratio: 1/1; background-color: var(--text-color); opacity: var(--accent-opacity); margin-bottom: 12px; }
-        .product-info { font-size: 11px; text-transform: lowercase; }
 
-        /* --- FOOTER --- */
-        .legal-footer { position: fixed; bottom: 40px; left: 40px; display: flex; gap: 20px; z-index: 5; }
+        /* --- FOOTER & DİL --- */
+        .legal-footer { position: fixed; bottom: 40px; left: 40px; display: flex; gap: 20px; }
         .legal-link { font-size: 11px; opacity: 0.5; cursor: pointer; color: var(--text-color); text-transform: lowercase; }
-        .lang-toggle { position: fixed; right: 40px; bottom: 40px; cursor: pointer; font-size: 12px; opacity: 0.8; }
+
+        .lang-wrapper { 
+            position: fixed; right: 40px; bottom: 40px; 
+            cursor: pointer; z-index: 10; font-size: 12px; 
+            opacity: 0.7; text-transform: lowercase;
+        }
 
         @media (max-width: 768px) {
             #infoPool { width: 95%; height: 85%; flex-direction: column; }
@@ -128,7 +141,7 @@
     <div id="globalOverlay" onclick="closeAllPanels()"></div>
 
     <div id="infoPool">
-        <div class="close-btn" onclick="closeAllPanels()">[kapat]</div>
+        <div style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:10px; opacity:0.5;" onclick="closeAllPanels()">[kapat]</div>
         <div class="info-sidebar">
             <div class="info-nav-link" onclick="loadInfo('sales')" id="link-sales" data-tr="mesafeli satış" data-en="distance sales">mesafeli satış</div>
             <div class="info-nav-link" onclick="loadInfo('shipping')" id="link-shipping" data-tr="teslimat & iade" data-en="shipping & returns">teslimat & iade</div>
@@ -145,7 +158,7 @@
 
     <div class="top-right-nav">
         <button class="cart-toggle" onclick="toggleCart()" id="cartCount">cart (0)</button>
-        <button class="theme-toggle" id="themeBtn"></button>
+        <button class="theme-toggle" onclick="toggleTheme()"></button>
     </div>
 
     <div class="side-cart" id="sideCart">
@@ -170,28 +183,25 @@
         <div class="legal-link" onclick="openInfoPool('contact')" data-tr="iletişim" data-en="contact">iletişim</div>
     </footer>
 
-    <div class="lang-toggle" onclick="toggleLanguage()">
-        <span id="langTxt">tr</span>
-    </div>
+    <div class="lang-wrapper" onclick="toggleLanguage()" id="langTxt">tr</div>
 
     <script>
-        // --- TÜM BİLGİLENDİRME METİNLERİ BURADA ---
         const infoData = {
             sales: { 
-                tr: "<h3>Mesafeli Satış Sözleşmesi</h3><br><p>1. TARAFLAR<br>İşbu sözleşme REEHA (Satıcı) ile ürünü satın alan kullanıcı (Alıcı) arasında dijital ortamda onaylanmıştır.</p><p>2. KONU<br>Alıcının satıcıya ait internet sitesi üzerinden sipariş verdiği ürünün satışı ve teslimi ile ilgili hak ve yükümlülükleri kapsar.</p>", 
-                en: "<h3>Distance Sales Agreement</h3><br><p>1. PARTIES<br>This agreement is signed between REEHA (Seller) and the user (Buyer) in digital environment.</p><p>2. SUBJECT<br>Covers the rights and obligations regarding the sale and delivery of the product ordered through the website.</p>" 
+                tr: "<h3>Mesafeli Satış Sözleşmesi</h3><br><p>Tüm satışlar dijital onay ile gerçekleştirilir...</p>", 
+                en: "<h3>Distance Sales Agreement</h3><br><p>All sales are processed via digital approval...</p>" 
             },
             shipping: { 
-                tr: "<h3>Teslimat ve İade</h3><br><p>TESLİMAT:<br>Siparişleriniz 1-3 iş günü içerisinde kargoya teslim edilir. Kargo takip numarası e-posta ile iletilir.</p><p>İADE:<br>Kullanılmamış ve etiketi çıkarılmamış ürünleri 14 gün içerisinde iade edebilirsiniz. İade kargo ücreti alıcıya aittir.</p>", 
-                en: "<h3>Shipping & Returns</h3><br><p>SHIPPING:<br>Orders are shipped within 1-3 business days. Tracking numbers are sent via email.</p><p>RETURNS:<br>Unused items with tags can be returned within 14 days. Return shipping is covered by the buyer.</p>" 
+                tr: "<h3>Teslimat ve İade</h3><br><p>14 gün içinde değişim ve iade hakkınız mevcuttur.</p>", 
+                en: "<h3>Shipping & Returns</h3><br><p>Exchange and returns are available within 14 days.</p>" 
             },
             privacy: { 
-                tr: "<h3>KVKK ve Gizlilik</h3><br><p>GİZLİLİK:<br>REEHA, kullanıcıların kişisel verilerini üçüncü şahıslarla asla paylaşmaz. Veriler sadece sipariş yönetimi için kullanılır.</p><p>GÜVENLİK:<br>Ödemeleriniz SSL sertifikalı güvenli altyapılar üzerinden gerçekleştirilir.</p>", 
-                en: "<h3>Privacy Policy</h3><br><p>PRIVACY:<br>REEHA never shares personal data with third parties. Data is only used for order management.</p><p>SECURITY:<br>Payments are processed through SSL-certified secure infrastructures.</p>" 
+                tr: "<h3>KVKK</h3><br><p>Verileriniz şifrelenmiş altyapımızda korunmaktadır.</p>", 
+                en: "<h3>Privacy Policy</h3><br><p>Your data is protected in our encrypted infrastructure.</p>" 
             },
             contact: { 
-                tr: "<h3>İletişim</h3><br><p>E-POSTA:<br>info@reeha.com</p><p>ADRES:<br>İstanbul, Türkiye</p><p>Müşteri hizmetlerimiz hafta içi 09:00 - 18:00 arası aktiftir.</p>", 
-                en: "<h3>Contact</h3><br><p>EMAIL:<br>info@reeha.com</p><p>ADDRESS:<br>Istanbul, Turkey</p><p>Customer service is active weekdays from 09:00 to 18:00.</p>" 
+                tr: `<h3>İletişim</h3><form class="contact-form" onsubmit="event.preventDefault(); alert('mesaj alındı.');"><input type="text" placeholder="isim soyisim" required><input type="email" placeholder="e-posta" required><textarea placeholder="mesajınız" rows="5" required></textarea><button type="submit">gönder</button></form>`,
+                en: `<h3>Contact</h3><form class="contact-form" onsubmit="event.preventDefault(); alert('message sent.');"><input type="text" placeholder="name surname" required><input type="email" placeholder="email" required><textarea placeholder="your message" rows="5" required></textarea><button type="submit">send</button></form>`
             }
         };
 
@@ -203,14 +213,17 @@
 
         let currentLang = 'tr';
 
-        // Tema
-        document.getElementById('themeBtn').onclick = () => {
+        function toggleTheme() {
             const isLight = document.documentElement.hasAttribute('data-theme');
-            document.documentElement.toggleAttribute('data-theme', !isLight);
-            localStorage.setItem('theme', isLight ? 'dark' : 'light');
-        };
+            if (isLight) {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }
+        }
 
-        // Havuz Açma
         function openInfoPool(type) {
             document.getElementById('infoPool').style.display = 'flex';
             setTimeout(() => {
@@ -220,7 +233,6 @@
             loadInfo(type);
         }
 
-        // İçerik Yükleme
         function loadInfo(type) {
             document.querySelectorAll('.info-nav-link').forEach(l => l.classList.remove('active'));
             const link = document.getElementById(`link-${type}`);
@@ -244,12 +256,14 @@
             currentLang = currentLang === 'tr' ? 'en' : 'tr';
             document.getElementById('langTxt').innerText = currentLang;
             document.querySelectorAll('[data-tr]').forEach(el => {
-                el.textContent = el.getAttribute(`data-${currentLang}`);
+                if(el.getAttribute(`data-${currentLang}`)) {
+                    el.textContent = el.getAttribute(`data-${currentLang}`);
+                }
             });
             updateTime();
             if(document.getElementById('infoPool').classList.contains('active')) {
-                const activeId = document.querySelector('.info-nav-link.active').id.replace('link-', '');
-                loadInfo(activeId);
+                const activeLink = document.querySelector('.info-nav-link.active');
+                if(activeLink) loadInfo(activeLink.id.replace('link-', ''));
             }
         }
 
@@ -263,10 +277,7 @@
         function loadProducts(cat) {
             const grid = document.getElementById('productGrid');
             grid.innerHTML = productsData[cat].map(p => `
-                <div class="product-card">
-                    <div class="product-box"></div>
-                    <div class="product-info">${p.name} <span style="opacity:0.5">${p.price}€</span></div>
-                </div>`).join('');
+                <div class="product-card"><div class="product-box"></div><div class="product-info">${p.name} <span style="opacity:0.5">${p.price}€</span></div></div>`).join('');
         }
 
         window.onload = () => {
