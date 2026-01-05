@@ -5,10 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reeha | Store</title>
     <style>
+        /* --- SUPREME FONT ESTETİĞİ --- */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap');
+
         :root {
             --bg-color: #0e0e0e;
             --text-color: #ffffff;
-            --accent-color: #ff0000; /* Supreme Kırmızısı */
+            --accent-color: #ff0000; /* Supreme Kırmızı */
         }
 
         [data-theme="light"] {
@@ -24,12 +27,15 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            font-family: "Arial Black", "Arial Bold", Gadget, sans-serif; /* Supreme Font Esintisi */
+            /* Supreme Font yapısı: Kalın, Dar ve İtalik */
+            font-family: 'Inter', "Arial Black", sans-serif;
+            font-weight: 900;
             transition: background-color 0.5s ease;
             display: flex;
+            overflow-x: hidden;
         }
 
-        /* --- TEMA BUTONU (Senin Kodunla Aynı) --- */
+        /* --- TEMA BUTONU --- */
         .theme-toggle {
             position: fixed; top: 30px; right: 30px;
             background: none; border: 1px solid var(--text-color);
@@ -38,46 +44,51 @@
         }
         body:not([data-theme="light"]) .theme-toggle { background: var(--text-color); }
 
-        /* --- SOL MENÜ (SUPREME TARZI) --- */
+        /* --- SOL MENÜ (SUPREME NAV) --- */
         nav {
-            width: 250px;
+            width: 240px;
             height: 100vh;
             position: fixed;
             padding: 40px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 8px; /* Supreme tarzı sıkışık liste */
             z-index: 100;
         }
 
         .brand-name {
-            font-size: 24px;
+            font-size: 28px;
             font-style: italic;
             text-transform: uppercase;
-            letter-spacing: -1px;
+            letter-spacing: -1.5px; /* Harfler birbirine yakın */
             margin-bottom: 40px;
             text-decoration: none;
             color: var(--text-color);
+            line-height: 0.9;
         }
 
         .nav-link {
             text-decoration: none;
             color: var(--text-color);
-            font-size: 14px;
+            font-size: 15px;
             text-transform: uppercase;
             font-style: italic;
-            opacity: 0.6;
-            transition: 0.3s;
+            opacity: 1; /* Supreme'de opaklık genelde tamdır */
+            transition: 0.2s;
+            display: block;
         }
 
-        .nav-link:hover, .nav-link.active {
-            opacity: 1;
+        .nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        .nav-link.active {
             color: var(--accent-color);
         }
 
         /* --- ANA İÇERİK --- */
         main {
-            margin-left: 250px;
+            margin-left: 240px;
             padding: 40px;
             width: 100%;
             min-height: 100vh;
@@ -85,60 +96,65 @@
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 60px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 50px;
         }
 
         .product-card {
-            aspect-ratio: 1/1;
-            background: #1a1a1a; /* Geçici kutu rengi */
+            background: none;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            padding: 15px;
-            position: relative;
             cursor: pointer;
-            overflow: hidden;
-            transition: 0.3s;
+            position: relative;
         }
 
-        [data-theme="light"] .product-card { background: #eee; }
+        .img-container {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: #151515;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        [data-theme="light"] .img-container { background: #eeeeee; }
 
         .product-card img {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .product-card:hover img {
-            transform: scale(1.05);
+            transition: opacity 0.3s;
         }
 
         .product-info {
-            position: relative;
-            z-index: 2;
-            font-size: 12px;
+            margin-top: 8px;
+            font-size: 13px;
             text-transform: uppercase;
             font-style: italic;
-            background: var(--bg-color);
-            padding: 5px;
-            display: inline-block;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
         }
 
-        /* --- MOBİL AYARLAR --- */
+        .price {
+            display: block;
+            margin-top: 2px;
+            opacity: 0.6;
+            font-family: monospace; /* Fiyatlar daha teknik dursun */
+            font-style: normal;
+        }
+
+        /* --- MOBİL --- */
         @media (max-width: 768px) {
             body { flex-direction: column; }
             nav {
                 width: 100%; height: auto;
                 position: relative; padding: 20px;
-                flex-direction: row; flex-wrap: wrap;
-                gap: 15px;
+                gap: 12px;
             }
-            .brand-name { width: 100%; margin-bottom: 10px; }
-            main { margin-left: 0; padding: 20px; }
-            .product-grid { grid-template-columns: repeat(2, 1fr); }
+            .brand-name { margin-bottom: 20px; font-size: 24px; }
+            main { margin-left: 0; padding: 15px; }
+            .product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .product-info { font-size: 11px; }
         }
     </style>
 </head>
@@ -148,26 +164,35 @@
 
     <nav>
         <a href="index.html" class="brand-name">Reeha</a>
-        <a href="#" class="nav-link active">Tümü</a>
-        <a href="#" class="nav-link">Üst Giyim</a>
-        <a href="#" class="nav-link">Alt Giyim</a>
-        <a href="#" class="nav-link">Aksesuar</a>
-        <a href="#" class="nav-link">Arşiv</a>
+        <a href="#" class="nav-link active">All</a>
+        <a href="#" class="nav-link">Jackets</a>
+        <a href="#" class="nav-link">Shirts</a>
+        <a href="#" class="nav-link">Tops/Sweaters</a>
+        <a href="#" class="nav-link">Sweatshirts</a>
+        <a href="#" class="nav-link">Pants</a>
+        <a href="#" class="nav-link">Accessories</a>
     </nav>
 
     <main>
         <div class="product-grid">
             <div class="product-card">
-                <img src="media/product1.webp" alt="Ürün">
-                <div class="product-info">Sample T-Shirt - 2026</div>
+                <div class="img-container">
+                    <img src="media/p1.webp" alt="">
+                </div>
+                <div class="product-info">
+                    REEHA GORE-TEX SHELL JACKET
+                    <span class="price">$298</span>
+                </div>
             </div>
+
             <div class="product-card">
-                <img src="media/product2.webp" alt="Ürün">
-                <div class="product-info">Limited Hoodie - 2026</div>
-            </div>
-            <div class="product-card">
-                <img src="media/product3.webp" alt="Ürün">
-                <div class="product-info">Street Cargo - 2026</div>
+                <div class="img-container">
+                    <img src="media/p2.webp" alt="">
+                </div>
+                <div class="product-info">
+                    BOX LOGO HOODED SWEATSHIRT
+                    <span class="price">$168</span>
+                </div>
             </div>
         </div>
     </main>
@@ -176,7 +201,6 @@
         const themeBtn = document.getElementById('themeBtn');
         const body = document.documentElement;
 
-        // Tema Yönetimi
         const savedTheme = localStorage.getItem('theme') || 'dark';
         if (savedTheme === 'light') body.setAttribute('data-theme', 'light');
 
