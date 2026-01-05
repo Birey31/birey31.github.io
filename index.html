@@ -2,18 +2,6 @@
 <html lang="tr">
 <head>
     <link rel="canonical" href="https://reeha.com.tr/">
-    <link rel="manifest" href="manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Reeha">
-    
-    <meta name="theme-color" content="#0e0e0e" id="meta-theme">
-    <meta name="theme-color" content="#0e0e0e" media="(prefers-color-scheme: dark)">
-    <meta name="theme-color" content="#fcfcfc" media="(prefers-color-scheme: light)">
-
-    <link rel="apple-touch-icon" href="media/logo.webp">
-    <link rel="icon" type="image/webp" href="media/mobillogo.webp">
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Reeha</title>
@@ -21,7 +9,6 @@
         :root {
             --bg-color: #0e0e0e; 
             --text-color: #ffffff;
-            color-scheme: dark light;
         }
 
         [data-theme="light"] {
@@ -29,80 +16,76 @@
             --text-color: #000000;
         }
 
-        html { background-color: var(--bg-color); }
-
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
             background-color: var(--bg-color);
-            display: flex; justify-content: center; align-items: center;
             transition: background-color 0.8s ease;
             overflow: hidden;
             font-family: 'Times New Roman', serif;
-            -webkit-tap-highlight-color: transparent;
+            display: flex;
+            flex-direction: column; /* İçeriği dikey sırala */
         }
 
         /* --- TEMA BUTONU --- */
         .theme-toggle {
-            position: absolute; top: 40px; right: 40px;
+            position: absolute; top: 30px; right: 30px;
             background: none; border: 1px solid var(--text-color); 
             width: 14px; height: 14px; border-radius: 50%;
-            cursor: pointer; opacity: 0.4; transition: 0.4s;
-            padding: 0; outline: none; z-index: 1000;
+            cursor: pointer; opacity: 0.4; z-index: 1000;
         }
-        .theme-toggle:hover { opacity: 1; transform: scale(1.1); }
         body:not([data-theme="light"]) .theme-toggle { background: var(--text-color); }
-        [data-theme="light"] .theme-toggle { background: transparent; }
 
-        /* --- LOGOLAR --- */
+        /* --- ANA İÇERİK (LOGO BURADA) --- */
+        .main-content {
+            flex: 1; /* Ekranın kalan tüm yerini kapla */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         .logo-container {
             display: flex; align-items: center; justify-content: center; gap: 40px;
-            z-index: 100;
         }
+
         .logo-link { 
-            text-decoration: none; 
-            display: flex; align-items: center; justify-content: center;
-            position: relative;
+            text-decoration: none; display: flex; align-items: center; justify-content: center; position: relative;
         }
         
         .desktop-only { 
-            display: block; height: auto; 
-            filter: grayscale(100%) opacity(0.6); 
-            transition: 0.6s ease; cursor: pointer;
+            filter: grayscale(100%) opacity(0.6); transition: 0.6s ease;
         }
         .logo-link:nth-of-type(1) .desktop-only { width: 185px; }
         .logo-link:nth-of-type(2) .desktop-only { width: 250px; }
 
         .coming-soon {
-            position: absolute;
-            font-size: 11px; letter-spacing: 2px;
+            position: absolute; font-size: 11px; letter-spacing: 2px;
             text-transform: uppercase; color: var(--text-color);
             opacity: 0; transition: 0.6s ease;
-            z-index: 10; pointer-events: none;
         }
 
         .logo-link:nth-of-type(2):hover .desktop-only {
             filter: grayscale(100%) opacity(0.2) blur(8px);
-            transform: scale(0.98);
         }
-        .logo-link:nth-of-type(2):hover .coming-soon {
-            opacity: 0.8;
-        }
+        .logo-link:nth-of-type(2):hover .coming-soon { opacity: 0.8; }
 
-        /* --- CANLI SAAT (Masaüstü) --- */
-        #live-clock {
-            position: absolute; bottom: 30px; right: 40px;
-            font-size: 11px; letter-spacing: 1px;
-            color: var(--text-color); opacity: 0.4; font-family: monospace;
-        }
-
-        /* --- FOOTER (İmza) --- */
+        /* --- FOOTER (İMZA) --- */
         footer {
-            position: absolute; bottom: 30px;
-            width: 100%; text-align: center;
-            font-size: 10px; letter-spacing: 2px;
-            color: var(--text-color); opacity: 0.3;
-            text-transform: uppercase; pointer-events: none;
-            z-index: 50;
+            height: 60px; /* Sabit bir yükseklik */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: var(--text-color);
+            opacity: 0.3;
+            text-transform: uppercase;
+            z-index: 100;
+        }
+
+        /* --- CANLI SAAT --- */
+        #live-clock {
+            position: absolute; bottom: 22px; right: 30px;
+            font-size: 11px; color: var(--text-color); opacity: 0.4; font-family: monospace;
         }
 
         /* --- MOBİL AYARLAR --- */
@@ -112,13 +95,13 @@
             .logo-link { display: none !important; }
             .mobile-only-link { 
                 display: flex !important; 
-                justify-content: center; align-items: center;
-                transform: translateY(-20px); /* Logoyu biraz yukarı alıyoruz */
+            }
+            .mobile-only-link img {
+                width: 160px; /* Mobilde logoyu biraz daha küçülttük ki yazıya yer kalsın */
             }
             #live-clock { display: none; } 
-            footer { 
-                bottom: 40px; /* Mobilde imzayı biraz daha yukarı çekiyoruz */
-                opacity: 0.4; /* Mobilde biraz daha belirgin olsun */
+            footer {
+                opacity: 0.5; /* Mobilde yazıyı biraz daha belirgin yaptık */
             }
         }
     </style>
@@ -127,19 +110,21 @@
 
     <button class="theme-toggle" id="themeBtn" onclick="playSound()"></button>
 
-    <div class="logo-container">
-        <a href="2026.html" class="logo-link">
-            <img src="media/logo.webp" alt="2026" class="desktop-only">
-        </a>
-        
-        <a href="javascript:void(0)" class="logo-link" id="lockedLink">
-            <img src="media/logo2.webp" alt="2027" class="desktop-only">
-            <span class="coming-soon">Yakında</span>
-        </a>
+    <div class="main-content">
+        <div class="logo-container">
+            <a href="2026.html" class="logo-link">
+                <img src="media/logo.webp" alt="2026" class="desktop-only">
+            </a>
+            
+            <a href="javascript:void(0)" class="logo-link" id="lockedLink">
+                <img src="media/logo2.webp" alt="2027" class="desktop-only">
+                <span class="coming-soon">Yakında</span>
+            </a>
 
-        <a href="2026.html" class="mobile-only-link">
-            <img src="media/mobillogo.webp" style="width:200px;" alt="Reeha">
-        </a>
+            <a href="2026.html" class="mobile-only-link">
+                <img src="media/mobillogo.webp" alt="Reeha">
+            </a>
+        </div>
     </div>
 
     <footer>Reeha © 2026</footer>
@@ -150,8 +135,6 @@
     </audio>
 
     <script>
-        // SERVICE WORKER KODLARI SİLİNDİ (Hızlı Güncelleme İçin)
-        
         const themeBtn = document.getElementById('themeBtn');
         const body = document.documentElement;
         const clickSound = document.getElementById('clickSound');
@@ -186,10 +169,6 @@
                 localStorage.setItem('theme', 'light');
             }
         });
-
-        if (window.location.pathname.endsWith('.html')) {
-            window.history.replaceState(null, '', window.location.pathname.replace(/\.html$/, ''));
-        }
     </script>
 </body>
 </html>
