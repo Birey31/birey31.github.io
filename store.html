@@ -28,6 +28,7 @@
             height: 100vh;
             overflow: hidden;
             display: flex;
+            flex-direction: column;
         }
 
         /* --- TEMA BUTONU --- */
@@ -39,8 +40,8 @@
         }
         body:not([data-theme="light"]) .theme-toggle { background: var(--text-color); }
 
-        /* --- SOL MENÜ --- */
-        nav {
+        /* --- SOL ANA MENÜ --- */
+        nav#main-nav {
             position: fixed;
             left: 40px;
             top: 50%;
@@ -48,6 +49,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            z-index: 10;
         }
 
         .nav-link {
@@ -61,7 +63,38 @@
 
         .nav-link:hover { text-decoration: underline; }
 
-        /* --- SAĞ ALT PANEL --- */
+        /* --- ALT YASAL MENÜ (FOOTER) --- */
+        .legal-footer {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            max-width: 70%;
+            z-index: 5;
+        }
+
+        .legal-link {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 11px;
+            text-transform: lowercase;
+            opacity: 0.6;
+            transition: 0.2s;
+        }
+
+        .legal-link:hover { opacity: 1; text-decoration: underline; }
+
+        /* Supreme Stili Kırmızı Vurgu */
+        .highlight-red {
+            background-color: #ff0000;
+            color: #ffffff !important;
+            padding: 0 4px;
+            opacity: 1 !important;
+        }
+
+        /* --- SAĞ ALT PANEL (DİL & SAAT) --- */
         .bottom-right-panel {
             position: fixed;
             right: 40px;
@@ -69,42 +102,35 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            z-index: 10;
         }
 
-        /* DÜZELTİLMİŞ DİL SEÇİCİ */
         .lang-wrapper {
             position: relative;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px; /* Bayrak ve ok arası boşluk */
+            gap: 8px;
         }
 
-        /* Dikdörtgen Bayrak Stili (Emoji yerine geçer) */
         .flag-box {
             width: 22px;
             height: 14px;
             display: inline-block;
             background-size: cover;
             background-position: center;
-            /* Buraya kendi bayrak icon linklerini ekleyebilirsin */
         }
 
-        /* Örnek Flag URL'leri (İstersen bunları media klasörüne alabilirsin) */
         .flag-tr { background-image: url('https://flagcdn.com/w40/tr.png'); }
         .flag-en { background-image: url('https://flagcdn.com/w40/gb.png'); }
 
-        /* HİZALANMIŞ OK */
         .arrow-down {
-            width: 0; 
-            height: 0; 
+            width: 0; height: 0; 
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
             border-top: 6px solid var(--text-color);
-            transition: transform 0.3s;
         }
 
-        /* AÇILIR MENÜ (BEYAZ KARE SİLİNDİ) */
         .lang-dropdown {
             position: absolute;
             bottom: 150%;
@@ -114,7 +140,6 @@
             background-color: var(--bg-color);
             gap: 12px;
             padding: 5px 0;
-            z-index: 100;
         }
 
         .lang-dropdown.active { display: flex; }
@@ -134,14 +159,12 @@
             letter-spacing: 1px;
             opacity: 0.8;
             white-space: nowrap;
-            /* Saatin aşağıda kalmaması için hizalama */
-            display: flex;
-            align-items: center;
         }
 
         /* --- MOBİL --- */
         @media (max-width: 768px) {
-            nav { left: 20px; top: 40px; transform: none; }
+            nav#main-nav { left: 20px; top: 40px; transform: none; }
+            .legal-footer { left: 20px; bottom: 80px; width: 90%; }
             .bottom-right-panel { right: 20px; bottom: 20px; flex-direction: column; align-items: flex-end; }
         }
     </style>
@@ -160,6 +183,14 @@
         <a href="#" class="nav-link" data-tr="iletişim" data-en="contact">contact</a>
         <a href="#" class="nav-link" data-tr="e-posta listesi" data-en="mailing list">mailing list</a>
     </nav>
+
+    <footer class="legal-footer">
+        <a href="#" class="legal-link" data-tr="mesafeli satış sözleşmesi" data-en="distance sales agreement">mesafeli satış sözleşmesi</a>
+        <a href="#" class="legal-link" data-tr="teslimat ve iade" data-en="shipping & returns">teslimat ve iade</a>
+        <a href="#" class="legal-link" data-tr="kvkk ve gizlilik" data-en="privacy policy">kvkk ve gizlilik</a>
+        <a href="#" class="legal-link" data-tr="çerez politikası" data-en="cookie policy">çerez politikası</a>
+        <a href="#" class="legal-link highlight-red" data-tr="kullanım koşulları" data-en="terms">kullanım koşulları</a>
+    </footer>
 
     <div class="bottom-right-panel">
         <div class="lang-wrapper" onclick="toggleLangDropdown()">
@@ -185,17 +216,16 @@
         let currentLang = 'tr';
 
         function toggleLangDropdown() {
-            const dropdown = document.getElementById('lang-dropdown');
-            dropdown.classList.toggle('active');
+            document.getElementById('lang-dropdown').classList.toggle('active');
         }
 
         function setLanguage(lang, flagClass) {
             currentLang = lang;
-            const flagBox = document.getElementById('selected-flag-box');
-            flagBox.className = 'flag-box ' + flagClass;
+            document.getElementById('selected-flag-box').className = 'flag-box ' + flagClass;
             
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.textContent = link.getAttribute(`data-${lang}`);
+            // Tüm linkleri (ana menü + footer) güncelle
+            document.querySelectorAll('[data-tr]').forEach(el => {
+                el.textContent = el.getAttribute(`data-${lang}`);
             });
 
             updateTime();
