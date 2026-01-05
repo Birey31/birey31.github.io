@@ -59,9 +59,7 @@
             width: max-content;
         }
 
-        .nav-link:hover {
-            text-decoration: underline;
-        }
+        .nav-link:hover { text-decoration: underline; }
 
         /* --- SAĞ ALT PANEL --- */
         .bottom-right-panel {
@@ -70,70 +68,75 @@
             bottom: 40px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
         }
 
-        /* YENİ DİL SEÇİCİ (ÇERÇEVESİZ VE OKLU) */
+        /* DÜZELTİLMİŞ DİL SEÇİCİ */
         .lang-wrapper {
             position: relative;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 4px;
-            opacity: 0.7;
-            transition: 0.3s;
+            gap: 8px; /* Bayrak ve ok arası boşluk */
         }
 
-        .lang-wrapper:hover { opacity: 1; }
-
-        .lang-current {
-            font-size: 18px;
-            display: flex;
-            align-items: center;
+        /* Dikdörtgen Bayrak Stili (Emoji yerine geçer) */
+        .flag-box {
+            width: 22px;
+            height: 14px;
+            display: inline-block;
+            background-size: cover;
+            background-position: center;
+            /* Buraya kendi bayrak icon linklerini ekleyebilirsin */
         }
 
-        /* Sekme Oku */
+        /* Örnek Flag URL'leri (İstersen bunları media klasörüne alabilirsin) */
+        .flag-tr { background-image: url('https://flagcdn.com/w40/tr.png'); }
+        .flag-en { background-image: url('https://flagcdn.com/w40/gb.png'); }
+
+        /* HİZALANMIŞ OK */
         .arrow-down {
             width: 0; 
             height: 0; 
-            border-left: 4px solid transparent;
-            border-right: 4px solid transparent;
-            border-top: 5px solid var(--text-color);
-            margin-top: 2px;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 6px solid var(--text-color);
+            transition: transform 0.3s;
         }
 
+        /* AÇILIR MENÜ (BEYAZ KARE SİLİNDİ) */
         .lang-dropdown {
             position: absolute;
-            bottom: 120%;
+            bottom: 150%;
             left: 0;
             display: none;
             flex-direction: column;
             background-color: var(--bg-color);
-            border: 1px solid var(--text-color);
-            padding: 2px;
+            gap: 12px;
+            padding: 5px 0;
             z-index: 100;
         }
 
-        .lang-dropdown.active {
-            display: flex;
-        }
+        .lang-dropdown.active { display: flex; }
 
         .lang-option {
-            padding: 5px 10px;
-            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0.6;
             transition: 0.2s;
         }
 
-        .lang-option:hover {
-            background-color: var(--text-color);
-            color: var(--bg-color);
-        }
+        .lang-option:hover { opacity: 1; }
 
         .date-info {
-            font-size: 12px;
+            font-size: 13px;
             letter-spacing: 1px;
             opacity: 0.8;
             white-space: nowrap;
+            /* Saatin aşağıda kalmaması için hizalama */
+            display: flex;
+            align-items: center;
         }
 
         /* --- MOBİL --- */
@@ -160,16 +163,20 @@
 
     <div class="bottom-right-panel">
         <div class="lang-wrapper" onclick="toggleLangDropdown()">
-            <div class="lang-current" id="selected-flag">🇹🇷</div>
+            <div id="selected-flag-box" class="flag-box flag-tr"></div>
             <div class="arrow-down"></div>
             
             <div class="lang-dropdown" id="lang-dropdown">
-                <div class="lang-option" onclick="setLanguage('tr', '🇹🇷')">🇹🇷</div>
-                <div class="lang-option" onclick="setLanguage('en', '🇬🇧')">🇬🇧</div>
+                <div class="lang-option" onclick="setLanguage('tr', 'flag-tr')">
+                    <div class="flag-box flag-tr"></div> tr
+                </div>
+                <div class="lang-option" onclick="setLanguage('en', 'flag-en')">
+                    <div class="flag-box flag-en"></div> en
+                </div>
             </div>
         </div>
         
-        <div class="date-info" id="current-time">05/01/2026 10:19pm TR</div>
+        <div class="date-info" id="current-time">05/01/2026 10:30pm TR</div>
     </div>
 
     <script>
@@ -178,12 +185,14 @@
         let currentLang = 'tr';
 
         function toggleLangDropdown() {
-            document.getElementById('lang-dropdown').classList.toggle('active');
+            const dropdown = document.getElementById('lang-dropdown');
+            dropdown.classList.toggle('active');
         }
 
-        function setLanguage(lang, flag) {
+        function setLanguage(lang, flagClass) {
             currentLang = lang;
-            document.getElementById('selected-flag').textContent = flag;
+            const flagBox = document.getElementById('selected-flag-box');
+            flagBox.className = 'flag-box ' + flagClass;
             
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.textContent = link.getAttribute(`data-${lang}`);
