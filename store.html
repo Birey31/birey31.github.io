@@ -83,12 +83,15 @@
         .detail-img-box { flex: 1; display: flex; align-items: center; justify-content: center; border-right: 1px solid var(--text-color); padding: 40px; }
         .detail-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
         .detail-info-box { width: 400px; padding: 40px; display: flex; flex-direction: column; justify-content: center; gap: 25px; }
+        
         .size-selector { display: flex; gap: 10px; margin-top: 10px; }
         .size-btn { 
             border: 1px solid var(--text-color); background: none; color: var(--text-color); 
             padding: 5px 12px; cursor: pointer; font-size: 10px; transition: 0.3s;
+            font-family: inherit;
         }
         .size-btn.selected { background: var(--text-color); color: var(--bg-color); }
+        
         .add-to-cart-btn {
             background: var(--text-color); color: var(--bg-color); border: none;
             padding: 12px; cursor: pointer; font-family: inherit; font-size: 11px;
@@ -148,8 +151,7 @@
 
     <div id="productDetailPool">
         <div style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:10px; opacity:0.5; z-index:10;" onclick="closeAllPanels()">[kapat]</div>
-        <div id="productDetailContent" class="detail-container">
-            </div>
+        <div id="productDetailContent" class="detail-container"></div>
     </div>
 
     <div id="infoPool">
@@ -206,18 +208,29 @@
                 { id: 3, name: "vintage tee black", price: 45, img: "elbise/tshirt3.png", desc: "Washed effect, vintage aesthetic." },
                 { id: 4, name: "reeha seasonal tee", price: 45, img: "elbise/tshirt4.png", desc: "Limited edition seasonal print." },
                 { id: 5, name: "loose fit denim", price: 95, img: "elbise/kot1.png", desc: "Wide leg, classic denim wash." }, 
-                { id: 6, name: "cargo pants", price: 105, img: "elbise/kot2.png", desc: "Multi-pocket utility design." }
+                { id: 6, name: "cargo pants", price: 105, img: "elbise/kot2.png", desc: "Multi-pocket utility design." },
+                { id: 7, name: "utility shorts", price: 80, img: "elbise/kot3.png", desc: "Breathable fabric, tactical pockets." },
+                { id: 8, name: "wide leg trousers", price: 115, img: "elbise/kot4.png", desc: "Elegant wide cut, daily comfort." },
+                { id: 9, name: "canvas tote bag", price: 30, img: "elbise/taki1.png", desc: "Durable canvas, minimalist design." }, 
+                { id: 10, name: "utility belt", price: 55, img: "elbise/taki2.png", desc: "Adjustable strap, metal buckle." },
+                { id: 11, name: "minimal chain", price: 45, img: "elbise/taki3.png", desc: "925 silver finish, subtle detail." }
             ],
             tops: [
                 { id: 1, name: "basic t-shirt white", price: 40, img: "elbise/tshirt1.png", desc: "100% heavy cotton." }, 
-                { id: 2, name: "heavy cotton hoodie", price: 110, img: "elbise/tshirt2.png", desc: "Oversized fit." }
+                { id: 2, name: "heavy cotton hoodie", price: 110, img: "elbise/tshirt2.png", desc: "Oversized fit." },
+                { id: 3, name: "vintage tee black", price: 45, img: "elbise/tshirt3.png", desc: "Washed aesthetic." },
+                { id: 4, name: "reeha seasonal tee", price: 45, img: "elbise/tshirt4.png", desc: "Limited print." }
             ],
             bottoms: [
-                { id: 5, name: "loose fit denim", price: 95, img: "elbise/kot1.png", desc: "Wide leg." }, 
-                { id: 6, name: "cargo pants", price: 105, img: "elbise/kot2.png", desc: "Utility pants." }
+                { id: 5, name: "loose fit denim", price: 95, img: "elbise/kot1.png", desc: "Wide leg denim." }, 
+                { id: 6, name: "cargo pants", price: 105, img: "elbise/kot2.png", desc: "Utility cargo." },
+                { id: 7, name: "utility shorts", price: 80, img: "elbise/kot3.png", desc: "Summer utility." },
+                { id: 8, name: "wide leg trousers", price: 115, img: "elbise/kot4.png", desc: "Comfort trousers." }
             ],
             accessories: [
-                { id: 9, name: "canvas tote bag", price: 30, img: "elbise/taki1.png", desc: "Durable canvas." }
+                { id: 9, name: "canvas tote bag", price: 30, img: "elbise/taki1.png", desc: "Daily tote." },
+                { id: 10, name: "utility belt", price: 55, img: "elbise/taki2.png", desc: "Tactical belt." },
+                { id: 11, name: "minimal chain", price: 45, img: "elbise/taki3.png", desc: "Silver chain." }
             ]
         };
 
@@ -226,9 +239,7 @@
 
         function updateTime() {
             const now = new Date();
-            const date = now.toLocaleDateString('tr-TR');
-            const time = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            document.getElementById('current-time').innerText = `${date} ${time}`;
+            document.getElementById('current-time').innerText = now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString('tr-TR');
         }
 
         function loadProducts(cat, e) {
@@ -247,7 +258,6 @@
 
         function openProductDetail(cat, id) {
             const product = productsData[cat].find(p => p.id === id);
-            const detailPool = document.getElementById('productDetailPool');
             const content = document.getElementById('productDetailContent');
 
             content.innerHTML = `
@@ -256,7 +266,7 @@
                 </div>
                 <div class="detail-info-box">
                     <div style="font-size: 18px; font-weight: bold;">${product.name}</div>
-                    <div style="font-size: 14px; opacity: 0.7;">${product.desc}</div>
+                    <div style="font-size: 12px; opacity: 0.7; line-height:1.5;">${product.desc}</div>
                     <div style="font-size: 16px;">${product.price}€</div>
                     <div>
                         <div style="font-size: 10px; margin-bottom: 5px;">beden / size:</div>
@@ -270,9 +280,10 @@
                 </div>
             `;
 
-            detailPool.style.display = 'flex';
+            const pool = document.getElementById('productDetailPool');
+            pool.style.display = 'flex';
             setTimeout(() => {
-                detailPool.classList.add('active');
+                pool.classList.add('active');
                 document.getElementById('globalOverlay').classList.add('active');
             }, 10);
         }
@@ -287,7 +298,7 @@
             if(!size) { alert('lütfen beden seçin / please select size'); return; }
             cart.push({ name, price, size });
             document.getElementById('cartCount').innerText = `cart (${cart.length})`;
-            alert('sepete eklendi / added to cart');
+            alert('sepete eklendi');
             closeAllPanels();
         }
 
@@ -309,17 +320,11 @@
         }
 
         function toggleCart() {
-            const sideCart = document.getElementById('sideCart');
-            const cartItems = document.getElementById('cartItems');
-            sideCart.classList.toggle('active');
+            document.getElementById('sideCart').classList.toggle('active');
             document.getElementById('globalOverlay').classList.toggle('active');
-            
+            const cartItems = document.getElementById('cartItems');
             if(cart.length > 0) {
-                cartItems.innerHTML = cart.map(item => `
-                    <div style="margin-bottom:10px; border-bottom:1px solid rgba(128,128,128,0.2); padding-bottom:5px;">
-                        ${item.name} - ${item.size}<br>${item.price}€
-                    </div>
-                `).join('');
+                cartItems.innerHTML = cart.map(i => `<div style="margin-bottom:10px;">${i.name} (${i.size}) - ${i.price}€</div>`).join('');
                 cartItems.style.opacity = "1";
             }
         }
