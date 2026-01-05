@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
-<head>
+<html lang="tr" style="background-color: #0e0e0e;"> <head>
     <link rel="icon" type="image/png" href="media/mobillogo.webp">
     <link rel="canonical" href="https://reeha.com.tr/">
     <meta charset="UTF-8">
@@ -24,7 +23,7 @@
             --text-color: #000000;
         }
 
-        /* --- AÇILIŞ ANİMASYONU --- */
+        /* --- HIZLI AÇILIŞ ANİMASYONU (0.5s) --- */
         @keyframes fadeInPage {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -38,7 +37,8 @@
             font-family: 'Times New Roman', serif;
             display: flex;
             flex-direction: column;
-            animation: fadeInPage 1.2s ease-in-out forwards;
+            /* Animasyon süresi kısaltıldı */
+            animation: fadeInPage 0.5s ease-out forwards;
         }
 
         /* --- TEMA BUTONU --- */
@@ -73,7 +73,7 @@
         .logo-link:nth-of-type(1) .desktop-only { width: 185px; }
         .logo-link:nth-of-type(2) .desktop-only { width: 250px; }
 
-        /* --- LOGO 1 HOVER (RENKLENME) --- */
+        /* --- LOGO 1 HOVER (RENKLENME GERİ GELDİ) --- */
         .logo-link:nth-of-type(1):hover .desktop-only {
             filter: grayscale(0%) opacity(1);
             transform: scale(1.02);
