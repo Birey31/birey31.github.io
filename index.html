@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="tr" style="background-color: #0e0e0e;"> <head>
+<html lang="tr" style="background-color: #0e0e0e;">
+<head>
     <link rel="icon" type="image/png" href="media/mobillogo.webp">
     <link rel="canonical" href="https://reeha.com.tr/">
     <meta charset="UTF-8">
@@ -37,7 +38,6 @@
             font-family: 'Times New Roman', serif;
             display: flex;
             flex-direction: column;
-            /* Animasyon süresi kısaltıldı */
             animation: fadeInPage 0.5s ease-out forwards;
         }
 
@@ -56,6 +56,32 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px; /* Store yazısı ile logolar arasındaki boşluk */
+        }
+
+        /* --- STORE YAZISI (SUPREME ESİNTİSİ) --- */
+        .store-link {
+            text-decoration: none;
+            color: var(--text-color);
+            font-family: "Arial Black", sans-serif;
+            font-size: 11px;
+            font-style: italic;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.5;
+            transition: 0.4s ease;
+            padding: 5px 10px;
+        }
+        .store-link:hover {
+            opacity: 1;
+            letter-spacing: 4px; /* Üzerine gelince hafif genişleme efekti */
         }
 
         .logo-container {
@@ -73,13 +99,11 @@
         .logo-link:nth-of-type(1) .desktop-only { width: 185px; }
         .logo-link:nth-of-type(2) .desktop-only { width: 250px; }
 
-        /* --- LOGO 1 HOVER (RENKLENME GERİ GELDİ) --- */
         .logo-link:nth-of-type(1):hover .desktop-only {
             filter: grayscale(0%) opacity(1);
             transform: scale(1.02);
         }
 
-        /* --- LOGO 2 HOVER (BULANIKLAŞMA) --- */
         .coming-soon {
             position: absolute; font-size: 11px; letter-spacing: 2px;
             text-transform: uppercase; color: var(--text-color);
@@ -121,6 +145,7 @@
             .mobile-only-link img { width: 160px; }
             #live-clock { display: none; } 
             footer { opacity: 0.5; }
+            .content-wrapper { gap: 10px; }
         }
     </style>
 </head>
@@ -129,19 +154,23 @@
     <button class="theme-toggle" id="themeBtn" onclick="playSound()"></button>
 
     <div class="main-content">
-        <div class="logo-container">
-            <a href="2026.html" class="logo-link">
-                <img src="media/logo.webp" alt="2026" class="desktop-only">
-            </a>
-            
-            <a href="javascript:void(0)" class="logo-link" id="lockedLink">
-                <img src="media/logo2.webp" alt="2027" class="desktop-only">
-                <span class="coming-soon">Yakında</span>
-            </a>
+        <div class="content-wrapper">
+            <a href="store.html" class="store-link">Store</a>
 
-            <a href="2026.html" class="mobile-only-link">
-                <img src="media/mobillogo.webp" alt="Reeha">
-            </a>
+            <div class="logo-container">
+                <a href="2026.html" class="logo-link">
+                    <img src="media/logo.webp" alt="2026" class="desktop-only">
+                </a>
+                
+                <a href="javascript:void(0)" class="logo-link" id="lockedLink">
+                    <img src="media/logo2.webp" alt="2027" class="desktop-only">
+                    <span class="coming-soon">Yakında</span>
+                </a>
+
+                <a href="2026.html" class="mobile-only-link">
+                    <img src="media/mobillogo.webp" alt="Reeha">
+                </a>
+            </div>
         </div>
     </div>
 
@@ -188,7 +217,6 @@
             }
         });
 
-        // URL Temizleme
         if (window.location.pathname.endsWith('.html')) {
             let newPath = window.location.pathname.replace(/\.html$/, '');
             if (newPath.endsWith('/index')) {
@@ -197,7 +225,6 @@
             window.history.replaceState(null, '', newPath);
         }
 
-        // Service Worker (Temizlik için)
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.js').then(reg => reg.update());
         }
