@@ -41,13 +41,7 @@
             font-weight: 900; font-size: 24px; letter-spacing: 1px;
             line-height: 1; margin-bottom: 8px; text-transform: uppercase;
         }
-        #current-time { 
-            font-size: 11px; 
-            opacity: 0.8; 
-            letter-spacing: 0.5px;
-            min-height: 15px;
-            display: block !important;
-        }
+        #current-time { font-size: 11px; opacity: 0.8; letter-spacing: 0.5px; min-height: 15px; display: block !important; }
 
         /* --- GLOBAL OVERLAY --- */
         #globalOverlay {
@@ -67,15 +61,10 @@
             width: 14px; height: 14px; border-radius: 50%; cursor: pointer;
         }
         body:not([data-theme="light"]) .theme-toggle { background: var(--text-color); }
-        [data-theme="light"] .theme-toggle { background: transparent; }
+        .cart-toggle { background: none; border: none; color: var(--text-color); font-size: 13px; cursor: pointer; text-transform: lowercase; }
 
-        .cart-toggle {
-            background: none; border: none; color: var(--text-color);
-            font-family: inherit; font-size: 13px; cursor: pointer; text-transform: lowercase;
-        }
-
-        /* --- HAVUZ SİSTEMİ (INFO & PRODUCTS) --- */
-        #infoPool {
+        /* --- HAVUZ SİSTEMLERİ --- */
+        #infoPool, #productDetailPool {
             position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0.95);
             width: 80%; height: 75%;
@@ -84,55 +73,45 @@
             z-index: 2500; display: none; opacity: 0;
             transition: all 0.3s ease;
         }
-        #infoPool.active { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        #infoPool.active, #productDetailPool.active { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
-        .info-sidebar {
-            width: 200px; border-right: 1px solid var(--text-color);
-            padding: 40px; display: flex; flex-direction: column; gap: 20px;
-        }
+        .info-sidebar { width: 200px; border-right: 1px solid var(--text-color); padding: 40px; display: flex; flex-direction: column; gap: 20px; }
         .info-content { flex: 1; padding: 40px; overflow-y: auto; font-size: 12px; line-height: 1.8; }
-        .info-nav-link { font-size: 12px; cursor: pointer; opacity: 0.4; text-transform: lowercase; }
-        .info-nav-link.active { opacity: 1; text-decoration: underline; font-weight: bold; }
+        
+        /* --- ÜRÜN DETAY İÇERİĞİ --- */
+        .detail-container { display: flex; width: 100%; height: 100%; }
+        .detail-img-box { flex: 1; display: flex; align-items: center; justify-content: center; border-right: 1px solid var(--text-color); padding: 40px; }
+        .detail-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .detail-info-box { width: 400px; padding: 40px; display: flex; flex-direction: column; justify-content: center; gap: 25px; }
+        .size-selector { display: flex; gap: 10px; margin-top: 10px; }
+        .size-btn { 
+            border: 1px solid var(--text-color); background: none; color: var(--text-color); 
+            padding: 5px 12px; cursor: pointer; font-size: 10px; transition: 0.3s;
+        }
+        .size-btn.selected { background: var(--text-color); color: var(--bg-color); }
+        .add-to-cart-btn {
+            background: var(--text-color); color: var(--bg-color); border: none;
+            padding: 12px; cursor: pointer; font-family: inherit; font-size: 11px;
+            text-transform: lowercase; margin-top: 10px;
+        }
 
-        /* --- ÜRÜN HAVUZU (CENTER POOL) --- */
+        /* --- ÜRÜN LİSTESİ --- */
         .products-pool {
             position: fixed; top: 52%; left: 55%;
             transform: translate(-50%, -50%);
             width: 65%; height: 65%;
             border: 1px solid var(--text-color);
-            padding: 30px;
-            overflow-y: auto;
-            background-color: var(--bg-color);
-            z-index: 5;
+            padding: 30px; overflow-y: auto;
+            background-color: var(--bg-color); z-index: 5;
         }
-
-        /* Yanyana en fazla 4 ürün */
-        .products-grid { 
-            display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 20px; 
-        }
-        
+        .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .product-card { cursor: pointer; }
         .product-box { 
-            width: 100%; 
-            aspect-ratio: 1/1; 
-            background-color: transparent; 
-            margin-bottom: 8px; 
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid rgba(128,128,128,0.2);
+            width: 100%; aspect-ratio: 1/1; border: 1px solid rgba(128,128,128,0.2);
+            display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 8px;
         }
-        .product-box img {
-            width: 90%; /* Önceki genişlik geri geldi */
-            height: 90%; /* Önceki yükseklik geri geldi */
-            object-fit: contain; /* Önceki hizalama geri geldi */
-            transition: transform 0.5s ease;
-            /* mix-blend-mode kaldırıldı çünkü siyah ekranda resmi siliyor */
-        }
-
-        .product-box:hover img { transform: scale(1.1); }
+        .product-box img { width: 90%; height: 90%; object-fit: contain; transition: transform 0.5s ease; }
+        .product-card:hover .product-box img { transform: scale(1.1); }
         .product-info { font-size: 9px; text-transform: lowercase; opacity: 0.8; text-align: center; }
 
         /* --- SEPET --- */
@@ -146,26 +125,32 @@
         }
         .side-cart.active { right: 0; }
 
-        /* --- ANA NAV --- */
+        /* --- NAV & FOOTER --- */
         nav#main-nav { position: fixed; left: 40px; top: 180px; display: flex; flex-direction: column; gap: 12px; z-index: 10; }
         .nav-link { text-decoration: none; color: var(--text-color); font-size: 14px; text-transform: lowercase; cursor: pointer; opacity: 0.5; }
         .nav-link.active { opacity: 1; font-weight: bold; text-decoration: underline; }
-
-        /* --- FOOTER & DİL --- */
         .legal-footer { position: fixed; bottom: 40px; left: 40px; display: flex; gap: 20px; }
         .legal-link { font-size: 11px; opacity: 0.5; cursor: pointer; color: var(--text-color); text-transform: lowercase; }
         .lang-wrapper { position: fixed; right: 40px; bottom: 40px; cursor: pointer; z-index: 10; font-size: 12px; opacity: 0.7; text-transform: lowercase; }
 
-        /* Mobile */
         @media (max-width: 1024px) {
             .products-pool { width: 85%; left: 50%; height: 60%; top: 55%; }
             .products-grid { grid-template-columns: repeat(2, 1fr); }
+            .detail-container { flex-direction: column; }
+            .detail-info-box { width: 100%; padding: 20px; }
+            .detail-img-box { border-right: none; border-bottom: 1px solid var(--text-color); padding: 20px; }
         }
     </style>
 </head>
 <body>
 
     <div id="globalOverlay" onclick="closeAllPanels()"></div>
+
+    <div id="productDetailPool">
+        <div style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:10px; opacity:0.5; z-index:10;" onclick="closeAllPanels()">[kapat]</div>
+        <div id="productDetailContent" class="detail-container">
+            </div>
+    </div>
 
     <div id="infoPool">
         <div style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:10px; opacity:0.5;" onclick="closeAllPanels()">[kapat]</div>
@@ -214,126 +199,140 @@
     <div class="lang-wrapper" onclick="toggleLanguage()" id="langTxt">tr</div>
 
     <script>
-        const infoData = {
-            sales: { tr: "<h3>Mesafeli Satış</h3><br><p>Satış detayları...</p>", en: "<h3>Distance Sales</h3><br><p>Agreement details...</p>" },
-            shipping: { tr: "<h3>Teslimat ve İade</h3><br><p>İade koşulları...</p>", en: "<h3>Shipping & Returns</h3><p>Return terms...</p>" },
-            privacy: { tr: "<h3>KVKK</h3><br><p>Gizlilik politikası...</p>", en: "<h3>Privacy Policy</h3><p>Privacy terms...</p>" },
-            contact: { 
-                tr: `<h3>İletişim</h3><form onsubmit="event.preventDefault(); alert('mesaj alındı.');">...</form>`,
-                en: `<h3>Contact</h3><form onsubmit="event.preventDefault(); alert('message sent.');">...</form>`
-            }
-        };
-
         const productsData = {
             news: [
-                { name: "basic t-shirt white", price: 40, img: "elbise/tshirt1.png" }, 
-                { name: "heavy cotton hoodie", price: 110, img: "elbise/tshirt2.png" },
-                { name: "vintage tee black", price: 45, img: "elbise/tshirt3.png" },
-                { name: "reeha seasonal tee", price: 45, img: "elbise/tshirt4.png" },
-                { name: "loose fit denim", price: 95, img: "elbise/kot1.png" }, 
-                { name: "cargo pants", price: 105, img: "elbise/kot2.png" },
-                { name: "utility shorts", price: 80, img: "elbise/kot3.png" },
-                { name: "wide leg trousers", price: 115, img: "elbise/kot4.png" },
-                { name: "canvas tote bag", price: 30, img: "elbise/taki1.png" }, 
-                { name: "utility belt", price: 55, img: "elbise/taki2.png" },
-                { name: "minimal chain", price: 45, img: "elbise/taki3.png" }
+                { id: 1, name: "basic t-shirt white", price: 40, img: "elbise/tshirt1.png", desc: "100% heavy cotton, relaxed fit." }, 
+                { id: 2, name: "heavy cotton hoodie", price: 110, img: "elbise/tshirt2.png", desc: "Oversized silhouette, premium fabric." },
+                { id: 3, name: "vintage tee black", price: 45, img: "elbise/tshirt3.png", desc: "Washed effect, vintage aesthetic." },
+                { id: 4, name: "reeha seasonal tee", price: 45, img: "elbise/tshirt4.png", desc: "Limited edition seasonal print." },
+                { id: 5, name: "loose fit denim", price: 95, img: "elbise/kot1.png", desc: "Wide leg, classic denim wash." }, 
+                { id: 6, name: "cargo pants", price: 105, img: "elbise/kot2.png", desc: "Multi-pocket utility design." }
             ],
             tops: [
-                { name: "basic t-shirt white", price: 40, img: "elbise/tshirt1.png" }, 
-                { name: "heavy cotton hoodie", price: 110, img: "elbise/tshirt2.png" },
-                { name: "vintage tee black", price: 45, img: "elbise/tshirt3.png" },
-                { name: "reeha seasonal tee", price: 45, img: "elbise/tshirt4.png" }
+                { id: 1, name: "basic t-shirt white", price: 40, img: "elbise/tshirt1.png", desc: "100% heavy cotton." }, 
+                { id: 2, name: "heavy cotton hoodie", price: 110, img: "elbise/tshirt2.png", desc: "Oversized fit." }
             ],
             bottoms: [
-                { name: "loose fit denim", price: 95, img: "elbise/kot1.png" }, 
-                { name: "cargo pants", price: 105, img: "elbise/kot2.png" },
-                { name: "utility shorts", price: 80, img: "elbise/kot3.png" },
-                { name: "wide leg trousers", price: 115, img: "elbise/kot4.png" }
+                { id: 5, name: "loose fit denim", price: 95, img: "elbise/kot1.png", desc: "Wide leg." }, 
+                { id: 6, name: "cargo pants", price: 105, img: "elbise/kot2.png", desc: "Utility pants." }
             ],
             accessories: [
-                { name: "canvas tote bag", price: 30, img: "elbise/taki1.png" }, 
-                { name: "utility belt", price: 55, img: "elbise/taki2.png" },
-                { name: "minimal chain", price: 45, img: "elbise/taki3.png" }
+                { id: 9, name: "canvas tote bag", price: 30, img: "elbise/taki1.png", desc: "Durable canvas." }
             ]
         };
 
         let currentLang = 'tr';
+        let cart = [];
 
         function updateTime() {
             const now = new Date();
-            const date = now.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const date = now.toLocaleDateString('tr-TR');
             const time = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            const target = document.getElementById('current-time');
-            if (target) { target.innerText = `${date} ${time}`; }
-        }
-
-        function toggleTheme() {
-            const isLight = document.documentElement.hasAttribute('data-theme');
-            if (isLight) {
-                document.documentElement.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.documentElement.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-            }
+            document.getElementById('current-time').innerText = `${date} ${time}`;
         }
 
         function loadProducts(cat, e) {
             const grid = document.getElementById('productGrid');
-            if (!grid) return;
-            
             grid.innerHTML = productsData[cat].map(p => `
-                <div class="product-card">
+                <div class="product-card" onclick="openProductDetail('${cat}', ${p.id})">
                     <div class="product-box">
-                        <img src="${p.img}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300?text=resim+yok';">
+                        <img src="${p.img}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300?text=reeha';">
                     </div>
                     <div class="product-info">${p.name}<br><span style="opacity:0.5">${p.price}€</span></div>
                 </div>`).join('');
             
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            if(e && e.target) { e.target.classList.add('active'); }
+            if(e) e.target.classList.add('active');
         }
 
-        function openInfoPool(type) {
-            document.getElementById('infoPool').style.display = 'flex';
+        function openProductDetail(cat, id) {
+            const product = productsData[cat].find(p => p.id === id);
+            const detailPool = document.getElementById('productDetailPool');
+            const content = document.getElementById('productDetailContent');
+
+            content.innerHTML = `
+                <div class="detail-img-box">
+                    <img src="${product.img}" alt="${product.name}">
+                </div>
+                <div class="detail-info-box">
+                    <div style="font-size: 18px; font-weight: bold;">${product.name}</div>
+                    <div style="font-size: 14px; opacity: 0.7;">${product.desc}</div>
+                    <div style="font-size: 16px;">${product.price}€</div>
+                    <div>
+                        <div style="font-size: 10px; margin-bottom: 5px;">beden / size:</div>
+                        <div class="size-selector">
+                            <button class="size-btn" onclick="selectSize(this)">S</button>
+                            <button class="size-btn" onclick="selectSize(this)">M</button>
+                            <button class="size-btn" onclick="selectSize(this)">L</button>
+                        </div>
+                    </div>
+                    <button class="add-to-cart-btn" onclick="addToCart('${product.name}', ${product.price})">sepete ekle / add to cart</button>
+                </div>
+            `;
+
+            detailPool.style.display = 'flex';
             setTimeout(() => {
-                document.getElementById('infoPool').classList.add('active');
+                detailPool.classList.add('active');
                 document.getElementById('globalOverlay').classList.add('active');
             }, 10);
-            loadInfo(type);
         }
 
-        function loadInfo(type) {
-            document.querySelectorAll('.info-nav-link').forEach(l => l.classList.remove('active'));
-            const link = document.getElementById(`link-${type}`);
-            if(link) link.classList.add('active');
-            document.getElementById('infoContent').innerHTML = infoData[type][currentLang];
+        function selectSize(btn) {
+            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+
+        function addToCart(name, price) {
+            const size = document.querySelector('.size-btn.selected')?.innerText;
+            if(!size) { alert('lütfen beden seçin / please select size'); return; }
+            cart.push({ name, price, size });
+            document.getElementById('cartCount').innerText = `cart (${cart.length})`;
+            alert('sepete eklendi / added to cart');
+            closeAllPanels();
         }
 
         function closeAllPanels() {
             document.getElementById('infoPool').classList.remove('active');
+            document.getElementById('productDetailPool').classList.remove('active');
             document.getElementById('sideCart').classList.remove('active');
             document.getElementById('globalOverlay').classList.remove('active');
-            setTimeout(() => { document.getElementById('infoPool').style.display = 'none'; }, 300);
+            setTimeout(() => {
+                document.getElementById('infoPool').style.display = 'none';
+                document.getElementById('productDetailPool').style.display = 'none';
+            }, 300);
+        }
+
+        function toggleTheme() {
+            const isLight = document.documentElement.hasAttribute('data-theme');
+            if (isLight) document.documentElement.removeAttribute('data-theme');
+            else document.documentElement.setAttribute('data-theme', 'light');
         }
 
         function toggleCart() {
-            document.getElementById('sideCart').classList.toggle('active');
+            const sideCart = document.getElementById('sideCart');
+            const cartItems = document.getElementById('cartItems');
+            sideCart.classList.toggle('active');
             document.getElementById('globalOverlay').classList.toggle('active');
+            
+            if(cart.length > 0) {
+                cartItems.innerHTML = cart.map(item => `
+                    <div style="margin-bottom:10px; border-bottom:1px solid rgba(128,128,128,0.2); padding-bottom:5px;">
+                        ${item.name} - ${item.size}<br>${item.price}€
+                    </div>
+                `).join('');
+                cartItems.style.opacity = "1";
+            }
         }
 
         function toggleLanguage() {
             currentLang = currentLang === 'tr' ? 'en' : 'tr';
             document.getElementById('langTxt').innerText = currentLang;
             document.querySelectorAll('[data-tr]').forEach(el => {
-                const trText = el.getAttribute('data-tr');
-                const enText = el.getAttribute('data-en');
-                el.textContent = currentLang === 'tr' ? trText : enText;
+                el.textContent = currentLang === 'tr' ? el.getAttribute('data-tr') : el.getAttribute('data-en');
             });
         }
 
         window.onload = () => {
-            if (localStorage.getItem('theme') === 'light') document.documentElement.setAttribute('data-theme', 'light');
             loadProducts('news');
             updateTime(); 
             setInterval(updateTime, 1000);
