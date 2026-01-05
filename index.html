@@ -64,8 +64,9 @@
             gap: 25px;
         }
 
-        /* --- STORE YAZISI --- */
-        .store-link {
+        /* --- STORE (KİLİTLİ / YAKINDA) --- */
+        .store-locked {
+            position: relative;
             text-decoration: none;
             color: var(--text-color);
             font-family: "Arial Black", sans-serif;
@@ -74,35 +75,49 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             opacity: 0.5;
-            transition: 0.4s ease;
+            transition: 0.6s ease;
             padding: 10px;
-        }
-        .store-link:hover {
-            opacity: 1;
-            letter-spacing: 5px;
+            cursor: default; /* Tıklanamaz hissi */
         }
 
-        /* --- 2027 GÖRSELİ (YAKINDA) --- */
-        .logo-static { 
-            display: flex; align-items: center; justify-content: center; position: relative;
+        .store-locked .status-text {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 9px;
+            letter-spacing: 1px;
+            opacity: 0;
+            transition: 0.6s ease;
+            white-space: nowrap;
+            color: var(--text-color);
+        }
+
+        .store-locked:hover {
+            filter: blur(4px); /* Store yazısı bulanıklaşır */
+            opacity: 0.2;
+        }
+        
+        .store-locked:hover .status-text {
+            opacity: 1;
+            filter: blur(0px); /* Yazı bulanık olmaz */
+        }
+
+        /* --- 2027 LOGOSU (AKTİF / RENKLİ) --- */
+        .logo-link { 
+            display: flex; align-items: center; justify-content: center; 
+            text-decoration: none;
         }
         
         .desktop-only { 
-            width: 250px; /* Logo 2 boyutu */
-            filter: grayscale(100%) opacity(0.6); transition: 0.6s ease;
+            width: 250px;
+            filter: grayscale(100%) opacity(0.6); 
+            transition: 0.6s ease;
         }
 
-        .coming-soon {
-            position: absolute; font-size: 11px; letter-spacing: 2px;
-            text-transform: uppercase; color: var(--text-color);
-            opacity: 0; transition: 0.6s ease;
-            pointer-events: none;
+        .logo-link:hover .desktop-only {
+            filter: grayscale(0%) opacity(1); /* Üzerine gelince renklenir */
+            transform: scale(1.02);
         }
-
-        .logo-static:hover .desktop-only {
-            filter: grayscale(100%) opacity(0.2) blur(8px);
-        }
-        .logo-static:hover .coming-soon { opacity: 0.8; }
 
         /* --- FOOTER & SAAT --- */
         footer {
@@ -119,9 +134,9 @@
 
         /* --- MOBİL --- */
         @media (max-width: 768px) {
-            .logo-static { display: none !important; }
             #live-clock { display: none; } 
             footer { opacity: 0.5; }
+            .desktop-only { width: 180px; }
         }
     </style>
 </head>
@@ -131,12 +146,14 @@
 
     <div class="main-content">
         <div class="content-wrapper">
-            <a href="store.html" class="store-link">Store</a>
-
-            <div class="logo-static">
-                <img src="media/logo2.webp" alt="2027" class="desktop-only">
-                <span class="coming-soon">Yakında</span>
+            <div class="store-locked">
+                Store
+                <span class="status-text">YAKINDA</span>
             </div>
+
+            <a href="2027.html" class="logo-link">
+                <img src="media/logo2.webp" alt="2027" class="desktop-only">
+            </a>
         </div>
     </div>
 
