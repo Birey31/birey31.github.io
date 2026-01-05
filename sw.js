@@ -3,6 +3,7 @@ const assets = [
   "./",
   "./index.html",
   "./2026.html",
+  "./2027.html",
   "./manifest.json",
   "./media/mobillogo.webp",
   "./media/logo.webp",
