@@ -71,6 +71,14 @@
             background: transparent;
         }
 
+        /* Logo Konteynırı Düzenlemesi */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px; /* Logolar arasındaki boşluk */
+        }
+
         .logo-container img {
             height: auto; cursor: pointer;
             transition: filter 0.5s ease, transform 0.5s ease, opacity 0.5s ease;
@@ -80,9 +88,10 @@
 
         .desktop-only { 
             display: block; 
-            width: 250px;
+            width: 250px; /* Logoların boyutu */
             filter: grayscale(100%) opacity(0.6); 
         }
+        
         .desktop-only:hover {
             filter: grayscale(0%) opacity(1);
             transform: scale(1.03);
@@ -94,6 +103,7 @@
             opacity: 1 !important; 
         }
 
+        /* Mobil Görünüm (Logoların teke düştüğü yer) */
         @media (max-width: 768px) {
             .desktop-only { display: none; }
             .mobile-only { 
@@ -109,6 +119,8 @@
             -webkit-tap-highlight-color: transparent;
             outline: none;
             text-decoration: none;
+            display: flex; /* Masaüstünde yan yana durmaları için */
+            gap: 20px;
         }
     </style>
 </head>
@@ -118,7 +130,8 @@
 
     <div class="logo-container">
         <a href="2026.html">
-            <img src="media/logo.webp" alt="Reeha Logo" class="desktop-only">
+            <img src="media/logo.webp" alt="Reeha Logo Sol" class="desktop-only">
+            <img src="media/logo2.webp" alt="Reeha Logo Sağ" class="desktop-only">
             
             <img src="media/mobillogo.webp" fetchpriority="high" class="mobile-only" alt="Reeha Logo">
         </a>
@@ -162,14 +175,14 @@
         }
     </script>
     <script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker
-        .register("./sw.js")
-        .then((reg) => console.log("Service Worker Kayıt Edildi"))
-        .catch((err) => console.log("Hata:", err));
-    });
-  }
-</script>
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker
+                .register("./sw.js")
+                .then((reg) => console.log("Service Worker Kayıt Edildi"))
+                .catch((err) => console.log("Hata:", err));
+            });
+        }
+    </script>
 </body>
 </html>
