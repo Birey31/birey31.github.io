@@ -29,8 +29,7 @@
             --text-color: #000000;
         }
 
-        html { background-color: #0e0e0e; }
-        [data-theme="light"] { background-color: #fcfcfc; }
+        html { background-color: var(--bg-color); }
 
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
@@ -47,69 +46,75 @@
             position: absolute; top: 40px; right: 40px;
             background: none; border: 1px solid var(--text-color); 
             width: 14px; height: 14px; border-radius: 50%;
-            cursor: pointer; opacity: 0.3; transition: 0.4s;
-            padding: 0; outline: none; z-index: 100;
+            cursor: pointer; opacity: 0.4; transition: 0.4s;
+            padding: 0; outline: none; z-index: 1000;
         }
         .theme-toggle:hover { opacity: 1; transform: scale(1.1); }
         body:not([data-theme="light"]) .theme-toggle { background: var(--text-color); }
         [data-theme="light"] .theme-toggle { background: transparent; }
 
-        /* --- LOGO KONTEYNIRI --- */
+        /* --- LOGOLAR --- */
         .logo-container {
             display: flex; align-items: center; justify-content: center; gap: 40px;
+            z-index: 100;
         }
         .logo-link { 
             text-decoration: none; 
-            display: flex; 
-            flex-direction: column; /* Yazıyı logonun altına koymak için */
-            align-items: center; 
+            display: flex; align-items: center; justify-content: center;
             position: relative;
         }
         
         .desktop-only { 
             display: block; height: auto; 
             filter: grayscale(100%) opacity(0.6); 
-            transition: 0.5s ease; cursor: pointer;
+            transition: 0.6s ease; cursor: pointer;
         }
         .logo-link:nth-of-type(1) .desktop-only { width: 185px; }
         .logo-link:nth-of-type(2) .desktop-only { width: 250px; }
-        
-        /* COMING SOON YAZISI */
+
+        /* LOGO 1 HOVER (Normal) */
+        .logo-link:nth-of-type(1):hover .desktop-only {
+            filter: grayscale(0%) opacity(1);
+            transform: scale(1.02);
+        }
+
+        /* LOGO 2 HOVER (Blur ve Yakında Efekti) */
         .coming-soon {
             position: absolute;
-            bottom: -25px;
-            font-size: 9px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: var(--text-color);
-            opacity: 0;
-            transition: 0.5s ease;
+            font-size: 11px; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--text-color);
+            opacity: 0; transition: 0.6s ease;
+            z-index: 10; pointer-events: none;
         }
-        .logo-link:hover .coming-soon { opacity: 0.4; }
-        .logo-link:hover .desktop-only { filter: grayscale(0%) opacity(1); transform: scale(1.03); }
 
-        /* --- CANLI SAAT --- */
+        .logo-link:nth-of-type(2):hover .desktop-only {
+            filter: grayscale(100%) opacity(0.2) blur(8px); /* Kararır ve Blurlaşır */
+            transform: scale(0.98);
+        }
+        .logo-link:nth-of-type(2):hover .coming-soon {
+            opacity: 0.8;
+        }
+
+        /* --- CANLI SAAT VE FOOTER --- */
         #live-clock {
             position: absolute; bottom: 30px; right: 40px;
-            font-size: 10px; letter-spacing: 1px;
-            color: var(--text-color); opacity: 0.3;
+            font-size: 11px; letter-spacing: 1px;
+            color: var(--text-color); opacity: 0.4; font-family: monospace;
         }
-
-        /* --- FOOTER --- */
         footer {
             position: absolute; bottom: 30px;
             width: 100%; text-align: center;
             font-size: 10px; letter-spacing: 2px;
-            color: var(--text-color); opacity: 0.2;
+            color: var(--text-color); opacity: 0.3;
             text-transform: uppercase; pointer-events: none;
         }
 
-        /* MOBİL AYARLAR */
+        /* --- MOBİL --- */
         .mobile-only-link { display: none; }
         @media (max-width: 768px) {
             .logo-link { display: none !important; }
             .mobile-only-link { display: flex !important; justify-content: center; align-items: center; }
-            #live-clock { right: 50%; transform: translateX(50%); bottom: 60px; } /* Mobilde saati ortala */
+            #live-clock { right: 0; left: 0; text-align: center; bottom: 70px; }
         }
     </style>
 </head>
@@ -119,16 +124,16 @@
 
     <div class="logo-container">
         <a href="2026.html" class="logo-link">
-            <img src="media/logo.webp" alt="Reeha Logo 2026" class="desktop-only">
+            <img src="media/logo.webp" alt="2026" class="desktop-only">
         </a>
         
-        <a href="2027.html" class="logo-link">
-            <img src="media/logo2.webp" alt="Reeha Logo 2027" class="desktop-only">
+        <a href="javascript:void(0)" class="logo-link" id="lockedLink">
+            <img src="media/logo2.webp" alt="2027" class="desktop-only">
             <span class="coming-soon">Yakında</span>
         </a>
 
         <a href="2026.html" class="mobile-only-link">
-            <img src="media/mobillogo.webp" style="width:200px;" alt="Reeha Logo">
+            <img src="media/mobillogo.webp" style="width:200px;" alt="Reeha">
         </a>
     </div>
 
@@ -136,7 +141,7 @@
     <div id="live-clock">TR 00:00:00</div>
 
     <audio id="clickSound" preload="auto">
-        <source src="https://www.soundjay.com/buttons/button-20.mp3" type="audio/mpeg">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg">
     </audio>
 
     <script>
@@ -144,26 +149,36 @@
         const body = document.documentElement;
         const clickSound = document.getElementById('clickSound');
         const clockElement = document.getElementById('live-clock');
+        const lockedLink = document.getElementById('lockedLink');
 
-        // Canlı Saat Fonksiyonu
+        // Canlı Saat
         function updateClock() {
             const now = new Date();
-            const options = { timeZone: 'Europe/Istanbul', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
-            const timeString = now.toLocaleTimeString('tr-TR', options);
+            const timeString = now.toLocaleTimeString('tr-TR', { 
+                timeZone: 'Europe/Istanbul', 
+                hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' 
+            });
             clockElement.textContent = `TR ${timeString}`;
         }
         setInterval(updateClock, 1000);
         updateClock();
 
+        // Ses
         function playSound() {
-            clickSound.currentTime = 0; 
-            clickSound.volume = 0.1;
-            clickSound.play().catch(()=>{}); 
+            clickSound.currentTime = 0;
+            clickSound.volume = 0.2;
+            clickSound.play().catch(()=>{});
         }
 
+        // 2027 Tıklama Kilidi Mesajı (İsteğe bağlı)
+        lockedLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Buraya tıklandığında ufak bir ses efekti veya uyarı eklenebilir.
+        });
+
         // Tema Yönetimi
-        const currentTheme = localStorage.getItem('theme') || 'dark';
-        if (currentTheme === 'light') body.setAttribute('data-theme', 'light');
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') body.setAttribute('data-theme', 'light');
 
         themeBtn.addEventListener('click', () => {
             playSound();
@@ -176,10 +191,9 @@
             }
         });
 
-        // URL Temizleme
+        // Temiz URL
         if (window.location.pathname.endsWith('.html')) {
-            let cleanUrl = window.location.pathname.replace(/\.html$/, '');
-            window.history.replaceState(null, '', cleanUrl);
+            window.history.replaceState(null, '', window.location.pathname.replace(/\.html$/, ''));
         }
     </script>
 </body>
