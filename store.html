@@ -187,7 +187,7 @@
 </head>
 <body>
 
-    <div id="globalOverlay" onclick="closeAllPanels()"></div>
+    <div id="globalOverlay" onclick="handleOverlayClick()"></div>
 
     <div id="productDetailPool">
         <div style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:10px; opacity:0.5; z-index:10;" onclick="closeAllPanels()">[kapat]</div>
@@ -424,7 +424,9 @@
 
         /* --- CHECKOUT LOGIC --- */
         function startCheckout() {
-            closeAllPanels();
+            // Sepet panelini kapat ama her şeyi sıfırlama
+            document.getElementById('sideCart').classList.remove('active');
+            
             const pool = document.getElementById('checkoutPool');
             pool.style.display = 'flex';
             
@@ -497,6 +499,12 @@
             }, 300);
         }
 
+        function handleOverlayClick() {
+            // Ödeme ekranı (checkoutPool) aktifse dışarı tıklanınca kapanmasın (isteğe bağlı)
+            // Ya da her durumda kapatmak istiyorsanız sadece closeAllPanels() çağırın
+            closeAllPanels();
+        }
+
         function toggleCart() {
             const sideCart = document.getElementById('sideCart');
             const overlay = document.getElementById('globalOverlay');
@@ -515,7 +523,6 @@
             document.querySelectorAll('[data-tr]').forEach(el => {
                 el.textContent = currentLang === 'tr' ? el.getAttribute('data-tr') : el.getAttribute('data-en');
             });
-            // Update info content if pool is open
             const activeInfoLink = document.querySelector('.info-nav-link.active');
             if(activeInfoLink) {
                 const type = activeInfoLink.id.split('-')[1];
