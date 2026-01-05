@@ -2,6 +2,7 @@ const cacheName = "reeha-v4"; // Versiyonu v4 yaptık
 const assets = [
   "./",
   "./index.html",
+  "https://www.fesliyanstudios.com/play-mp3/387",
   "./2026.html",
   "./2027.html",
   "./manifest.json",
