@@ -93,16 +93,6 @@
         .info-nav-link { font-size: 12px; cursor: pointer; opacity: 0.4; text-transform: lowercase; }
         .info-nav-link.active { opacity: 1; text-decoration: underline; font-weight: bold; }
 
-        .contact-form { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
-        .contact-form input, .contact-form textarea {
-            background: transparent; border: 1px solid var(--text-color);
-            color: var(--text-color); padding: 12px; font-family: inherit; font-size: 11px; outline: none;
-        }
-        .contact-form button {
-            background: var(--text-color); color: var(--bg-color); border: none;
-            padding: 15px; cursor: pointer; font-family: inherit; text-transform: lowercase;
-        }
-
         /* --- SEPET --- */
         .side-cart {
             position: fixed; top: 0; right: -400px;
@@ -121,8 +111,25 @@
 
         /* --- ÜRÜNLER --- */
         .products-container { position: fixed; top: 100px; bottom: 120px; left: 280px; right: 40px; overflow-y: auto; }
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 30px 20px; }
-        .product-box { width: 100%; aspect-ratio: 1/1; background-color: var(--text-color); opacity: var(--accent-opacity); margin-bottom: 8px; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 40px 20px; }
+        
+        .product-box { 
+            width: 100%; 
+            aspect-ratio: 1/1; 
+            background-color: var(--text-color); 
+            margin-bottom: 12px; 
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .product-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .product-box:hover img { transform: scale(1.05); }
         .product-info { font-size: 10px; text-transform: lowercase; opacity: 0.8; }
 
         /* --- FOOTER & DİL --- */
@@ -199,10 +206,26 @@
         };
 
         const productsData = {
-            news: [{ name: "reeha seasonal tee", price: 45 }, { name: "limited hoodie v1", price: 125 }],
-            tops: [{ name: "basic t-shirt white", price: 40 }, { name: "heavy cotton hoodie", price: 110 }],
-            bottoms: [{ name: "loose fit denim", price: 95 }, { name: "cargo pants", price: 105 }],
-            accessories: [{ name: "canvas tote bag", price: 30 }, { name: "utility belt", price: 55 }]
+            news: [
+                { name: "reeha seasonal tee", price: 45, img: "elbise/tshirt1.png" }, 
+                { name: "limited hoodie v1", price: 125, img: "elbise/tshirt2.png" }
+            ],
+            tops: [
+                { name: "basic t-shirt white", price: 40, img: "elbise/tshirt1.png" }, 
+                { name: "heavy cotton hoodie", price: 110, img: "elbise/tshirt2.png" },
+                { name: "vintage tee black", price: 45, img: "elbise/tshirt3.png" }
+            ],
+            bottoms: [
+                { name: "loose fit denim", price: 95, img: "elbise/kot1.png" }, 
+                { name: "cargo pants", price: 105, img: "elbise/kot2.png" },
+                { name: "utility shorts", price: 80, img: "elbise/kot3.png" },
+                { name: "wide leg trousers", price: 115, img: "elbise/kot4.png" }
+            ],
+            accessories: [
+                { name: "canvas tote bag", price: 30, img: "elbise/taki1.png" }, 
+                { name: "utility belt", price: 55, img: "elbise/taki2.png" },
+                { name: "minimal chain", price: 45, img: "elbise/taki3.png" }
+            ]
         };
 
         let currentLang = 'tr';
@@ -212,9 +235,7 @@
             const date = now.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' });
             const time = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             const target = document.getElementById('current-time');
-            if (target) {
-                target.innerText = `${date} ${time}`;
-            }
+            if (target) { target.innerText = `${date} ${time}`; }
         }
 
         function toggleTheme() {
@@ -226,6 +247,22 @@
                 document.documentElement.setAttribute('data-theme', 'light');
                 localStorage.setItem('theme', 'light');
             }
+        }
+
+        function loadProducts(cat, e) {
+            const grid = document.getElementById('productGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = productsData[cat].map(p => `
+                <div class="product-card">
+                    <div class="product-box">
+                        <img src="${p.img}" alt="${p.name}" onerror="this.style.opacity='0.1';">
+                    </div>
+                    <div class="product-info">${p.name} <span style="opacity:0.5">${p.price}€</span></div>
+                </div>`).join('');
+            
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            if(e && e.target) { e.target.classList.add('active'); }
         }
 
         function openInfoPool(type) {
@@ -267,22 +304,6 @@
             if(document.getElementById('infoPool').classList.contains('active')) {
                 const activeLink = document.querySelector('.info-nav-link.active');
                 if(activeLink) loadInfo(activeLink.id.replace('link-', ''));
-            }
-        }
-
-        function loadProducts(cat, e) {
-            const grid = document.getElementById('productGrid');
-            if (!grid) return;
-            
-            grid.innerHTML = productsData[cat].map(p => `
-                <div class="product-card">
-                    <div class="product-box"></div>
-                    <div class="product-info">${p.name} <span style="opacity:0.5">${p.price}€</span></div>
-                </div>`).join('');
-            
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            if(e && e.target) {
-                e.target.classList.add('active');
             }
         }
 
