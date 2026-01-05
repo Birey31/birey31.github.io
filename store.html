@@ -9,13 +9,13 @@
         :root {
             --bg-color: #000000;
             --text-color: #ffffff;
-            --accent-opacity: 0.1;
+            --pool-border: rgba(255, 255, 255, 0.3);
         }
 
         [data-theme="light"] {
             --bg-color: #ffffff;
             --text-color: #000000;
-            --accent-opacity: 0.05;
+            --pool-border: rgba(0, 0, 0, 0.1);
         }
 
         * {
@@ -41,21 +41,7 @@
             font-weight: 900; font-size: 24px; letter-spacing: 1px;
             line-height: 1; margin-bottom: 8px; text-transform: uppercase;
         }
-        #current-time { 
-            font-size: 11px; 
-            opacity: 0.8; 
-            letter-spacing: 0.5px;
-            min-height: 15px;
-            display: block !important;
-        }
-
-        /* --- GLOBAL OVERLAY --- */
-        #globalOverlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4); z-index: 1500; display: none; cursor: pointer;
-            backdrop-filter: blur(4px);
-        }
-        #globalOverlay.active { display: block; }
+        #current-time { font-size: 11px; opacity: 0.8; letter-spacing: 0.5px; }
 
         /* --- ÜST SAĞ NAV --- */
         .top-right-nav {
@@ -67,40 +53,18 @@
             width: 14px; height: 14px; border-radius: 50%; cursor: pointer;
         }
         body:not([data-theme="light"]) .theme-toggle { background: var(--text-color); }
-        [data-theme="light"] .theme-toggle { background: transparent; }
-
-        .cart-toggle {
-            background: none; border: none; color: var(--text-color);
-            font-family: inherit; font-size: 13px; cursor: pointer; text-transform: lowercase;
-        }
-
-        /* --- HAVUZ SİSTEMİ (INFO & PRODUCTS) --- */
-        #infoPool {
-            position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0.95);
-            width: 80%; height: 75%;
-            background-color: var(--bg-color);
-            border: 1px solid var(--text-color);
-            z-index: 2500; display: none; opacity: 0;
-            transition: all 0.3s ease;
-        }
-        #infoPool.active { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-
-        .info-sidebar {
-            width: 200px; border-right: 1px solid var(--text-color);
-            padding: 40px; display: flex; flex-direction: column; gap: 20px;
-        }
-        .info-content { flex: 1; padding: 40px; overflow-y: auto; font-size: 12px; line-height: 1.8; }
-        .info-nav-link { font-size: 12px; cursor: pointer; opacity: 0.4; text-transform: lowercase; }
-        .info-nav-link.active { opacity: 1; text-decoration: underline; font-weight: bold; }
+        .cart-toggle { background: none; border: none; color: var(--text-color); font-size: 13px; cursor: pointer; text-transform: lowercase; }
 
         /* --- ÜRÜN HAVUZU (CENTER POOL) --- */
         .products-pool {
-            position: fixed; top: 52%; left: 55%;
+            position: fixed;
+            top: 50%;
+            left: 55%;
             transform: translate(-50%, -50%);
-            width: 65%; height: 65%;
+            width: 60%;
+            height: 60%;
             border: 1px solid var(--text-color);
-            padding: 30px;
+            padding: 20px;
             overflow-y: auto;
             background-color: var(--bg-color);
             z-index: 5;
@@ -110,9 +74,11 @@
         .products-grid { 
             display: grid; 
             grid-template-columns: repeat(4, 1fr); 
-            gap: 20px; 
+            gap: 15px; 
         }
         
+        .product-card { display: flex; flex-direction: column; align-items: center; }
+
         .product-box { 
             width: 100%; 
             aspect-ratio: 1/1; 
@@ -122,29 +88,19 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid rgba(128,128,128,0.1);
+            border: 1px solid var(--pool-border);
         }
+
         .product-box img {
-            width: 90%;
-            height: 90%;
-            object-fit: contain;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Resmin kutuyu doldurmasını sağlar */
             transition: transform 0.5s ease;
-            mix-blend-mode: multiply; 
+            display: block;
         }
 
-        .product-box:hover img { transform: scale(1.1); }
-        .product-info { font-size: 9px; text-transform: lowercase; opacity: 0.8; text-align: center; }
-
-        /* --- SEPET --- */
-        .side-cart {
-            position: fixed; top: 0; right: -400px;
-            width: 300px; height: 100vh;
-            background-color: var(--bg-color);
-            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 2000; padding: 40px; display: flex; flex-direction: column;
-            border-left: 1px solid var(--text-color);
-        }
-        .side-cart.active { right: 0; }
+        .product-box:hover img { transform: scale(1.05); }
+        .product-info { font-size: 9px; text-transform: lowercase; opacity: 0.8; text-align: center; width: 100%; }
 
         /* --- ANA NAV --- */
         nav#main-nav { position: fixed; left: 40px; top: 180px; display: flex; flex-direction: column; gap: 12px; z-index: 10; }
@@ -154,11 +110,19 @@
         /* --- FOOTER & DİL --- */
         .legal-footer { position: fixed; bottom: 40px; left: 40px; display: flex; gap: 20px; }
         .legal-link { font-size: 11px; opacity: 0.5; cursor: pointer; color: var(--text-color); text-transform: lowercase; }
-        .lang-wrapper { position: fixed; right: 40px; bottom: 40px; cursor: pointer; z-index: 10; font-size: 12px; opacity: 0.7; text-transform: lowercase; }
+        .lang-wrapper { position: fixed; right: 40px; bottom: 40px; cursor: pointer; z-index: 10; font-size: 12px; opacity: 0.7; }
 
-        /* Mobile */
+        /* --- BİLGİ HAVUZU (POPUP) --- */
+        #globalOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1500; display: none; backdrop-filter: blur(4px); }
+        #globalOverlay.active { display: block; }
+        #infoPool { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 80%; height: 75%; background-color: var(--bg-color); border: 1px solid var(--text-color); z-index: 2500; display: none; opacity: 0; transition: all 0.3s ease; }
+        #infoPool.active { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        .info-sidebar { width: 200px; border-right: 1px solid var(--text-color); padding: 40px; display: flex; flex-direction: column; gap: 20px; }
+        .info-content { flex: 1; padding: 40px; overflow-y: auto; font-size: 12px; line-height: 1.8; }
+
+        /* Mobil */
         @media (max-width: 1024px) {
-            .products-pool { width: 85%; left: 50%; height: 60%; top: 55%; }
+            .products-pool { width: 85%; left: 50%; height: 55%; top: 55%; }
             .products-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
@@ -188,11 +152,6 @@
         <button class="theme-toggle" onclick="toggleTheme()"></button>
     </div>
 
-    <div class="side-cart" id="sideCart">
-        <div style="font-size:12px; margin-bottom:20px; border-bottom:1px solid var(--text-color); padding-bottom:10px; text-transform:lowercase;" data-tr="sepet" data-en="cart">sepet</div>
-        <div id="cartItems" style="flex-grow:1; font-size:10px; opacity:0.5;">boş.</div>
-    </div>
-
     <nav id="main-nav">
         <a onclick="loadProducts('news', event)" class="nav-link active" data-tr="news" data-en="news">news</a>
         <a onclick="loadProducts('tops', event)" class="nav-link" data-tr="üst giyim" data-en="tops">üst giyim</a>
@@ -214,16 +173,6 @@
     <div class="lang-wrapper" onclick="toggleLanguage()" id="langTxt">tr</div>
 
     <script>
-        const infoData = {
-            sales: { tr: "<h3>Mesafeli Satış</h3><br><p>Satış detayları...</p>", en: "<h3>Distance Sales</h3><br><p>Agreement details...</p>" },
-            shipping: { tr: "<h3>Teslimat ve İade</h3><br><p>İade koşulları...</p>", en: "<h3>Shipping & Returns</h3><p>Return terms...</p>" },
-            privacy: { tr: "<h3>KVKK</h3><br><p>Gizlilik politikası...</p>", en: "<h3>Privacy Policy</h3><p>Privacy terms...</p>" },
-            contact: { 
-                tr: `<h3>İletişim</h3><form onsubmit="event.preventDefault(); alert('mesaj alındı.');"><input type="text" placeholder="isim soyisim" style="width:100%; margin-bottom:10px; padding:5px; background:none; border:1px solid var(--text-color); color:var(--text-color);"><input type="email" placeholder="e-posta" style="width:100%; margin-bottom:10px; padding:5px; background:none; border:1px solid var(--text-color); color:var(--text-color);"><textarea placeholder="mesajınız" rows="5" style="width:100%; margin-bottom:10px; padding:5px; background:none; border:1px solid var(--text-color); color:var(--text-color);"></textarea><button type="submit" style="background:var(--text-color); color:var(--bg-color); border:none; padding:5px 15px; cursor:pointer;">gönder</button></form>`,
-                en: `<h3>Contact</h3><form onsubmit="event.preventDefault(); alert('message sent.');"><input type="text" placeholder="name surname" style="width:100%; margin-bottom:10px; padding:5px; background:none; border:1px solid var(--text-color); color:var(--text-color);"><input type="email" placeholder="email" style="width:100%; margin-bottom:10px; padding:5px; background:none; border:1px solid var(--text-color); color:var(--text-color);"><textarea placeholder="your message" rows="5" style="width:100%; margin-bottom:10px; padding:5px; background:none; border:1px solid var(--text-color); color:var(--text-color);"></textarea><button type="submit" style="background:var(--text-color); color:var(--bg-color); border:none; padding:5px 15px; cursor:pointer;">send</button></form>`
-            }
-        };
-
         const productsData = {
             news: [
                 { name: "basic t-shirt white", price: 40, img: "elbise/tshirt1.png" }, 
@@ -231,52 +180,20 @@
                 { name: "vintage tee black", price: 45, img: "elbise/tshirt3.png" },
                 { name: "reeha seasonal tee", price: 45, img: "elbise/tshirt4.png" },
                 { name: "loose fit denim", price: 95, img: "elbise/kot1.png" }, 
-                { name: "cargo pants", price: 105, img: "elbise/kot2.png" },
-                { name: "utility shorts", price: 80, img: "elbise/kot3.png" },
-                { name: "wide leg trousers", price: 115, img: "elbise/kot4.png" },
-                { name: "canvas tote bag", price: 30, img: "elbise/taki1.png" }, 
-                { name: "utility belt", price: 55, img: "elbise/taki2.png" },
-                { name: "minimal chain", price: 45, img: "elbise/taki3.png" }
+                { name: "cargo pants", price: 105, img: "elbise/kot2.png" }
             ],
             tops: [
                 { name: "basic t-shirt white", price: 40, img: "elbise/tshirt1.png" }, 
-                { name: "heavy cotton hoodie", price: 110, img: "elbise/tshirt2.png" },
-                { name: "vintage tee black", price: 45, img: "elbise/tshirt3.png" },
-                { name: "reeha seasonal tee", price: 45, img: "elbise/tshirt4.png" }
+                { name: "heavy cotton hoodie", price: 110, img: "elbise/tshirt2.png" }
             ],
             bottoms: [
                 { name: "loose fit denim", price: 95, img: "elbise/kot1.png" }, 
-                { name: "cargo pants", price: 105, img: "elbise/kot2.png" },
-                { name: "utility shorts", price: 80, img: "elbise/kot3.png" },
-                { name: "wide leg trousers", price: 115, img: "elbise/kot4.png" }
+                { name: "cargo pants", price: 105, img: "elbise/kot2.png" }
             ],
             accessories: [
-                { name: "canvas tote bag", price: 30, img: "elbise/taki1.png" }, 
-                { name: "utility belt", price: 55, img: "elbise/taki2.png" },
-                { name: "minimal chain", price: 45, img: "elbise/taki3.png" }
+                { name: "canvas tote bag", price: 30, img: "elbise/taki1.png" }
             ]
         };
-
-        let currentLang = 'tr';
-
-        function updateTime() {
-            const now = new Date();
-            const date = now.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-            const time = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            const target = document.getElementById('current-time');
-            if (target) { target.innerText = `${date} ${time}`; }
-        }
-
-        function toggleTheme() {
-            const isLight = document.documentElement.hasAttribute('data-theme');
-            if (isLight) {
-                document.documentElement.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.documentElement.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-            }
-        }
 
         function loadProducts(cat, e) {
             const grid = document.getElementById('productGrid');
@@ -285,61 +202,39 @@
             grid.innerHTML = productsData[cat].map(p => `
                 <div class="product-card">
                     <div class="product-box">
-                        <img src="${p.img}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300?text=resim+yok';">
+                        <img src="${p.img}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/150?text=reeha';">
                     </div>
-                    <div class="product-info">${p.name}<br><span style="opacity:0.5">${p.price}€</span></div>
+                    <div class="product-info">
+                        <div>${p.name}</div>
+                        <div style="opacity:0.5">${p.price}€</div>
+                    </div>
                 </div>`).join('');
             
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             if(e && e.target) { e.target.classList.add('active'); }
         }
 
-        function openInfoPool(type) {
-            document.getElementById('infoPool').style.display = 'flex';
-            setTimeout(() => {
-                document.getElementById('infoPool').classList.add('active');
-                document.getElementById('globalOverlay').classList.add('active');
-            }, 10);
-            loadInfo(type);
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleDateString('tr-TR') + ' ' + now.toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('current-time').innerText = timeStr;
         }
 
-        function loadInfo(type) {
-            document.querySelectorAll('.info-nav-link').forEach(l => l.classList.remove('active'));
-            const link = document.getElementById(`link-${type}`);
-            if(link) link.classList.add('active');
-            document.getElementById('infoContent').innerHTML = infoData[type][currentLang];
+        function toggleTheme() {
+            const isLight = document.documentElement.hasAttribute('data-theme');
+            if (isLight) document.documentElement.removeAttribute('data-theme');
+            else document.documentElement.setAttribute('data-theme', 'light');
         }
 
         function closeAllPanels() {
             document.getElementById('infoPool').classList.remove('active');
-            document.getElementById('sideCart').classList.remove('active');
             document.getElementById('globalOverlay').classList.remove('active');
             setTimeout(() => { document.getElementById('infoPool').style.display = 'none'; }, 300);
         }
 
-        function toggleCart() {
-            document.getElementById('sideCart').classList.toggle('active');
-            document.getElementById('globalOverlay').classList.toggle('active');
-        }
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'tr' ? 'en' : 'tr';
-            document.getElementById('langTxt').innerText = currentLang;
-            document.querySelectorAll('[data-tr]').forEach(el => {
-                const trText = el.getAttribute('data-tr');
-                const enText = el.getAttribute('data-en');
-                el.textContent = currentLang === 'tr' ? trText : enText;
-            });
-            if(document.getElementById('infoPool').classList.contains('active')) {
-                const activeLink = document.querySelector('.info-nav-link.active');
-                if(activeLink) loadInfo(activeLink.id.replace('link-', ''));
-            }
-        }
-
         window.onload = () => {
-            if (localStorage.getItem('theme') === 'light') document.documentElement.setAttribute('data-theme', 'light');
             loadProducts('news');
-            updateTime(); 
+            updateTime();
             setInterval(updateTime, 1000);
         };
     </script>
