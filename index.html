@@ -71,27 +71,39 @@
             background: transparent;
         }
 
-        /* Logo Konteynırı Düzenlemesi */
+        /* --- LOGO DÜZENLEMELERİ --- */
         .logo-container {
             display: flex;
-            align-items: center;
+            align-items: center; /* Logoları dikeyde tam ortalar */
             justify-content: center;
-            gap: 20px; /* Logolar arasındaki boşluk */
+            gap: 40px; /* Logolar arası boşluğu biraz açtık */
         }
 
-        .logo-container img {
-            height: auto; cursor: pointer;
-            transition: filter 0.5s ease, transform 0.5s ease, opacity 0.5s ease;
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
+        .logo-link {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
         }
 
         .desktop-only { 
             display: block; 
-            width: 250px; /* Logoların boyutu */
+            height: auto; /* Basık durmasını engeller */
             filter: grayscale(100%) opacity(0.6); 
+            transition: 0.5s ease;
+            cursor: pointer;
         }
-           .desktop-only:hover {
+
+        /* Birinci Logo (2026) Boyutu */
+        .logo-link:nth-of-type(1) .desktop-only {
+            width: 250px;
+        }
+
+        /* İkinci Logo (2027) Boyutu - Orantılı şekilde küçültüldü */
+        .logo-link:nth-of-type(2) .desktop-only {
+            width: 170px; /* Yaklaşık 1cm daha küçük */
+        }
+
+        .desktop-only:hover {
             filter: grayscale(0%) opacity(1);
             transform: scale(1.03);
         }
@@ -102,9 +114,10 @@
             opacity: 1 !important; 
         }
 
-        /* Mobil Görünüm (Logoların teke düştüğü yer) */
+        /* Mobil Görünüm */
         @media (max-width: 768px) {
-            .desktop-only { display: none; }
+            .logo-link { display: none; }
+            .mobile-only-link { display: block; }
             .mobile-only { 
                 display: block; 
                 width: 200px; 
@@ -113,14 +126,6 @@
                 transform: scale(0.97);
             }
         }
-
-        a {
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
-            text-decoration: none;
-            display: flex; /* Masaüstünde yan yana durmaları için */
-            gap: 20px;
-        }
     </style>
 </head>
 <body>
@@ -128,10 +133,15 @@
     <button class="theme-toggle" id="themeBtn"></button>
 
     <div class="logo-container">
-        <a href="2026.html">
-            <img src="media/logo.webp" alt="Reeha Logo Sol" class="desktop-only">
-            <img src="media/logo2.webp" alt="Reeha Logo Sağ" class="desktop-only">
-            
+        <a href="2026.html" class="logo-link">
+            <img src="media/logo.webp" alt="Reeha Logo 2026" class="desktop-only">
+        </a>
+
+        <a href="2027.html" class="logo-link">
+            <img src="media/logo2.webp" alt="Reeha Logo 2027" class="desktop-only">
+        </a>
+        
+        <a href="2026.html" class="mobile-only-link" style="display: none;">
             <img src="media/mobillogo.webp" fetchpriority="high" class="mobile-only" alt="Reeha Logo">
         </a>
     </div>
