@@ -71,12 +71,12 @@
             background: transparent;
         }
 
-        /* --- LOGO DÜZENLEMELERİ --- */
+        /* --- EŞİTLEME DÜZENLEMELERİ --- */
         .logo-container {
             display: flex;
-            align-items: center;
+            align-items: center; /* Dikeyde milimetrik eşitlik sağlar */
             justify-content: center;
-            gap: 40px; /* Aradaki boşluk */
+            gap: 40px; /* İki logo arasındaki mesafe */
         }
 
         .logo-link {
@@ -87,8 +87,8 @@
 
         .desktop-only { 
             display: block; 
-            width: 250px; /* İKİ LOGO DA ŞU AN 250PX OLARAK EŞİTLENDİ */
-            height: auto; 
+            width: 250px; /* HER İKİ LOGONUN GENİŞLİĞİ BURADA EŞİTLENDİ */
+            height: auto; /* Oranları korur, basık yapmaz */
             filter: grayscale(100%) opacity(0.6); 
             transition: 0.5s ease;
             cursor: pointer;
