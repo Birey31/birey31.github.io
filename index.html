@@ -98,7 +98,12 @@
             width: 250px;
         }
 
-        
+        /* Her iki logoyu da aynı (250px) yapar */
+.logo-link:nth-of-type(1) .desktop-only,
+.logo-link:nth-of-type(2) .desktop-only {
+    width: 250px;
+    height: auto;
+}
 
         .desktop-only:hover {
             filter: grayscale(0%) opacity(1);
