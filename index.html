@@ -88,7 +88,7 @@
         }
 
         .logo-link:nth-of-type(2):hover .desktop-only {
-            filter: grayscale(100%) opacity(0.2) blur(8px); /* Kararır ve Blurlaşır */
+            filter: grayscale(100%) opacity(0.2) blur(8px);
             transform: scale(0.98);
         }
         .logo-link:nth-of-type(2):hover .coming-soon {
@@ -120,7 +120,7 @@
 </head>
 <body>
 
-    <button class="theme-toggle" id="themeBtn"></button>
+    <button class="theme-toggle" id="themeBtn" onclick="playSound()"></button>
 
     <div class="logo-container">
         <a href="2026.html" class="logo-link">
@@ -141,7 +141,7 @@
     <div id="live-clock">TR 00:00:00</div>
 
     <audio id="clickSound" preload="auto">
-        <source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg">
+        <source src="https://www.fesliyanstudios.com/play-mp3/387" type="audio/mpeg">
     </audio>
 
     <script>
@@ -150,6 +150,15 @@
         const clickSound = document.getElementById('clickSound');
         const clockElement = document.getElementById('live-clock');
         const lockedLink = document.getElementById('lockedLink');
+
+        // Service Worker Kaydı (Yeni Versiyonu Zorla)
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("./sw.js?v=4").then(reg => {
+                    reg.update();
+                });
+            });
+        }
 
         // Canlı Saat
         function updateClock() {
@@ -163,25 +172,24 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Ses
+        // Ses Fonksiyonu (Daha dirençli yapı)
         function playSound() {
             clickSound.currentTime = 0;
             clickSound.volume = 0.2;
-            clickSound.play().catch(()=>{});
+            let playPromise = clickSound.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("Ses çalma engellendi, etkileşim gerekiyor.");
+                });
+            }
         }
-
-        // 2027 Tıklama Kilidi Mesajı (İsteğe bağlı)
-        lockedLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            // Buraya tıklandığında ufak bir ses efekti veya uyarı eklenebilir.
-        });
 
         // Tema Yönetimi
         const savedTheme = localStorage.getItem('theme') || 'dark';
         if (savedTheme === 'light') body.setAttribute('data-theme', 'light');
 
         themeBtn.addEventListener('click', () => {
-            playSound();
+            // playSound() artık inline onclick ile de tetikleniyor
             if (body.getAttribute('data-theme') === 'light') {
                 body.removeAttribute('data-theme');
                 localStorage.setItem('theme', 'dark');
