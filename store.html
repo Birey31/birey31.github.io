@@ -78,7 +78,6 @@
         .info-sidebar { width: 200px; border-right: 1px solid var(--text-color); padding: 40px; display: flex; flex-direction: column; gap: 20px; }
         .info-content { flex: 1; padding: 40px; overflow-y: auto; font-size: 12px; line-height: 1.8; }
         
-        /* --- ÜRÜN DETAY İÇERİĞİ --- */
         .detail-container { display: flex; width: 100%; height: 100%; }
         .detail-img-box { flex: 1; display: flex; align-items: center; justify-content: center; border-right: 1px solid var(--text-color); padding: 40px; }
         .detail-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
@@ -117,16 +116,40 @@
         .product-card:hover .product-box img { transform: scale(1.1); }
         .product-info { font-size: 9px; text-transform: lowercase; opacity: 0.8; text-align: center; }
 
-        /* --- SEPET --- */
+        /* --- SEPET TASARIMI --- */
         .side-cart {
             position: fixed; top: 0; right: -400px;
-            width: 300px; height: 100vh;
+            width: 350px; height: 100vh;
             background-color: var(--bg-color);
             transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 2000; padding: 40px; display: flex; flex-direction: column;
+            z-index: 2000; padding: 30px; display: flex; flex-direction: column;
             border-left: 1px solid var(--text-color);
         }
         .side-cart.active { right: 0; }
+        
+        .cart-items-container { flex: 1; overflow-y: auto; margin-bottom: 20px; }
+        .cart-item { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 15px; border-bottom: 1px solid rgba(128,128,128,0.2); 
+            padding-bottom: 10px; font-size: 11px;
+        }
+        .qty-controls { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+        .qty-btn { 
+            background: none; border: 1px solid var(--text-color); color: var(--text-color);
+            width: 18px; height: 18px; cursor: pointer; font-size: 12px; line-height: 1;
+        }
+
+        .cart-footer { border-top: 1px solid var(--text-color); padding-top: 20px; }
+        .cart-note {
+            width: 100%; background: none; border: 1px solid rgba(128,128,128,0.4);
+            color: var(--text-color); font-family: inherit; font-size: 10px;
+            padding: 10px; height: 60px; resize: none; margin-bottom: 15px; outline: none;
+        }
+        .checkout-btn {
+            width: 100%; background: var(--text-color); color: var(--bg-color);
+            border: none; padding: 15px; font-family: inherit; font-size: 12px;
+            cursor: pointer; text-transform: lowercase; font-weight: bold;
+        }
 
         /* --- NAV & FOOTER --- */
         nav#main-nav { position: fixed; left: 40px; top: 180px; display: flex; flex-direction: column; gap: 12px; z-index: 10; }
@@ -139,9 +162,7 @@
         @media (max-width: 1024px) {
             .products-pool { width: 85%; left: 50%; height: 60%; top: 55%; }
             .products-grid { grid-template-columns: repeat(2, 1fr); }
-            .detail-container { flex-direction: column; }
-            .detail-info-box { width: 100%; padding: 20px; }
-            .detail-img-box { border-right: none; border-bottom: 1px solid var(--text-color); padding: 20px; }
+            .side-cart { width: 100%; right: -100%; }
         }
     </style>
 </head>
@@ -176,8 +197,23 @@
     </div>
 
     <div class="side-cart" id="sideCart">
-        <div style="font-size:12px; margin-bottom:20px; border-bottom:1px solid var(--text-color); padding-bottom:10px; text-transform:lowercase;" data-tr="sepet" data-en="cart">sepet</div>
-        <div id="cartItems" style="flex-grow:1; font-size:10px; opacity:0.5;">boş.</div>
+        <div style="font-size:12px; margin-bottom:20px; border-bottom:1px solid var(--text-color); padding-bottom:10px; text-transform:lowercase; display:flex; justify-content:space-between;">
+            <span data-tr="sepet" data-en="cart">sepet</span>
+            <span onclick="toggleCart()" style="cursor:pointer; opacity:0.5;">[x]</span>
+        </div>
+        
+        <div id="cartItems" class="cart-items-container">
+            <div style="opacity:0.5; font-size:10px;">boş.</div>
+        </div>
+
+        <div class="cart-footer" id="cartFooter" style="display:none;">
+            <textarea class="cart-note" placeholder="sipariş notu / order note..."></textarea>
+            <div style="font-size:12px; margin-bottom:15px; display:flex; justify-content:space-between;">
+                <span>total:</span>
+                <span id="cartTotal">0€</span>
+            </div>
+            <button class="checkout-btn" data-tr="odeme" data-en="checkout">odeme / checkout</button>
+        </div>
     </div>
 
     <nav id="main-nav">
@@ -217,20 +253,14 @@
             ],
             tops: [
                 { id: 1, name: "basic t-shirt white", price: 40, img: "elbise/tshirt1.png", desc: "100% heavy cotton." }, 
-                { id: 2, name: "heavy cotton hoodie", price: 110, img: "elbise/tshirt2.png", desc: "Oversized fit." },
-                { id: 3, name: "vintage tee black", price: 45, img: "elbise/tshirt3.png", desc: "Washed aesthetic." },
-                { id: 4, name: "reeha seasonal tee", price: 45, img: "elbise/tshirt4.png", desc: "Limited print." }
+                { id: 2, name: "heavy cotton hoodie", price: 110, img: "elbise/tshirt2.png", desc: "Oversized fit." }
             ],
             bottoms: [
                 { id: 5, name: "loose fit denim", price: 95, img: "elbise/kot1.png", desc: "Wide leg denim." }, 
-                { id: 6, name: "cargo pants", price: 105, img: "elbise/kot2.png", desc: "Utility cargo." },
-                { id: 7, name: "utility shorts", price: 80, img: "elbise/kot3.png", desc: "Summer utility." },
-                { id: 8, name: "wide leg trousers", price: 115, img: "elbise/kot4.png", desc: "Comfort trousers." }
+                { id: 6, name: "cargo pants", price: 105, img: "elbise/kot2.png", desc: "Utility cargo." }
             ],
             accessories: [
-                { id: 9, name: "canvas tote bag", price: 30, img: "elbise/taki1.png", desc: "Daily tote." },
-                { id: 10, name: "utility belt", price: 55, img: "elbise/taki2.png", desc: "Tactical belt." },
-                { id: 11, name: "minimal chain", price: 45, img: "elbise/taki3.png", desc: "Silver chain." }
+                { id: 9, name: "canvas tote bag", price: 30, img: "elbise/taki1.png", desc: "Daily tote." }
             ]
         };
 
@@ -251,7 +281,6 @@
                     </div>
                     <div class="product-info">${p.name}<br><span style="opacity:0.5">${p.price}€</span></div>
                 </div>`).join('');
-            
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             if(e) e.target.classList.add('active');
         }
@@ -259,11 +288,8 @@
         function openProductDetail(cat, id) {
             const product = productsData[cat].find(p => p.id === id);
             const content = document.getElementById('productDetailContent');
-
             content.innerHTML = `
-                <div class="detail-img-box">
-                    <img src="${product.img}" alt="${product.name}">
-                </div>
+                <div class="detail-img-box"><img src="${product.img}" alt="${product.name}"></div>
                 <div class="detail-info-box">
                     <div style="font-size: 18px; font-weight: bold;">${product.name}</div>
                     <div style="font-size: 12px; opacity: 0.7; line-height:1.5;">${product.desc}</div>
@@ -279,13 +305,9 @@
                     <button class="add-to-cart-btn" onclick="addToCart('${product.name}', ${product.price})">sepete ekle / add to cart</button>
                 </div>
             `;
-
             const pool = document.getElementById('productDetailPool');
             pool.style.display = 'flex';
-            setTimeout(() => {
-                pool.classList.add('active');
-                document.getElementById('globalOverlay').classList.add('active');
-            }, 10);
+            setTimeout(() => { pool.classList.add('active'); document.getElementById('globalOverlay').classList.add('active'); }, 10);
         }
 
         function selectSize(btn) {
@@ -295,11 +317,61 @@
 
         function addToCart(name, price) {
             const size = document.querySelector('.size-btn.selected')?.innerText;
-            if(!size) { alert('lütfen beden seçin / please select size'); return; }
-            cart.push({ name, price, size });
-            document.getElementById('cartCount').innerText = `cart (${cart.length})`;
-            alert('sepete eklendi');
+            if(!size) { return; } // Uyarı mesajı kaldırıldı (Sessiz ekleme)
+
+            const existingItem = cart.find(i => i.name === name && i.size === size);
+            if(existingItem) {
+                existingItem.qty++;
+            } else {
+                cart.push({ name, price, size, qty: 1 });
+            }
+            
+            updateCartUI();
             closeAllPanels();
+            toggleCart(); // Ekledikten sonra sepeti otomatik açar
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cartItems');
+            const footer = document.getElementById('cartFooter');
+            const totalEl = document.getElementById('cartTotal');
+            
+            document.getElementById('cartCount').innerText = `cart (${cart.reduce((a, b) => a + b.qty, 0)})`;
+
+            if(cart.length === 0) {
+                container.innerHTML = '<div style="opacity:0.5; font-size:10px;">boş.</div>';
+                footer.style.display = 'none';
+                return;
+            }
+
+            footer.style.display = 'block';
+            let total = 0;
+
+            container.innerHTML = cart.map((item, index) => {
+                total += (item.price * item.qty);
+                return `
+                    <div class="cart-item">
+                        <div>
+                            <div style="font-weight:bold">${item.name}</div>
+                            <div style="opacity:0.6">${item.size} | ${item.price}€</div>
+                            <div class="qty-controls">
+                                <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
+                                <span>${item.qty}</span>
+                                <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+                            </div>
+                        </div>
+                        <div style="font-weight:bold">${item.price * item.qty}€</div>
+                    </div>
+                `;
+            }).join('');
+            
+            totalEl.innerText = total + '€';
+        }
+
+        function changeQty(index, delta) {
+            cart[index].qty += delta;
+            if(cart[index].qty <= 0) cart.splice(index, 1);
+            updateCartUI();
         }
 
         function closeAllPanels() {
@@ -313,20 +385,18 @@
             }, 300);
         }
 
+        function toggleCart() {
+            const sideCart = document.getElementById('sideCart');
+            const overlay = document.getElementById('globalOverlay');
+            sideCart.classList.toggle('active');
+            if(sideCart.classList.contains('active')) overlay.classList.add('active');
+            else overlay.classList.remove('active');
+        }
+
         function toggleTheme() {
             const isLight = document.documentElement.hasAttribute('data-theme');
             if (isLight) document.documentElement.removeAttribute('data-theme');
             else document.documentElement.setAttribute('data-theme', 'light');
-        }
-
-        function toggleCart() {
-            document.getElementById('sideCart').classList.toggle('active');
-            document.getElementById('globalOverlay').classList.toggle('active');
-            const cartItems = document.getElementById('cartItems');
-            if(cart.length > 0) {
-                cartItems.innerHTML = cart.map(i => `<div style="margin-bottom:10px;">${i.name} (${i.size}) - ${i.price}€</div>`).join('');
-                cartItems.style.opacity = "1";
-            }
         }
 
         function toggleLanguage() {
