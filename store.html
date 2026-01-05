@@ -72,10 +72,13 @@
             border: 1px solid var(--text-color);
             z-index: 2500; display: none; opacity: 0;
             transition: all 0.3s ease;
+            overflow: hidden;
         }
         #infoPool.active, #productDetailPool.active, #checkoutPool.active { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
-        .info-sidebar { width: 200px; border-right: 1px solid var(--text-color); padding: 40px; display: flex; flex-direction: column; gap: 20px; }
+        /* INFO POOL YAPISI */
+        .info-container { display: flex; width: 100%; height: 100%; }
+        .info-sidebar { width: 200px; border-right: 1px solid var(--text-color); padding: 40px; display: flex; flex-direction: column; gap: 20px; flex-shrink: 0; }
         .info-nav-link { font-size: 11px; cursor: pointer; opacity: 0.5; transition: 0.3s; text-transform: lowercase; }
         .info-nav-link.active { opacity: 1; text-decoration: underline; }
         .info-content { flex: 1; padding: 40px; overflow-y: auto; font-size: 12px; line-height: 1.8; }
@@ -161,9 +164,7 @@
         .form-group label { display: block; font-size: 10px; margin-bottom: 5px; opacity: 0.7; }
         .form-input { 
             width: 100%; background: none; border: 1px solid var(--text-color); 
-            color: var(--text-color); padding: 10px; font-family: inherit; 
-            font-size: 16px; /* iPhone zoom engeli için 16px yapıldı */
-            outline: none;
+            color: var(--text-color); padding: 10px; font-family: inherit; font-size: 16px; outline: none;
         }
         .checkout-step-title { font-size: 18px; margin-bottom: 30px; text-transform: lowercase; border-bottom: 1px solid var(--text-color); padding-bottom: 10px; }
 
@@ -206,7 +207,29 @@
                 gap: 10px;
             }
 
-            /* --- SEPET MOBİL OPTİMİZE --- */
+            /* INFO POOL MOBİL DÜZELTME */
+            #infoPool { 
+                width: 90% !important; 
+                height: 85% !important; 
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+            }
+            .info-container { flex-direction: column; }
+            .info-sidebar { 
+                width: 100%; 
+                border-right: none; 
+                border-bottom: 1px solid var(--text-color); 
+                flex-direction: row; 
+                padding: 15px; 
+                gap: 15px;
+                overflow-x: auto;
+                white-space: nowrap;
+                justify-content: flex-start;
+            }
+            .info-nav-link { font-size: 10px; }
+            .info-content { padding: 20px; font-size: 11px; }
+
             .side-cart { 
                 width: 100%; 
                 right: -100%; 
@@ -214,23 +237,21 @@
                 border-left: none;
             }
             .side-cart.active { right: 0; }
-            .cart-items-container { margin-bottom: 10px; }
 
             #checkoutPool { width: 95% !important; height: 90% !important; }
-            .checkout-container { flex-direction: column; }
-            .checkout-form-box { padding: 25px; }
+            .checkout-container { flex-direction: column; overflow-y: auto; }
+            .checkout-form-box { padding: 25px; flex: none; }
             .checkout-summary-box { 
                 width: 100%; 
                 border-left: none; 
                 border-top: 1px solid var(--text-color); 
                 padding: 20px; 
+                margin-top: auto;
             }
-            #infoPool, #productDetailPool { width: 90%; height: 80%; }
+            #productDetailPool { width: 90%; height: 85%; }
             .detail-container { flex-direction: column; overflow-y: auto; }
             .detail-info-box { width: 100%; padding: 20px; gap: 15px; }
-            .detail-img-box { border-right: none; border-bottom: 1px solid var(--text-color); padding: 20px; }
-            
-            .info-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--text-color); flex-direction: row; padding: 20px; overflow-x: auto; }
+            .detail-img-box { border-right: none; border-bottom: 1px solid var(--text-color); padding: 20px; flex: none; height: 300px; }
         }
     </style>
 </head>
@@ -244,14 +265,16 @@
     </div>
 
     <div id="infoPool">
-        <div style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:10px; opacity:0.5;" onclick="closeAllPanels()">[kapat]</div>
-        <div class="info-sidebar">
-            <div class="info-nav-link" onclick="loadInfo('sales')" id="link-sales" data-tr="mesafeli satış" data-en="distance sales">mesafeli satış</div>
-            <div class="info-nav-link" onclick="loadInfo('shipping')" id="link-shipping" data-tr="teslimat & iade" data-en="shipping & returns">teslimat & iade</div>
-            <div class="info-nav-link" onclick="loadInfo('privacy')" id="link-privacy" data-tr="kvkk" data-en="privacy">kvkk</div>
-            <div class="info-nav-link" onclick="loadInfo('contact')" id="link-contact" data-tr="iletişim" data-en="contact">iletişim</div>
+        <div style="position:absolute; top:15px; right:15px; cursor:pointer; font-size:10px; opacity:0.5; z-index:100;" onclick="closeAllPanels()">[kapat]</div>
+        <div class="info-container">
+            <div class="info-sidebar">
+                <div class="info-nav-link" onclick="loadInfo('sales')" id="link-sales" data-tr="mesafeli satış" data-en="distance sales">mesafeli satış</div>
+                <div class="info-nav-link" onclick="loadInfo('shipping')" id="link-shipping" data-tr="teslimat & iade" data-en="shipping & returns">teslimat & iade</div>
+                <div class="info-nav-link" onclick="loadInfo('privacy')" id="link-privacy" data-tr="kvkk" data-en="privacy">kvkk</div>
+                <div class="info-nav-link" onclick="loadInfo('contact')" id="link-contact" data-tr="iletişim" data-en="contact">iletişim</div>
+            </div>
+            <div class="info-content" id="infoContent"></div>
         </div>
-        <div class="info-content" id="infoContent"></div>
     </div>
 
     <div id="checkoutPool">
@@ -540,10 +563,7 @@
                 </div>`).join('');
             document.getElementById('checkoutTotal').innerText = document.getElementById('cartTotal').innerText;
             showAddressStep();
-            setTimeout(() => { 
-                pool.classList.add('active'); 
-                document.getElementById('globalOverlay').classList.add('active'); 
-            }, 10);
+            setTimeout(() => { pool.classList.add('active'); document.getElementById('globalOverlay').classList.add('active'); }, 10);
         }
 
         function showAddressStep() {
