@@ -93,12 +93,12 @@
             cursor: pointer;
         }
 
-        /* SOLDAN SAĞDAN YUKARIDAN AŞAĞIDAN HAFİF KÜÇÜLTME (Logo 1) */
+        /* SOLDAN SAĞDAN YUKARIDAN AŞAĞIDAN BİRAZ DAHA KÜÇÜLTME (Logo 1) */
         .logo-link:nth-of-type(1) .desktop-only {
-            width: 215px; /* 250px'den buraya çektik */
+            width: 185px; /* Bir öncekinde 215px idi, şimdi daha da küçüldü */
         }
 
-        /* Logo 2 (Sabit Kalan) */
+        /* Logo 2 (Sabit 250px) */
         .logo-link:nth-of-type(2) .desktop-only {
             width: 250px;
         }
@@ -146,6 +146,7 @@
     </div>
 
     <script>
+        // ... (Script kısmı aynı kalıyor) ...
         const themeBtn = document.getElementById('themeBtn');
         const body = document.documentElement;
         const metaTheme = document.getElementById('meta-theme');
