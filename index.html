@@ -74,9 +74,9 @@
         /* --- LOGO DÜZENLEMELERİ --- */
         .logo-container {
             display: flex;
-            align-items: center; /* Logoları dikeyde tam ortalar */
+            align-items: center;
             justify-content: center;
-            gap: 40px; /* Logolar arası boşluğu biraz açtık */
+            gap: 40px; /* Aradaki boşluk */
         }
 
         .logo-link {
@@ -87,23 +87,12 @@
 
         .desktop-only { 
             display: block; 
-            height: auto; /* Basık durmasını engeller */
+            width: 250px; /* İKİ LOGO DA ŞU AN 250PX OLARAK EŞİTLENDİ */
+            height: auto; 
             filter: grayscale(100%) opacity(0.6); 
             transition: 0.5s ease;
             cursor: pointer;
         }
-
-        /* Birinci Logo (2026) Boyutu */
-        .logo-link:nth-of-type(1) .desktop-only {
-            width: 250px;
-        }
-
-        /* Her iki logoyu da aynı (250px) yapar */
-.logo-link:nth-of-type(1) .desktop-only,
-.logo-link:nth-of-type(2) .desktop-only {
-    width: 250px;
-    height: auto;
-}
 
         .desktop-only:hover {
             filter: grayscale(0%) opacity(1);
@@ -143,7 +132,7 @@
             <img src="media/logo2.webp" alt="Reeha Logo 2027" class="desktop-only">
         </a>
         
-        <a href="2026.html" class="mobile-only-link" style="display: none;">
+        <a href="2026.html" class="mobile-only-link">
             <img src="media/mobillogo.webp" fetchpriority="high" class="mobile-only" alt="Reeha Logo">
         </a>
     </div>
