@@ -58,17 +58,6 @@
             cursor: pointer; opacity: 0.3; transition: 0.4s;
             padding: 0; outline: none;
             z-index: 100;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .theme-toggle:hover { opacity: 1; transform: scale(1.1); }
-
-        body:not([data-theme="light"]) .theme-toggle {
-            background: var(--text-color);
-        }
-        
-        [data-theme="light"] .theme-toggle {
-            background: transparent;
         }
 
         /* --- LOGO KONTEYNIRI --- */
@@ -93,12 +82,12 @@
             cursor: pointer;
         }
 
-        /* SOLDAN SAĞDAN YUKARIDAN AŞAĞIDAN BİRAZ DAHA KÜÇÜLTME (Logo 1) */
+        /* Logo 1 (Sol - 2026) */
         .logo-link:nth-of-type(1) .desktop-only {
-            width: 185px; /* Bir öncekinde 215px idi, şimdi daha da küçüldü */
+            width: 185px; 
         }
 
-        /* Logo 2 (Sabit 250px) */
+        /* Logo 2 (Sağ - 2027) */
         .logo-link:nth-of-type(2) .desktop-only {
             width: 250px;
         }
@@ -108,21 +97,26 @@
             transform: scale(1.03);
         }
 
+        /* MOBİL LOGO AYARLARI */
+        .mobile-only-link {
+            display: none; /* Masaüstünde gizle */
+        }
+
         .mobile-only { 
-            display: none; 
+            display: block;
+            width: 200px;
+            height: auto;
             filter: none !important; 
             opacity: 1 !important; 
         }
 
+        /* MOBİL GÖRÜNÜM DÜZELTMESİ */
         @media (max-width: 768px) {
-            .logo-link { display: none; }
-            .mobile-only-link { display: block; }
-            .mobile-only { 
-                display: block; 
-                width: 200px; 
-            }
-            .mobile-only:active {
-                transform: scale(0.97);
+            .logo-link { display: none !important; } /* Masaüstü logolarını gizle */
+            .mobile-only-link { 
+                display: flex !important; /* Mobil linki aktif et */
+                justify-content: center;
+                align-items: center;
             }
         }
     </style>
@@ -146,7 +140,6 @@
     </div>
 
     <script>
-        // ... (Script kısmı aynı kalıyor) ...
         const themeBtn = document.getElementById('themeBtn');
         const body = document.documentElement;
         const metaTheme = document.getElementById('meta-theme');
@@ -181,16 +174,6 @@
                 cleanUrl = cleanUrl.replace(/\/index$/, '/');
             }
             window.history.replaceState(null, '', cleanUrl);
-        }
-    </script>
-    <script>
-        if ("serviceWorker" in navigator) {
-            window.addEventListener("load", () => {
-                navigator.serviceWorker
-                .register("./sw.js")
-                .then((reg) => console.log("Service Worker Kayıt Edildi"))
-                .catch((err) => console.log("Hata:", err));
-            });
         }
     </script>
 </body>
