@@ -23,13 +23,12 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            /* Ekran görüntüsündeki gerçek font: Monospace / Courier */
+            /* Ekran görüntüsündeki Courier/Monospace fontu */
             font-family: "Courier New", Courier, monospace;
             transition: background-color 0.5s ease;
+            height: 100vh;
+            overflow: hidden;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
         }
 
         /* --- TEMA BUTONU --- */
@@ -41,87 +40,74 @@
         }
         body:not([data-theme="light"]) .theme-toggle { background: var(--text-color); }
 
-        /* --- LOGO ALANI --- */
-        header {
-            margin-top: 50px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .supreme-box {
-            background-color: #ff0000;
-            color: white;
-            padding: 5px 15px;
-            font-family: sans-serif; /* Box logo içi sans-serif kalmalı */
-            font-weight: bold;
-            font-size: 24px;
-            display: inline-block;
-            text-decoration: none;
-            margin-bottom: 10px;
-        }
-
-        .date-info {
-            font-size: 12px;
-            letter-spacing: 1px;
-            display: block;
-            margin-bottom: 40px;
-        }
-
-        /* --- STORE MENÜSÜ (ORTALANMIŞ) --- */
+        /* --- SOL MENÜ (SUPREME STYLE) --- */
         nav {
+            position: fixed;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .nav-link {
             text-decoration: none;
             color: var(--text-color);
-            font-size: 13px;
+            font-size: 14px;
+            text-transform: lowercase; /* Supreme tarzı küçük harf */
             transition: 0.2s;
+            width: max-content;
         }
 
         .nav-link:hover {
             text-decoration: underline;
         }
 
-        /* --- SOSYAL İKONLAR --- */
-        .social-icons {
-            margin-top: 40px;
-            display: flex;
-            gap: 15px;
+        /* --- SAĞ ALT TARİH & SAAT --- */
+        .date-info {
+            position: fixed;
+            right: 40px;
+            bottom: 40px;
+            font-size: 12px;
+            letter-spacing: 1px;
             opacity: 0.8;
+            text-align: right;
         }
 
-        .social-icons svg {
-            width: 16px;
-            height: 16px;
-            fill: var(--text-color);
+        /* --- MOBİL AYARLAR --- */
+        @media (max-width: 768px) {
+            nav {
+                left: 20px;
+                top: 40px;
+                transform: none;
+            }
+            .date-info {
+                right: 20px;
+                bottom: 20px;
+                font-size: 10px;
+            }
         }
-
     </style>
 </head>
 <body>
 
     <button class="theme-toggle" id="themeBtn"></button>
 
-    <header>
-        <a href="index.html" class="supreme-box">Reeha</a>
-        <span class="date-info" id="current-time">05/01/2026 07:17pm TR</span>
-    </header>
-
     <nav>
+        <a href="#" class="nav-link">news</a>
         <a href="#" class="nav-link">üst giyim</a>
         <a href="#" class="nav-link">alt giyim</a>
         <a href="#" class="nav-link">aksesuar</a>
-        <a href="#" class="nav-link">arşiv</a>
-        <a href="#" class="nav-link">iletişim</a>
+        <a href="#" class="nav-link">random</a>
+        <a href="#" class="nav-link">about</a>
+        <a href="#" class="nav-link">contact</a>
         <a href="#" class="nav-link">mailing list</a>
     </nav>
 
-    <div class="social-icons">
-        </div>
+    <div class="date-info" id="current-time">
+        05/01/2026 10:19pm TR
+    </div>
 
     <script>
         const themeBtn = document.getElementById('themeBtn');
@@ -130,7 +116,7 @@
         // Saat fonksiyonu (Görüntüdeki gibi formatlandı)
         function updateTime() {
             const now = new Date();
-            const date = now.toLocaleDateString('en-GB');
+            const date = now.toLocaleDateString('en-GB'); // DD/MM/YYYY
             const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
             document.getElementById('current-time').innerHTML = `${date} ${time} TR`;
         }
