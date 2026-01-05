@@ -31,7 +31,7 @@
             flex-direction: column;
         }
 
-        /* --- TEMA VE SEPET BUTONLARI --- */
+        /* --- ÜST SAĞ NAV --- */
         .top-right-nav {
             position: fixed; top: 30px; right: 30px;
             display: flex; align-items: center; gap: 20px; z-index: 1000;
@@ -49,9 +49,8 @@
             font-family: inherit; font-size: 13px; cursor: pointer;
             text-transform: lowercase; opacity: 0.8;
         }
-        .cart-toggle:hover { opacity: 1; text-decoration: underline; }
 
-        /* --- SEPET PANELI --- */
+        /* --- SEPET PANELİ --- */
         .side-cart {
             position: fixed; top: 0; right: -400px;
             width: 350px; height: 100vh;
@@ -72,6 +71,8 @@
             color: var(--bg-color); border: none; cursor: pointer;
             font-family: inherit; text-transform: lowercase; margin-top: 15px;
         }
+
+        .remove-btn { background: none; border: none; color: red; cursor: pointer; font-size: 10px; margin-left: 10px; opacity: 0.6; }
 
         /* --- SOL ANA MENÜ --- */
         nav#main-nav {
@@ -108,31 +109,39 @@
         .product-info { font-size: 11px; line-height: 1.4; text-transform: lowercase; }
         .price { opacity: 0.5; margin-left: 5px; }
 
-        /* --- ALT YASAL MENÜ --- */
-        .legal-footer {
-            position: fixed; bottom: 40px; left: 40px;
-            display: flex; flex-wrap: wrap; gap: 15px;
-            max-width: 70%; z-index: 5;
-        }
-        .legal-link {
-            text-decoration: none; color: var(--text-color);
-            font-size: 11px; text-transform: lowercase;
-            opacity: 0.6; transition: 0.2s;
-        }
-        .legal-link:hover { opacity: 1; text-decoration: underline; }
-
-        /* --- SAĞ ALT PANEL --- */
+        /* --- SAĞ ALT PANEL (DİL & SAAT) --- */
         .bottom-right-panel {
             position: fixed; right: 40px; bottom: 40px;
             display: flex; align-items: center; gap: 15px; z-index: 10;
         }
+
+        .lang-wrapper { position: relative; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .flag-box { width: 22px; height: 14px; background-size: cover; background-position: center; border: 0.5px solid rgba(255,255,255,0.1); }
+        .flag-tr { background-image: url('https://flagcdn.com/w40/tr.png'); }
+        .flag-en { background-image: url('https://flagcdn.com/w40/gb.png'); }
+
+        .arrow-down { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid var(--text-color); }
+        .lang-dropdown {
+            position: absolute; bottom: 150%; left: 0; display: none;
+            flex-direction: column; background-color: var(--bg-color); gap: 12px; padding: 5px 0;
+            border: 1px solid rgba(255,255,255,0.1); padding: 10px;
+        }
+        .lang-dropdown.active { display: flex; }
+        .lang-option { display: flex; align-items: center; gap: 10px; opacity: 0.6; transition: 0.2s; font-size: 11px; }
+        .lang-option:hover { opacity: 1; }
+
         .date-info { font-size: 13px; letter-spacing: 1px; opacity: 0.8; white-space: nowrap; }
 
-        /* --- MOBİL --- */
+        /* --- ALT YASAL --- */
+        .legal-footer {
+            position: fixed; bottom: 40px; left: 40px;
+            display: flex; flex-wrap: wrap; gap: 15px; z-index: 5;
+        }
+        .legal-link { text-decoration: none; color: var(--text-color); font-size: 11px; opacity: 0.6; text-transform: lowercase; }
+
         @media (max-width: 768px) {
             nav#main-nav { left: 20px; top: 30px; transform: none; flex-direction: row; flex-wrap: wrap; }
             .products-container { left: 20px; right: 20px; top: 120px; bottom: 150px; }
-            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
             .side-cart { width: 100%; right: -100%; }
         }
     </style>
@@ -145,13 +154,13 @@
     </div>
 
     <div class="side-cart" id="sideCart">
-        <div class="cart-header">your cart</div>
+        <div class="cart-header" data-tr="sepetiniz" data-en="your cart">sepetiniz</div>
         <div class="cart-items" id="cartItems">
             <p style="opacity: 0.5;">sepetiniz boş.</p>
         </div>
         <div class="cart-footer">
-            <div style="font-size: 12px;">toplam: <span id="cartTotal">0€</span></div>
-            <button class="checkout-btn">ödemeye geç</button>
+            <div style="font-size: 12px;" data-tr="toplam" data-en="total">toplam: <span id="cartTotal">0€</span></div>
+            <button class="checkout-btn" data-tr="ödemeye geç" data-en="checkout">ödemeye geç</button>
             <button onclick="toggleCart()" style="background:none; border:none; color:var(--text-color); cursor:pointer; font-size:10px; margin-top:15px; opacity:0.5; font-family:inherit;">[kapat]</button>
         </div>
     </div>
@@ -168,13 +177,18 @@
     </main>
 
     <footer class="legal-footer">
-        <a href="#" class="legal-link" data-tr="mesafeli satış sözleşmesi" data-en="distance sales agreement">mesafeli satış sözleşmesi</a>
-        <a href="#" class="legal-link" data-tr="teslimat ve iade" data-en="shipping & returns">teslimat ve iade</a>
-        <a href="#" class="legal-link" data-tr="kvkk ve gizlilik" data-en="privacy policy">kvkk ve gizlilik</a>
         <a href="#" class="legal-link" data-tr="iletisim" data-en="contact">iletişim</a>
     </footer>
 
     <div class="bottom-right-panel">
+        <div class="lang-wrapper" onclick="toggleLangDropdown()">
+            <div id="selected-flag-box" class="flag-box flag-tr"></div>
+            <div class="arrow-down"></div>
+            <div class="lang-dropdown" id="lang-dropdown">
+                <div class="lang-option" onclick="setLanguage('tr', 'flag-tr')"> <div class="flag-box flag-tr"></div> tr </div>
+                <div class="lang-option" onclick="setLanguage('en', 'flag-en')"> <div class="flag-box flag-en"></div> en </div>
+            </div>
+        </div>
         <div class="date-info" id="current-time"></div>
     </div>
 
@@ -187,23 +201,25 @@
         };
 
         let cart = [];
+        let currentLang = 'tr';
 
-        function toggleCart() {
-            document.getElementById('sideCart').classList.toggle('active');
-        }
+        // --- SEPET FONKSİYONLARI ---
+        function toggleCart() { document.getElementById('sideCart').classList.toggle('active'); }
 
         function addToCart(name, price) {
             cart.push({ name, price });
             updateCartUI();
-            // İstersen eklendiğinde sepeti otomatik açabilirsin:
-            // document.getElementById('sideCart').classList.add('active');
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
         }
 
         function updateCartUI() {
             const cartItems = document.getElementById('cartItems');
             const cartCount = document.getElementById('cartCount');
             const cartTotal = document.getElementById('cartTotal');
-            
             cartCount.innerText = `cart (${cart.length})`;
             
             if (cart.length === 0) {
@@ -216,16 +232,38 @@
             cartItems.innerHTML = cart.map((item, index) => {
                 total += item.price;
                 return `
-                    <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
-                        <span>${item.name}</span>
-                        <span>${item.price}€</span>
+                    <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>${item.name} - ${item.price}€</span>
+                        <button class="remove-btn" onclick="removeFromCart(${index})">[x]</button>
                     </div>
                 `;
             }).join('');
-            
             cartTotal.innerText = total + '€';
         }
 
+        // --- DİL VE SAAT ---
+        function toggleLangDropdown() { document.getElementById('lang-dropdown').classList.toggle('active'); }
+
+        function setLanguage(lang, flagClass) {
+            currentLang = lang;
+            document.getElementById('selected-flag-box').className = 'flag-box ' + flagClass;
+            document.querySelectorAll('[data-tr]').forEach(el => {
+                el.textContent = el.getAttribute(`data-${lang}`);
+            });
+            updateTime();
+            document.getElementById('lang-dropdown').classList.remove('active');
+            event.stopPropagation();
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const date = now.toLocaleDateString(currentLang === 'tr' ? 'tr-TR' : 'en-GB');
+            const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+            const suffix = currentLang === 'tr' ? 'TR' : 'UK';
+            document.getElementById('current-time').innerHTML = `${date} ${time} ${suffix}`;
+        }
+
+        // --- ÜRÜN YÜKLEME ---
         function loadProducts(category) {
             const grid = document.getElementById('productGrid');
             grid.innerHTML = '';
@@ -239,22 +277,17 @@
                 grid.innerHTML += card;
             });
             document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-            if(event) event.target.classList.add('active');
+            if(event && event.target.classList.contains('nav-link')) event.target.classList.add('active');
         }
 
-        function updateTime() {
-            const now = new Date();
-            const date = now.toLocaleDateString('tr-TR');
-            const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-            document.getElementById('current-time').innerHTML = `${date} ${time} TR`;
-        }
-
+        // --- TEMA ---
         const themeBtn = document.getElementById('themeBtn');
         themeBtn.addEventListener('click', () => {
             document.documentElement.toggleAttribute('data-theme');
-            const isLight = document.documentElement.hasAttribute('data-theme');
-            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            localStorage.setItem('theme', document.documentElement.hasAttribute('data-theme') ? 'light' : 'dark');
         });
+
+        window.onclick = (e) => { if (!e.target.closest('.lang-wrapper')) document.getElementById('lang-dropdown').classList.remove('active'); }
 
         window.onload = () => {
             loadProducts('news');
