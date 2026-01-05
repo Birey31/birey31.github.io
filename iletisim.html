@@ -1,11 +1,143 @@
 <!DOCTYPE html>
 <html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reeha | İletişim</title>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: "Courier New", Courier, monospace;
+            transition: background-color 0.5s ease;
+            padding: 60px 40px;
+            text-transform: lowercase;
+        }
+
+        /* --- TEMA BUTONU --- */
+        .theme-toggle {
+            position: fixed; top: 30px; right: 30px;
+            background: none; border: 1px solid var(--text-color);
+            width: 12px; height: 12px; border-radius: 50%;
+            cursor: pointer; opacity: 0.4;
+        }
+        body:not([data-theme="light"]) .theme-toggle { background: var(--text-color); }
+
+        .content {
+            max-width: 600px;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 14px;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--text-color);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .contact-item {
+            margin-bottom: 25px;
+        }
+
+        .label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .value {
+            font-size: 12px;
+            line-height: 1.6;
+            opacity: 0.8;
+            display: block;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+
+        .value:hover {
+            opacity: 1;
+        }
+
+        .placeholder {
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 40px;
+            font-size: 12px;
+            color: var(--text-color);
+            text-decoration: none;
+            opacity: 0.5;
+        }
+        .back-link:hover { opacity: 1; text-decoration: underline; }
+
+    </style>
+</head>
 <body>
-    <h1>iletişim</h1>
-    <p>her türlü sorunuz için bizimle iletişime geçebilirsiniz:</p>
-    <p>e-posta: <span class="placeholder">[E-POSTA ADRESİ]</span></p>
-    <p>instagram: <span class="placeholder">[@INSTAGRAM_KULLANICI_ADI]</span></p>
-    <p>resmi adres: <span class="placeholder">[AÇIK ADRES]</span></p>
-    <p>mersis no: <span class="placeholder">[VARSA MERSİS NO]</span></p>
+
+    <button class="theme-toggle" id="themeBtn"></button>
+
+    <div class="content">
+        <h1>iletişim</h1>
+
+        <div class="contact-item">
+            <span class="label">e-posta:</span>
+            <a href="mailto:[E-POSTA ADRESİ]" class="value placeholder">[E-POSTA ADRESİ]</a>
+        </div>
+
+        <div class="contact-item">
+            <span class="label">instagram:</span>
+            <a href="https://instagram.com/[INSTAGRAM_KULLANICI_ADI]" target="_blank" class="value placeholder">@[INSTAGRAM_KULLANICI_ADI]</a>
+        </div>
+
+        <div class="contact-item">
+            <span class="label">adres:</span>
+            <span class="value placeholder">[FİRMA RESMİ ADRESİ]</span>
+        </div>
+
+        <div class="contact-item">
+            <span class="label">mersis no:</span>
+            <span class="value placeholder">[VARSA MERSİS NO / YOKSA BU SATIRI SİLEBİLİRSİN]</span>
+        </div>
+
+        <a href="store.html" class="back-link">← geri dön</a>
+    </div>
+
+    <script>
+        const themeBtn = document.getElementById('themeBtn');
+        const body = document.documentElement;
+
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') body.setAttribute('data-theme', 'light');
+
+        themeBtn.addEventListener('click', () => {
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
 </body>
 </html>
