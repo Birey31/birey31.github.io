@@ -118,16 +118,12 @@
         .products-container { position: fixed; top: 100px; bottom: 120px; left: 280px; right: 40px; overflow-y: auto; }
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 40px 25px; }
         .product-box { width: 100%; aspect-ratio: 1/1; background-color: var(--text-color); opacity: var(--accent-opacity); margin-bottom: 12px; }
+        .product-info { font-size: 11px; text-transform: lowercase; }
 
         /* --- FOOTER & DİL --- */
         .legal-footer { position: fixed; bottom: 40px; left: 40px; display: flex; gap: 20px; }
         .legal-link { font-size: 11px; opacity: 0.5; cursor: pointer; color: var(--text-color); text-transform: lowercase; }
-
-        .lang-wrapper { 
-            position: fixed; right: 40px; bottom: 40px; 
-            cursor: pointer; z-index: 10; font-size: 12px; 
-            opacity: 0.7; text-transform: lowercase;
-        }
+        .lang-wrapper { position: fixed; right: 40px; bottom: 40px; cursor: pointer; z-index: 10; font-size: 12px; opacity: 0.7; text-transform: lowercase; }
 
         @media (max-width: 768px) {
             #infoPool { width: 95%; height: 85%; flex-direction: column; }
@@ -170,6 +166,7 @@
         <a onclick="loadProducts('news')" class="nav-link active" data-tr="news" data-en="news">news</a>
         <a onclick="loadProducts('tops')" class="nav-link" data-tr="üst giyim" data-en="tops">üst giyim</a>
         <a onclick="loadProducts('bottoms')" class="nav-link" data-tr="alt giyim" data-en="bottoms">alt giyim</a>
+        <a onclick="loadProducts('accessories')" class="nav-link" data-tr="aksesuar" data-en="accessories">aksesuar</a>
     </nav>
 
     <main class="products-container">
@@ -187,18 +184,9 @@
 
     <script>
         const infoData = {
-            sales: { 
-                tr: "<h3>Mesafeli Satış Sözleşmesi</h3><br><p>Tüm satışlar dijital onay ile gerçekleştirilir...</p>", 
-                en: "<h3>Distance Sales Agreement</h3><br><p>All sales are processed via digital approval...</p>" 
-            },
-            shipping: { 
-                tr: "<h3>Teslimat ve İade</h3><br><p>14 gün içinde değişim ve iade hakkınız mevcuttur.</p>", 
-                en: "<h3>Shipping & Returns</h3><br><p>Exchange and returns are available within 14 days.</p>" 
-            },
-            privacy: { 
-                tr: "<h3>KVKK</h3><br><p>Verileriniz şifrelenmiş altyapımızda korunmaktadır.</p>", 
-                en: "<h3>Privacy Policy</h3><br><p>Your data is protected in our encrypted infrastructure.</p>" 
-            },
+            sales: { tr: "<h3>Mesafeli Satış</h3><br><p>Satış detayları buraya gelecek...</p>", en: "<h3>Distance Sales</h3><br><p>Agreement details...</p>" },
+            shipping: { tr: "<h3>Teslimat ve İade</h3><br><p>İade koşulları buraya gelecek...</p>", en: "<h3>Shipping & Returns</h3><p>Return terms...</p>" },
+            privacy: { tr: "<h3>KVKK</h3><br><p>Gizlilik politikası buraya gelecek...</p>", en: "<h3>Privacy Policy</h3><p>Privacy terms...</p>" },
             contact: { 
                 tr: `<h3>İletişim</h3><form class="contact-form" onsubmit="event.preventDefault(); alert('mesaj alındı.');"><input type="text" placeholder="isim soyisim" required><input type="email" placeholder="e-posta" required><textarea placeholder="mesajınız" rows="5" required></textarea><button type="submit">gönder</button></form>`,
                 en: `<h3>Contact</h3><form class="contact-form" onsubmit="event.preventDefault(); alert('message sent.');"><input type="text" placeholder="name surname" required><input type="email" placeholder="email" required><textarea placeholder="your message" rows="5" required></textarea><button type="submit">send</button></form>`
@@ -207,8 +195,9 @@
 
         const productsData = {
             news: [{ name: "reeha seasonal tee", price: 45 }, { name: "limited hoodie v1", price: 125 }],
-            tops: [{ name: "basic t-shirt white", price: 40 }],
-            bottoms: [{ name: "loose fit denim", price: 95 }]
+            tops: [{ name: "basic t-shirt white", price: 40 }, { name: "heavy cotton hoodie", price: 110 }],
+            bottoms: [{ name: "loose fit denim", price: 95 }, { name: "cargo pants", price: 105 }],
+            accessories: [{ name: "canvas tote bag", price: 30 }, { name: "utility belt", price: 55 }]
         };
 
         let currentLang = 'tr';
@@ -256,9 +245,9 @@
             currentLang = currentLang === 'tr' ? 'en' : 'tr';
             document.getElementById('langTxt').innerText = currentLang;
             document.querySelectorAll('[data-tr]').forEach(el => {
-                if(el.getAttribute(`data-${currentLang}`)) {
-                    el.textContent = el.getAttribute(`data-${currentLang}`);
-                }
+                const trText = el.getAttribute('data-tr');
+                const enText = el.getAttribute('data-en');
+                el.textContent = currentLang === 'tr' ? trText : enText;
             });
             updateTime();
             if(document.getElementById('infoPool').classList.contains('active')) {
@@ -277,7 +266,13 @@
         function loadProducts(cat) {
             const grid = document.getElementById('productGrid');
             grid.innerHTML = productsData[cat].map(p => `
-                <div class="product-card"><div class="product-box"></div><div class="product-info">${p.name} <span style="opacity:0.5">${p.price}€</span></div></div>`).join('');
+                <div class="product-card">
+                    <div class="product-box"></div>
+                    <div class="product-info">${p.name} <span style="opacity:0.5">${p.price}€</span></div>
+                </div>`).join('');
+            
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            if(event && event.target) event.target.classList.add('active');
         }
 
         window.onload = () => {
