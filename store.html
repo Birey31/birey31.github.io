@@ -128,12 +128,8 @@
             height: 100%;
             object-fit: contain;
             transition: transform 0.5s ease;
-            /* Beyaz arka planı sitenin rengine göre şeffaflaştırır, ürün rengini bozmaz */
             mix-blend-mode: multiply; 
         }
-
-        /* Koyu modda multiply özelliği beyazı siyahla karıştırır. */
-        /* Eğer koyu modda arka plan hala beyaz kalırsa 'screen' modu kullanılabilir ancak 'multiply' standarttır. */
 
         .product-box:hover img { transform: scale(1.05); }
         .product-info { font-size: 10px; text-transform: lowercase; opacity: 0.8; }
@@ -212,14 +208,25 @@
         };
 
         const productsData = {
+            // Tüm ürünler News altında toplandı, sıralama Tişörtler -> Kotlar -> Diğerleri
             news: [
-                { name: "reeha seasonal tee", price: 45, img: "elbise/tshirt1.png" }, 
-                { name: "limited hoodie v1", price: 125, img: "elbise/tshirt2.png" }
+                { name: "basic t-shirt white", price: 40, img: "elbise/tshirt1.png" }, 
+                { name: "heavy cotton hoodie", price: 110, img: "elbise/tshirt2.png" },
+                { name: "vintage tee black", price: 45, img: "elbise/tshirt3.png" },
+                { name: "reeha seasonal tee", price: 45, img: "elbise/tshirt4.png" },
+                { name: "loose fit denim", price: 95, img: "elbise/kot1.png" }, 
+                { name: "cargo pants", price: 105, img: "elbise/kot2.png" },
+                { name: "utility shorts", price: 80, img: "elbise/kot3.png" },
+                { name: "wide leg trousers", price: 115, img: "elbise/kot4.png" },
+                { name: "canvas tote bag", price: 30, img: "elbise/taki1.png" }, 
+                { name: "utility belt", price: 55, img: "elbise/taki2.png" },
+                { name: "minimal chain", price: 45, img: "elbise/taki3.png" }
             ],
             tops: [
                 { name: "basic t-shirt white", price: 40, img: "elbise/tshirt1.png" }, 
                 { name: "heavy cotton hoodie", price: 110, img: "elbise/tshirt2.png" },
-                { name: "vintage tee black", price: 45, img: "elbise/tshirt3.png" }
+                { name: "vintage tee black", price: 45, img: "elbise/tshirt3.png" },
+                { name: "reeha seasonal tee", price: 45, img: "elbise/tshirt4.png" }
             ],
             bottoms: [
                 { name: "loose fit denim", price: 95, img: "elbise/kot1.png" }, 
@@ -262,7 +269,7 @@
             grid.innerHTML = productsData[cat].map(p => `
                 <div class="product-card">
                     <div class="product-box">
-                        <img src="${p.img}" alt="${p.name}" onerror="this.style.opacity='0.1';">
+                        <img src="${p.img}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300?text=resim+yok';">
                     </div>
                     <div class="product-info">${p.name} <span style="opacity:0.5">${p.price}€</span></div>
                 </div>`).join('');
