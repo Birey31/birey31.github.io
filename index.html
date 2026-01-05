@@ -169,6 +169,15 @@
                 localStorage.setItem('theme', 'light');
             }
         });
+        // TEMİZLİK İÇİN GEÇİCİ OLARAK EKLENDİ
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').then(function(reg) {
+        reg.update(); // Yeni hazırladığımız sw.js dosyasını zorla indir
+        console.log("Temizlik worker'ı devrede.");
+    }).catch(function(err) {
+        console.log("Hata:", err);
+    });
+}
     </script>
 </body>
 </html>
