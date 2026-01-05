@@ -63,52 +63,70 @@
             text-decoration: underline;
         }
 
-        /* --- SAĞ ALT PANEL (DİL & TARİH) --- */
+        /* --- SAĞ ALT PANEL (DİL & TARİH YANYANA) --- */
         .bottom-right-panel {
             position: fixed;
             right: 40px;
             bottom: 40px;
             display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 10px;
+            align-items: center; /* Yan yana hizalama */
+            gap: 15px;
         }
 
-        /* DİL SEÇİCİ KUTUCUK */
-        .lang-selector {
-            display: flex;
-            gap: 8px;
-            border: 1px solid var(--text-color);
-            padding: 4px 8px;
-            opacity: 0.6;
-            transition: 0.3s;
-        }
-        .lang-selector:hover { opacity: 1; }
-
-        .lang-btn {
+        /* İÇ İÇE DİL SEÇİCİ */
+        .lang-wrapper {
+            position: relative;
+            display: inline-block;
             cursor: pointer;
-            font-size: 14px;
-            filter: grayscale(100%);
-            transition: 0.3s;
+        }
+
+        .lang-current {
+            border: 1px solid var(--text-color);
+            padding: 3px 6px;
+            font-size: 16px;
+            opacity: 0.7;
             display: flex;
             align-items: center;
+            transition: 0.3s;
         }
-        .lang-btn:hover, .lang-btn.active {
-            filter: grayscale(0%);
-            transform: scale(1.1);
+
+        .lang-dropdown {
+            position: absolute;
+            bottom: 100%; /* Üste doğru açılır */
+            left: 0;
+            display: none;
+            flex-direction: column;
+            background-color: var(--bg-color);
+            border: 1px solid var(--text-color);
+            margin-bottom: 5px;
+        }
+
+        .lang-dropdown.active {
+            display: flex;
+        }
+
+        .lang-option {
+            padding: 5px 8px;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+
+        .lang-option:hover {
+            background-color: var(--text-color);
+            color: var(--bg-color);
         }
 
         .date-info {
             font-size: 12px;
             letter-spacing: 1px;
             opacity: 0.8;
-            text-align: right;
+            white-space: nowrap;
         }
 
         /* --- MOBİL --- */
         @media (max-width: 768px) {
             nav { left: 20px; top: 40px; transform: none; }
-            .bottom-right-panel { right: 20px; bottom: 20px; }
+            .bottom-right-panel { right: 20px; bottom: 20px; flex-direction: column; align-items: flex-end; }
             .date-info { font-size: 10px; }
         }
     </style>
@@ -129,9 +147,12 @@
     </nav>
 
     <div class="bottom-right-panel">
-        <div class="lang-selector">
-            <span class="lang-btn active" onclick="setLanguage('tr')" title="Türkçe">🇹🇷</span>
-            <span class="lang-btn" onclick="setLanguage('en')" title="English">🇬🇧</span>
+        <div class="lang-wrapper" onclick="toggleLangDropdown()">
+            <div class="lang-current" id="selected-flag">🇹🇷</div>
+            <div class="lang-dropdown" id="lang-dropdown">
+                <div class="lang-option" onclick="setLanguage('tr', '🇹🇷')">🇹🇷</div>
+                <div class="lang-option" onclick="setLanguage('en', '🇬🇧')">🇬🇧</div>
+            </div>
         </div>
         
         <div class="date-info" id="current-time">05/01/2026 10:19pm TR</div>
@@ -142,20 +163,30 @@
         const body = document.documentElement;
         let currentLang = 'tr';
 
-        // Dil Değiştirme Fonksiyonu
-        function setLanguage(lang) {
-            currentLang = lang;
-            
-            // Bayrak aktiflik durumunu güncelle
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+        function toggleLangDropdown() {
+            document.getElementById('lang-dropdown').classList.toggle('active');
+        }
 
-            // Menü yazılarını güncelle
+        function setLanguage(lang, flag) {
+            currentLang = lang;
+            document.getElementById('selected-flag').textContent = flag;
+            
+            // Menüyü güncelle
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.textContent = link.getAttribute(`data-${lang}`);
             });
 
-            updateTime(); // Zaman formatını güncellemek için çağır
+            updateTime();
+            // Menüyü kapatmak için
+            event.stopPropagation(); 
+            document.getElementById('lang-dropdown').classList.remove('active');
+        }
+
+        // Dropdown dışında bir yere basınca kapatma
+        window.onclick = function(event) {
+            if (!event.target.matches('.lang-current') && !event.target.matches('.lang-option')) {
+                document.getElementById('lang-dropdown').classList.remove('active');
+            }
         }
 
         function updateTime() {
