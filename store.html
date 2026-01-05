@@ -42,9 +42,10 @@
         }
         #current-time { 
             font-size: 11px; 
-            opacity: 0.7; 
-            letter-spacing: 0.5px; 
-            display: block !important; /* Görünürlüğü garanti et */
+            opacity: 0.8; 
+            letter-spacing: 0.5px;
+            min-height: 15px;
+            display: block !important;
         }
 
         /* --- GLOBAL OVERLAY --- */
@@ -167,10 +168,10 @@
     </div>
 
     <nav id="main-nav">
-        <a onclick="loadProducts('news')" class="nav-link active" data-tr="news" data-en="news">news</a>
-        <a onclick="loadProducts('tops')" class="nav-link" data-tr="üst giyim" data-en="tops">üst giyim</a>
-        <a onclick="loadProducts('bottoms')" class="nav-link" data-tr="alt giyim" data-en="bottoms">alt giyim</a>
-        <a onclick="loadProducts('accessories')" class="nav-link" data-tr="aksesuar" data-en="accessories">aksesuar</a>
+        <a onclick="loadProducts('news', event)" class="nav-link active" data-tr="news" data-en="news">news</a>
+        <a onclick="loadProducts('tops', event)" class="nav-link" data-tr="üst giyim" data-en="tops">üst giyim</a>
+        <a onclick="loadProducts('bottoms', event)" class="nav-link" data-tr="alt giyim" data-en="bottoms">alt giyim</a>
+        <a onclick="loadProducts('accessories', event)" class="nav-link" data-tr="aksesuar" data-en="accessories">aksesuar</a>
     </nav>
 
     <main class="products-container">
@@ -205,6 +206,16 @@
         };
 
         let currentLang = 'tr';
+
+        function updateTime() {
+            const now = new Date();
+            const date = now.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const time = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const target = document.getElementById('current-time');
+            if (target) {
+                target.innerText = `${date} ${time}`;
+            }
+        }
 
         function toggleTheme() {
             const isLight = document.documentElement.hasAttribute('data-theme');
@@ -259,21 +270,10 @@
             }
         }
 
-        // SAATİ BURADA GÜNCELLİYORUZ
-        function updateTime() {
-            const now = new Date();
-            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-            const dateStr = now.toLocaleDateString('tr-TR', options);
-            const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            
-            const timeEl = document.getElementById('current-time');
-            if (timeEl) {
-                timeEl.innerHTML = dateStr + " " + timeStr;
-            }
-        }
-
-        function loadProducts(cat) {
+        function loadProducts(cat, e) {
             const grid = document.getElementById('productGrid');
+            if (!grid) return;
+            
             grid.innerHTML = productsData[cat].map(p => `
                 <div class="product-card">
                     <div class="product-box"></div>
@@ -281,16 +281,16 @@
                 </div>`).join('');
             
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            if(event && event.target && event.target.classList.contains('nav-link')) {
-                event.target.classList.add('active');
+            if(e && e.target) {
+                e.target.classList.add('active');
             }
         }
 
         window.onload = () => {
             if (localStorage.getItem('theme') === 'light') document.documentElement.setAttribute('data-theme', 'light');
             loadProducts('news');
-            updateTime(); // İlk açılışta çalıştır
-            setInterval(updateTime, 1000); // Her saniye güncelle
+            updateTime(); 
+            setInterval(updateTime, 1000);
         };
     </script>
 </body>
