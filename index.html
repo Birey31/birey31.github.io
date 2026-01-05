@@ -153,9 +153,7 @@
         const clickSound = document.getElementById('clickSound');
         const clockElement = document.getElementById('live-clock');
 
-        if ("serviceWorker" in navigator) {
-            window.addEventListener("load", () => {
-                navigator.serviceWorker.register("./sw.js?v=5").then(reg => reg.update());
+      
             });
         }
 
