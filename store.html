@@ -63,42 +63,55 @@
             text-decoration: underline;
         }
 
-        /* --- SAĞ ALT PANEL (DİL & TARİH YANYANA) --- */
+        /* --- SAĞ ALT PANEL --- */
         .bottom-right-panel {
             position: fixed;
             right: 40px;
             bottom: 40px;
             display: flex;
-            align-items: center; /* Yan yana hizalama */
-            gap: 15px;
+            align-items: center;
+            gap: 12px;
         }
 
-        /* İÇ İÇE DİL SEÇİCİ */
+        /* YENİ DİL SEÇİCİ (ÇERÇEVESİZ VE OKLU) */
         .lang-wrapper {
             position: relative;
-            display: inline-block;
             cursor: pointer;
-        }
-
-        .lang-current {
-            border: 1px solid var(--text-color);
-            padding: 3px 6px;
-            font-size: 16px;
-            opacity: 0.7;
             display: flex;
             align-items: center;
+            gap: 4px;
+            opacity: 0.7;
             transition: 0.3s;
+        }
+
+        .lang-wrapper:hover { opacity: 1; }
+
+        .lang-current {
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Sekme Oku */
+        .arrow-down {
+            width: 0; 
+            height: 0; 
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 5px solid var(--text-color);
+            margin-top: 2px;
         }
 
         .lang-dropdown {
             position: absolute;
-            bottom: 100%; /* Üste doğru açılır */
+            bottom: 120%;
             left: 0;
             display: none;
             flex-direction: column;
             background-color: var(--bg-color);
             border: 1px solid var(--text-color);
-            margin-bottom: 5px;
+            padding: 2px;
+            z-index: 100;
         }
 
         .lang-dropdown.active {
@@ -106,8 +119,8 @@
         }
 
         .lang-option {
-            padding: 5px 8px;
-            font-size: 16px;
+            padding: 5px 10px;
+            font-size: 18px;
             transition: 0.2s;
         }
 
@@ -127,7 +140,6 @@
         @media (max-width: 768px) {
             nav { left: 20px; top: 40px; transform: none; }
             .bottom-right-panel { right: 20px; bottom: 20px; flex-direction: column; align-items: flex-end; }
-            .date-info { font-size: 10px; }
         }
     </style>
 </head>
@@ -149,6 +161,8 @@
     <div class="bottom-right-panel">
         <div class="lang-wrapper" onclick="toggleLangDropdown()">
             <div class="lang-current" id="selected-flag">🇹🇷</div>
+            <div class="arrow-down"></div>
+            
             <div class="lang-dropdown" id="lang-dropdown">
                 <div class="lang-option" onclick="setLanguage('tr', '🇹🇷')">🇹🇷</div>
                 <div class="lang-option" onclick="setLanguage('en', '🇬🇧')">🇬🇧</div>
@@ -171,20 +185,17 @@
             currentLang = lang;
             document.getElementById('selected-flag').textContent = flag;
             
-            // Menüyü güncelle
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.textContent = link.getAttribute(`data-${lang}`);
             });
 
             updateTime();
-            // Menüyü kapatmak için
             event.stopPropagation(); 
             document.getElementById('lang-dropdown').classList.remove('active');
         }
 
-        // Dropdown dışında bir yere basınca kapatma
         window.onclick = function(event) {
-            if (!event.target.matches('.lang-current') && !event.target.matches('.lang-option')) {
+            if (!event.target.closest('.lang-wrapper')) {
                 document.getElementById('lang-dropdown').classList.remove('active');
             }
         }
@@ -200,7 +211,6 @@
         setInterval(updateTime, 1000);
         updateTime();
 
-        // Tema ayarları
         const savedTheme = localStorage.getItem('theme') || 'dark';
         if (savedTheme === 'light') body.setAttribute('data-theme', 'light');
 
