@@ -72,13 +72,6 @@
         .logo-link:nth-of-type(1) .desktop-only { width: 185px; }
         .logo-link:nth-of-type(2) .desktop-only { width: 250px; }
 
-        /* LOGO 1 HOVER */
-        .logo-link:nth-of-type(1):hover .desktop-only {
-            filter: grayscale(0%) opacity(1);
-            transform: scale(1.02);
-        }
-
-        /* LOGO 2 HOVER (Blur ve Yakında) */
         .coming-soon {
             position: absolute;
             font-size: 11px; letter-spacing: 2px;
@@ -95,29 +88,38 @@
             opacity: 0.8;
         }
 
-        /* --- CANLI SAAT VE FOOTER --- */
+        /* --- CANLI SAAT (Masaüstü) --- */
         #live-clock {
             position: absolute; bottom: 30px; right: 40px;
             font-size: 11px; letter-spacing: 1px;
             color: var(--text-color); opacity: 0.4; font-family: monospace;
         }
+
+        /* --- FOOTER (İmza) --- */
         footer {
             position: absolute; bottom: 30px;
             width: 100%; text-align: center;
             font-size: 10px; letter-spacing: 2px;
             color: var(--text-color); opacity: 0.3;
             text-transform: uppercase; pointer-events: none;
+            z-index: 50;
         }
 
-        /* --- MOBİL --- */
+        /* --- MOBİL AYARLAR --- */
         .mobile-only-link { display: none; }
+        
         @media (max-width: 768px) {
             .logo-link { display: none !important; }
             .mobile-only-link { 
                 display: flex !important; 
-                justify-content: center; align-items: center; 
+                justify-content: center; align-items: center;
+                transform: translateY(-20px); /* Logoyu biraz yukarı alıyoruz */
             }
-            #live-clock { display: none; } /* MOBİLDE SAATİ GİZLE */
+            #live-clock { display: none; } 
+            footer { 
+                bottom: 40px; /* Mobilde imzayı biraz daha yukarı çekiyoruz */
+                opacity: 0.4; /* Mobilde biraz daha belirgin olsun */
+            }
         }
     </style>
 </head>
@@ -148,14 +150,12 @@
     </audio>
 
     <script>
+        // SERVICE WORKER KODLARI SİLİNDİ (Hızlı Güncelleme İçin)
+        
         const themeBtn = document.getElementById('themeBtn');
         const body = document.documentElement;
         const clickSound = document.getElementById('clickSound');
         const clockElement = document.getElementById('live-clock');
-
-      
-            });
-        }
 
         function updateClock() {
             const now = new Date();
