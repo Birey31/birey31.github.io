@@ -77,7 +77,7 @@
         #infoPool.active, #productDetailPool.active, #checkoutPool.active { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
         /* INFO POOL YAPISI */
-        .info-container { display: flex; width: 100%; height: 100%; }
+        .info-container { display: flex; width: 100%; height: 100%; position: relative; }
         .info-sidebar { width: 200px; border-right: 1px solid var(--text-color); padding: 40px; display: flex; flex-direction: column; gap: 20px; flex-shrink: 0; }
         .info-nav-link { font-size: 11px; cursor: pointer; opacity: 0.5; transition: 0.3s; text-transform: lowercase; }
         .info-nav-link.active { opacity: 1; text-decoration: underline; }
@@ -209,26 +209,43 @@
 
             /* INFO POOL MOBİL DÜZELTME */
             #infoPool { 
-                width: 90% !important; 
+                width: 95% !important; 
                 height: 85% !important; 
                 top: 50% !important;
                 left: 50% !important;
                 transform: translate(-50%, -50%) !important;
             }
-            .info-container { flex-direction: column; }
+            .info-container { flex-direction: column; position: relative; }
             .info-sidebar { 
                 width: 100%; 
                 border-right: none; 
                 border-bottom: 1px solid var(--text-color); 
                 flex-direction: row; 
-                padding: 15px; 
+                padding: 12px 15px; 
                 gap: 15px;
                 overflow-x: auto;
                 white-space: nowrap;
                 justify-content: flex-start;
+                flex-shrink: 0;
             }
             .info-nav-link { font-size: 10px; }
-            .info-content { padding: 20px; font-size: 11px; }
+            .info-content { 
+                padding: 45px 20px 20px 20px !important; /* Üstten kapat butonu için yer açıldı */
+                font-size: 11px; 
+                flex: 1;
+                overflow-y: auto;
+            }
+
+            .info-close-btn {
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                background: var(--bg-color);
+                z-index: 100;
+                padding: 2px 5px;
+                font-size: 11px !important;
+                opacity: 0.9 !important;
+            }
 
             .side-cart { 
                 width: 100%; 
@@ -265,7 +282,7 @@
     </div>
 
     <div id="infoPool">
-        <div style="position:absolute; top:15px; right:15px; cursor:pointer; font-size:10px; opacity:0.5; z-index:100;" onclick="closeAllPanels()">[kapat]</div>
+        <div class="info-close-btn" style="position:absolute; top:15px; right:15px; cursor:pointer; font-size:10px; opacity:0.5; z-index:100;" onclick="closeAllPanels()">[kapat]</div>
         <div class="info-container">
             <div class="info-sidebar">
                 <div class="info-nav-link" onclick="loadInfo('sales')" id="link-sales" data-tr="mesafeli satış" data-en="distance sales">mesafeli satış</div>
@@ -375,10 +392,10 @@
         };
 
         const infoTexts = {
-            sales: { tr: "Mesafeli Satış Sözleşmesi: Siparişleriniz 1-3 iş günü içinde işlenir...", en: "Distance Sales Agreement: Orders are processed within 1-3 business days..." },
-            shipping: { tr: "Teslimat ve İade: 14 gün içinde değişim ve iade hakkınız bulunmaktadır.", en: "Shipping & Returns: You have the right to exchange or return within 14 days." },
-            privacy: { tr: "KVKK: Verileriniz Reeha bünyesinde güvendedir.", en: "Privacy: Your data is secure with Reeha." },
-            contact: { tr: "İletişim: info@reeha.com | @reeha.studio", en: "Contact: info@reeha.com | @reeha.studio" }
+            sales: { tr: "Mesafeli Satış Sözleşmesi: Siparişleriniz 1-3 iş günü içinde işlenir. Tüm işlemler Türkiye Cumhuriyeti yasalarına tabidir.", en: "Distance Sales Agreement: Your orders are processed within 1-3 business days. All transactions are subject to the laws of the Republic of Turkey." },
+            shipping: { tr: "Teslimat ve İade: 14 gün içinde değişim ve iade hakkınız bulunmaktadır. İade kargo ücreti alıcıya aittir.", en: "Shipping & Returns: You have the right to exchange or return within 14 days. Return shipping costs are the responsibility of the buyer." },
+            privacy: { tr: "KVKK: Verileriniz Reeha bünyesinde güvendedir. Kişisel verileriniz 6698 sayılı kanun kapsamında korunmaktadır.", en: "Privacy Policy: Your data is secure with Reeha. Your personal data is protected under law no. 6698." },
+            contact: { tr: "İletişim: info@reeha.com | @reeha.studio | +90 000 000 00 00", en: "Contact: info@reeha.com | @reeha.studio | +90 000 000 00 00" }
         };
 
         const translations = {
@@ -546,7 +563,8 @@
 
         function loadInfo(type) {
             document.querySelectorAll('.info-nav-link').forEach(link => link.classList.remove('active'));
-            document.getElementById('link-' + type).classList.add('active');
+            const linkEl = document.getElementById('link-' + type);
+            if(linkEl) linkEl.classList.add('active');
             document.getElementById('infoContent').innerText = infoTexts[type][currentLang];
         }
 
