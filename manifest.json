@@ -1,51 +1,20 @@
-const cacheName = "reeha-v3"; // Versiyonu güncelledik, tarayıcı yeni düzeni hemen algılar.
-
-const assets = [
-  "./",
-  "./index.html",
-  "./2026.html",
-  "./manifest.json",
-  "./media/mobillogo.webp",
-  "./media/logo.webp",
-  "./media/ask.webp",
-  "./media/ask1.webp",
-  "./media/ask2.webp",
-  "./media/ask3.webp",
-  "./media/ask4.webp",
-  "./media/ask5.webp",
-  "./media/ask6.webp",
-  "./media/ask7.webp",
-  "./media/askim.mp3",
-  "./media/askim2.mp3"
-];
-
-// Kurulum: Dosyaları önbelleğe al
-self.addEventListener("install", (installEvent) => {
-  installEvent.waitUntil(
-    caches.open(cacheName).then((cache) => {
-      // Hatalı bir dosya yolu varsa tüm kurulumun iptal olmaması için tek tek ekleme denenebilir,
-      // ama profesyonel olan hepsini tek seferde almaktır.
-      return cache.addAll(assets);
-    })
-  );
-});
-
-// Aktivasyon: Eski versiyon önbelleklerini (v1, v2 vb.) temizle
-self.addEventListener("activate", (activateEvent) => {
-  activateEvent.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.filter((key) => key !== cacheName).map((key) => caches.delete(key))
-      );
-    })
-  );
-});
-
-// Getirme: Önce önbelleğe bak, yoksa internetten getir
-self.addEventListener("fetch", (fetchEvent) => {
-  fetchEvent.respondWith(
-    caches.match(fetchEvent.request).then((res) => {
-      return res || fetch(fetchEvent.request);
-    })
-  );
-});
+{
+  "name": "Reeha Sergi",
+  "short_name": "Reeha",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0e0e0e",
+  "theme_color": "#0e0e0e",
+  "icons": [
+    {
+      "src": "media/mobillogo.webp",
+      "sizes": "192x192",
+      "type": "image/webp"
+    },
+    {
+      "src": "media/mobillogo.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
+    }
+  ]
+}
