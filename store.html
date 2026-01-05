@@ -98,14 +98,14 @@
             padding: 15px; cursor: pointer; font-family: inherit; text-transform: lowercase;
         }
 
-        /* --- SEPET --- */
+        /* --- SEPET (ESKİ HALİNE DÖNDÜ) --- */
         .side-cart {
             position: fixed; top: 0; right: -400px;
-            width: 350px; height: 100vh;
+            width: 300px; height: 100vh;
             background-color: var(--bg-color);
-            border-left: 1px solid var(--text-color);
             transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             z-index: 2000; padding: 40px; display: flex; flex-direction: column;
+            border-left: 1px solid var(--text-color);
         }
         .side-cart.active { right: 0; }
 
@@ -114,11 +114,11 @@
         .nav-link { text-decoration: none; color: var(--text-color); font-size: 14px; text-transform: lowercase; cursor: pointer; opacity: 0.5; }
         .nav-link.active { opacity: 1; font-weight: bold; text-decoration: underline; }
 
-        /* --- ÜRÜNLER --- */
+        /* --- ÜRÜNLER (KUTULAR KÜÇÜLTÜLDÜ) --- */
         .products-container { position: fixed; top: 100px; bottom: 120px; left: 280px; right: 40px; overflow-y: auto; }
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 40px 25px; }
-        .product-box { width: 100%; aspect-ratio: 1/1; background-color: var(--text-color); opacity: var(--accent-opacity); margin-bottom: 12px; }
-        .product-info { font-size: 11px; text-transform: lowercase; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 30px 20px; }
+        .product-box { width: 100%; aspect-ratio: 1/1; background-color: var(--text-color); opacity: var(--accent-opacity); margin-bottom: 8px; }
+        .product-info { font-size: 10px; text-transform: lowercase; opacity: 0.8; }
 
         /* --- FOOTER & DİL --- */
         .legal-footer { position: fixed; bottom: 40px; left: 40px; display: flex; gap: 20px; }
@@ -158,8 +158,8 @@
     </div>
 
     <div class="side-cart" id="sideCart">
-        <div style="font-size:14px; margin-bottom:30px; border-bottom:1px solid var(--text-color); padding-bottom:10px;" data-tr="sepetiniz" data-en="your cart">sepetiniz</div>
-        <div id="cartItems" style="flex-grow:1; font-size:11px;"><p style="opacity:0.5;">sepetiniz boş.</p></div>
+        <div style="font-size:12px; margin-bottom:20px; border-bottom:1px solid var(--text-color); padding-bottom:10px; text-transform:lowercase;" data-tr="sepet" data-en="cart">sepet</div>
+        <div id="cartItems" style="flex-grow:1; font-size:10px; opacity:0.5;">boş.</div>
     </div>
 
     <nav id="main-nav">
@@ -272,7 +272,9 @@
                 </div>`).join('');
             
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            if(event && event.target) event.target.classList.add('active');
+            if(event && event.target && event.target.classList.contains('nav-link')) {
+                event.target.classList.add('active');
+            }
         }
 
         window.onload = () => {
