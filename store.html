@@ -110,11 +110,17 @@
         }
         .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
         .product-card { cursor: pointer; }
+        
+        /* GÖRSEL DÜZELTME */
         .product-box { 
             width: 100%; aspect-ratio: 1/1; border: 1px solid rgba(128,128,128,0.2);
             display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 8px;
+            background: var(--accent-opacity);
         }
-        .product-box img { width: 90%; height: 90%; object-fit: contain; transition: transform 0.5s ease; }
+        .product-box img { 
+            width: 100%; height: 100%; object-fit: cover; /* Resmi kutuya yayar */
+            transition: transform 0.5s ease; 
+        }
         .product-card:hover .product-box img { transform: scale(1.1); }
         .product-info { font-size: 9px; text-transform: lowercase; opacity: 0.8; text-align: center; }
 
@@ -198,21 +204,8 @@
             }
             .products-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
 
-            .legal-footer {
-                flex-direction: column;
-                bottom: 80px;
-                gap: 10px;
-            }
-
-            /* --- SEPET MOBİL OPTİMİZE --- */
-            .side-cart { 
-                width: 100%; 
-                right: -100%; 
-                padding: 20px; 
-                border-left: none;
-            }
+            .side-cart { width: 100%; right: -100%; border-left: none; padding: 20px; }
             .side-cart.active { right: 0; }
-            .cart-items-container { margin-bottom: 10px; }
 
             .checkoutPool { width: 95% !important; height: 90% !important; }
             .checkout-container { flex-direction: column; }
@@ -408,7 +401,7 @@
             const grid = document.getElementById('productGrid');
             grid.innerHTML = productsData[cat].map(p => `
                 <div class="product-card" onclick="openProductDetail('${cat}', ${p.id})">
-                    <div class="product-box"><img src="${p.img}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300?text=reeha';"></div>
+                    <div class="product-box"><img src="${p.img}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/400x600?text=reeha';"></div>
                     <div class="product-info">${p.name}<br><span style="opacity:0.5">${p.price}€</span></div>
                 </div>`).join('');
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
@@ -421,7 +414,7 @@
             const btnTxt = currentLang === 'tr' ? 'sepete ekle' : 'add to cart';
             const sizeTxt = currentLang === 'tr' ? 'beden' : 'size';
             content.innerHTML = `
-                <div class="detail-img-box"><img src="${product.img}" alt="${product.name}"></div>
+                <div class="detail-img-box"><img src="${product.img}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/400x600?text=reeha';"></div>
                 <div class="detail-info-box">
                     <div style="font-size: 18px; font-weight: bold;">${product.name}</div>
                     <div style="font-size: 12px; opacity: 0.7; line-height:1.5;">${product.desc}</div>
@@ -605,20 +598,16 @@
             currentLang = currentLang === 'tr' ? 'en' : 'tr';
             document.getElementById('langTxt').innerText = currentLang;
             
-            // Statik data-tr/en olanları güncelle
             document.querySelectorAll('[data-tr]').forEach(el => {
                 el.textContent = currentLang === 'tr' ? el.getAttribute('data-tr') : el.getAttribute('data-en');
             });
 
-            // UI metinlerini güncelle
             updateCartUI();
             
-            // Eğer ödeme ekranı açıksa orayı da güncelle
             if(document.getElementById('checkoutPool').classList.contains('active')) {
                 startCheckout();
             }
 
-            // Info pool açıksa içeriği güncelle
             const activeInfoLink = document.querySelector('.info-nav-link.active');
             if(activeInfoLink) {
                 loadInfo(activeInfoLink.id.split('-')[1]);
