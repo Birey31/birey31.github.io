@@ -214,7 +214,7 @@
             .side-cart.active { right: 0; }
             .cart-items-container { margin-bottom: 10px; }
 
-            .checkoutPool { width: 95% !important; height: 90% !important; }
+            #checkoutPool { width: 95% !important; height: 90% !important; }
             .checkout-container { flex-direction: column; }
             .checkout-form-box { padding: 25px; }
             .checkout-summary-box { 
@@ -515,15 +515,29 @@
         }
 
         function startCheckout() {
+            // Sepeti kapat ama overlay'i açık tut
             document.getElementById('sideCart').classList.remove('active');
+            
             const pool = document.getElementById('checkoutPool');
             pool.style.display = 'flex';
+            
             document.getElementById('summaryTitle').innerText = translations[currentLang].summary;
             const summary = document.getElementById('checkoutSummaryItems');
-            summary.innerHTML = cart.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:5px; opacity:0.8;"><span>${i.qty}x ${i.name}</span><span>${i.price * i.qty}€</span></div>`).join('');
+            summary.innerHTML = cart.map(i => `
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px; opacity:0.8;">
+                    <span>${i.qty}x ${i.name}</span>
+                    <span>${i.price * i.qty}€</span>
+                </div>`).join('');
+            
             document.getElementById('checkoutTotal').innerText = document.getElementById('cartTotal').innerText;
+            
             showAddressStep();
-            setTimeout(() => { pool.classList.add('active'); document.getElementById('globalOverlay').classList.add('active'); }, 10);
+
+            // Paneli aç ve overlay'in aktif olduğundan emin ol
+            setTimeout(() => { 
+                pool.classList.add('active'); 
+                document.getElementById('globalOverlay').classList.add('active'); 
+            }, 10);
         }
 
         function showAddressStep() {
@@ -605,20 +619,16 @@
             currentLang = currentLang === 'tr' ? 'en' : 'tr';
             document.getElementById('langTxt').innerText = currentLang;
             
-            // Statik data-tr/en olanları güncelle
             document.querySelectorAll('[data-tr]').forEach(el => {
                 el.textContent = currentLang === 'tr' ? el.getAttribute('data-tr') : el.getAttribute('data-en');
             });
 
-            // UI metinlerini güncelle
             updateCartUI();
             
-            // Eğer ödeme ekranı açıksa orayı da güncelle
             if(document.getElementById('checkoutPool').classList.contains('active')) {
                 startCheckout();
             }
 
-            // Info pool açıksa içeriği güncelle
             const activeInfoLink = document.querySelector('.info-nav-link.active');
             if(activeInfoLink) {
                 loadInfo(activeInfoLink.id.split('-')[1]);
