@@ -71,12 +71,12 @@
             background: transparent;
         }
 
-        /* --- EŞİTLEME DÜZENLEMELERİ --- */
+        /* --- LOGO KONTEYNIRI --- */
         .logo-container {
             display: flex;
-            align-items: center; /* Dikeyde milimetrik eşitlik sağlar */
+            align-items: center;
             justify-content: center;
-            gap: 40px; /* İki logo arasındaki mesafe */
+            gap: 40px;
         }
 
         .logo-link {
@@ -87,11 +87,20 @@
 
         .desktop-only { 
             display: block; 
-            width: 250px; /* HER İKİ LOGONUN GENİŞLİĞİ BURADA EŞİTLENDİ */
-            height: auto; /* Oranları korur, basık yapmaz */
+            height: auto; 
             filter: grayscale(100%) opacity(0.6); 
             transition: 0.5s ease;
             cursor: pointer;
+        }
+
+        /* SOLDAN SAĞDAN YUKARIDAN AŞAĞIDAN HAFİF KÜÇÜLTME (Logo 1) */
+        .logo-link:nth-of-type(1) .desktop-only {
+            width: 215px; /* 250px'den buraya çektik */
+        }
+
+        /* Logo 2 (Sabit Kalan) */
+        .logo-link:nth-of-type(2) .desktop-only {
+            width: 250px;
         }
 
         .desktop-only:hover {
@@ -105,7 +114,6 @@
             opacity: 1 !important; 
         }
 
-        /* Mobil Görünüm */
         @media (max-width: 768px) {
             .logo-link { display: none; }
             .mobile-only-link { display: block; }
