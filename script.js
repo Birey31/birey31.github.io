@@ -36,6 +36,19 @@ const infoTexts = {
         tr: "Teslimat ve İade: 14 gün içinde değişim ve iade hakkınız bulunmaktadır. İade kargo ücreti alıcıya aittir.", 
         en: "Shipping & Returns: You have the right to exchange or return within 14 days. Return shipping costs are the responsibility of the buyer." 
     },
+    cookie: {
+        tr: `ÇEREZ POLİTİKASI
+
+Sitemizde, kullanım kolaylığı sağlamak ve ilgi alanlarınıza göre kişiselleştirilmiş bir deneyim sunmak amacıyla çerezler kullanılmaktadır. Çerezler, tarayıcınız aracılığıyla cihazınıza kaydedilen küçük metin dosyalarıdır.
+
+Bu çerezler şunlar için kullanılır:
+- Oturumunuzun açık kalmasını sağlamak.
+- Dil tercihleriniz gibi ayarları hatırlamak.
+- Site trafiğini analiz ederek size daha iyi hizmet sunmak.
+
+İstediğiniz zaman tarayıcı ayarlarınızdan çerezleri engelleyebilir veya silebilirsiniz. Ancak çerezleri devre dışı bırakmak sitemizdeki bazı özelliklerin çalışmasını engelleyebilir.`,
+        en: "Cookie Policy: We use cookies to improve your experience. You can manage cookies via your browser settings."
+    },
     privacy: { 
         tr: `KİŞİSEL VERİLERİN KORUNMASINA İLİŞKİN BİLGİLENDİRME
 
@@ -72,7 +85,7 @@ Reeha Online Shop, ödeme sayfasında istenen kredi kartı bilgilerinizi hiçbir
 
 const translations = {
     tr: { emptyCart: "boş.", orderNote: "sipariş notu...", addrTitle: "teslimat bilgileri", fullName: "ad soyad", email: "e-posta", city: "şehir", country: "ülke", address: "adres", proceedPay: "ödemeye geç", payTitle: "ödeme bilgileri", cardName: "kart üzerindeki isim", cardNumber: "kart numarası", expiry: "son kullanma (AA/YY)", cvv: "CVV", demoAlert: "* bu bir demo arayüzdür. gerçek işlem yapılmaz.", completeOrder: "siparişi tamamla", goBack: "[geri dön]", thanks: "teşekkürler!", success: "siparişiniz başarıyla alındı.", returnStore: "mağazaya dön", summary: "özet", selectSize: "lütfen beden seçin" },
-    en: { emptyCart: "empty.", orderNote: "order note...", addrTitle: "shipping info", fullName: "full name", email: "email", city: "city", country: "country", address: "address", proceedPay: "proceed to payment", payTitle: "payment info", cardName: "name on card", cardNumber: "card number", expiry: "expiry (MM/YY)", cvv: "CVV", demoAlert: "* this is a demo interface. no real transaction.", completeOrder: "complete order", goBack: "[go back]", thanks: "thanks!", success: "your order has been received.", returnStore: "return to store", summary: "summary", selectSize: "please select a size" }
+    en: { emptyCart: "empty.", orderNote: "order note...", addrTitle: "shipping info", fullName: "full name", email: "email", city: "city", country: "country", address: "address", proceedPay: "proceed to payment", payTitle: "payment info", cardName: "name on card", cardNumber: "card number", expiry: "expiry (MM/YY)", cvv: "CVV", demoAlert: "* this is a demo interface. no real transaction.", complete order: "complete order", goBack: "[go back]", thanks: "thanks!", success: "your order has been received.", returnStore: "return to store", summary: "summary", selectSize: "please select a size" }
 };
 
 let currentLang = 'tr';
