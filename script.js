@@ -30,27 +30,31 @@ const productsData = {
 const infoTexts = {
     sales: { 
         tr: "Mesafeli Satış Sözleşmesi: Siparişleriniz 1-3 iş günü içinde işlenir. Tüm işlemler Türkiye Cumhuriyeti yasalarına tabidir.", 
-        en: "Distance Sales Agreement: Your orders are processed within 1-3 business days. All transactions are subject to the laws of the Republic of Turkey." 
+        en: "Distance Sales Agreement: Your orders are processed within 1-3 business days." 
     },
     shipping: { 
         tr: "Teslimat ve İade: 14 gün içinde değişim ve iade hakkınız bulunmaktadır. İade kargo ücreti alıcıya aittir.", 
-        en: "Shipping & Returns: You have the right to exchange or return within 14 days. Return shipping costs are the responsibility of the buyer." 
+        en: "Shipping & Returns: You have the right to exchange or return within 14 days." 
     },
     cookie: {
         tr: `ÇEREZ POLİTİKASI
 
-Sitemizde, kullanım kolaylığı sağlamak ve ilgi alanlarınıza göre kişiselleştirilmiş bir deneyim sunmak amacıyla çerezler kullanılmaktadır. Çerezler, tarayıcınız aracılığıyla cihazınıza kaydedilen küçük metin dosyalarıdır.
+Reeha olarak, web sitemizi ziyaret ettiğinizde deneyiminizi iyileştirmek için çerezler kullanıyoruz.
 
-Bu çerezler şunlar için kullanılır:
-- Oturumunuzun açık kalmasını sağlamak.
-- Dil tercihleriniz gibi ayarları hatırlamak.
-- Site trafiğini analiz ederek size daha iyi hizmet sunmak.
+1. Çerez Nedir?
+Çerezler, ziyaret ettiğiniz internet siteleri tarafından cihazınıza kaydedilen küçük metin dosyalarıdır.
 
-İstediğiniz zaman tarayıcı ayarlarınızdan çerezleri engelleyebilir veya silebilirsiniz. Ancak çerezleri devre dışı bırakmak sitemizdeki bazı özelliklerin çalışmasını engelleyebilir.`,
-        en: "Cookie Policy: We use cookies to improve your experience. You can manage cookies via your browser settings."
+2. Hangi Çerezleri Kullanıyoruz?
+- Zorunlu Çerezler: Sepetinizin hatırlanması ve güvenli ödeme işlemleri için gereklidir.
+- Performans Çerezleri: Sitemizin nasıl kullanıldığını anlamamıza yardımcı olur.
+- Tercih Çerezleri: Dil seçiminizi hatırlar.
+
+3. Çerezleri Nasıl Kontrol Edebilirsiniz?
+Tarayıcı ayarlarınızdan çerezleri dilediğiniz zaman silebilir veya engelleyebilirsiniz. Ancak bu durumda sitemizin bazı özellikleri (sepet gibi) düzgün çalışmayabilir.`,
+        en: "Cookie Policy: We use cookies to improve your experience. You can manage cookies through your browser settings."
     },
     privacy: { 
-        tr: `KİŞİSEL VERİLERİN KORUNMASINA İLİŞKİN BİLGİLENDİRME
+       tr:`KİŞİSEL VERİLERİN KORUNMASINA İLİŞKİN BİLGİLENDİRME
 
 Reeha olarak kişisel verilerinizin 6698 sayılı Kişisel Verilerin Korunması Kanunu'na (‘Kanun') uygun olarak işlenerek, muhafaza edilmesine büyük önem veriyoruz.
 
@@ -75,8 +79,12 @@ E-posta: admkymk25@gmail.com
 
 GİZLİLİK VE GÜVENLİK
 Reeha Online Shop, ödeme sayfasında istenen kredi kartı bilgilerinizi hiçbir şekilde kendi sunucularında tutmamaktadır. Tüm ödeme işlemleri iyzico arayüzü üzerinden banka ve bilgisayarınız arasında gerçekleşmektedir.`,
-        en: "Privacy Policy: Your data is secure with Reeha. Your personal data is protected under law no. 6698." 
     },
+    contact: { 
+        tr: "İletişim: admkymk25@gmail.com | @reeha.studio | 0534 875 57 60", 
+        en: "Contact: admkymk25@gmail.com | @reeha.studio" 
+    }
+};
     contact: { 
         tr: "İletişim: admkymk25@gmail.com | @reeha.studio | 0534 875 57 60", 
         en: "Contact: admkymk25@gmail.com | @reeha.studio | 0534 875 57 60" 
