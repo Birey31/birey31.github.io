@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr" style="background-color: #fcfcfc;">
+<html lang="tr">
 <head>
     <link rel="icon" type="image/png" href="media/mobillogo.webp">
     <link rel="canonical" href="https://reeha.com.tr/">
@@ -29,7 +29,7 @@
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
             background-color: var(--bg-color);
-            transition: background-color 0.3s ease; /* Daha seri tepki */
+            /* Başlangıçta transition kapalı (Takılmayı önleyen ana ayar) */
             overflow: hidden;
             font-family: 'Times New Roman', serif;
             display: flex;
@@ -37,12 +37,16 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        /* Sayfa yüklendikten sonra aktif olacak sınıf */
+        body.ready {
+            transition: background-color 0.3s ease-out;
+        }
+
         .theme-toggle {
             position: absolute; top: 30px; right: 30px;
             background: none; border: 1px solid var(--text-color); 
             width: 14px; height: 14px; border-radius: 50%;
             cursor: pointer; opacity: 0.4; z-index: 1000;
-            transition: opacity 0.3s, background-color 0.3s;
         }
         body[data-theme="dark"] .theme-toggle { background: var(--text-color); }
 
@@ -51,7 +55,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            will-change: transform;
+            transform: translateZ(0); /* Donanım hızlandırma */
         }
 
         .content-wrapper {
@@ -96,14 +100,14 @@
             align-items: center; 
             justify-content: center; 
             text-decoration: none; 
-            transform: translateZ(0); /* GPU'yu tetikler */
         }
 
         .desktop-only { 
             width: 250px; 
             filter: grayscale(100%) opacity(0.6); 
             transition: filter 0.6s ease, opacity 0.6s ease, transform 0.6s ease;
-            will-change: filter, transform; /* Takılmayı bitiren asıl komut */
+            will-change: filter, transform;
+            transform: translateZ(0); /* GPU'yu uyarır */
         }
 
         .logo-link:hover .desktop-only { 
@@ -131,11 +135,14 @@
 </head>
 <body data-theme="light">
     <script>
+        // Tema sayfa render edilmeden hemen burada set edilmeli
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.body.setAttribute('data-theme', savedTheme);
+        // Geri tuşuyla gelindiğinde arka planın beyaz kalmasını önlemek için HTML seviyesinde de set ediyoruz
+        document.documentElement.style.backgroundColor = savedTheme === 'dark' ? '#0e0e0e' : '#fcfcfc';
     </script>
 
-    <button class="theme-toggle" id="themeBtn" aria-label="Temayı Değiştir"></button>
+    <button class="theme-toggle" id="themeBtn" aria-label="Tema Değiştir"></button>
 
     <div class="main-content">
         <div class="content-wrapper">
@@ -144,7 +151,7 @@
                 <span class="status-text">YAKINDA</span>
             </div>
             <a href="2027.html" class="logo-link">
-                <img src="media/logo2.webp" alt="2027" class="desktop-only" decoding="async" loading="eager">
+                <img src="media/logo2.webp" alt="2027" class="desktop-only" decoding="async">
             </a>
         </div>
     </div>
@@ -167,22 +174,38 @@
         }
 
         function toggleTheme() {
-            if (body.getAttribute('data-theme') === 'light') {
-                body.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                body.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-            }
+            const current = body.getAttribute('data-theme');
+            const target = current === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', target);
+            localStorage.setItem('theme', target);
+            document.documentElement.style.backgroundColor = target === 'dark' ? '#0e0e0e' : '#fcfcfc';
         }
 
         themeBtn.addEventListener('click', toggleTheme);
 
-        // JavaScript görevlerini parçalayarak tarayıcıyı rahatlatıyoruz
-        document.addEventListener('DOMContentLoaded', () => {
+        // Geri Tuşu (bfcache) ve Normal Yükleme için ortak başlatıcı
+        function initPage() {
             updateClock();
-            setInterval(updateClock, 1000);
+            // 100ms sonra transition'ı açarak navigasyon takılmasını engelliyoruz
+            setTimeout(() => {
+                body.classList.add('ready');
+            }, 100);
+        }
+
+        // Sayfa normal açıldığında
+        document.addEventListener('DOMContentLoaded', initPage);
+
+        // Geri-İleri tuşlarıyla gelindiğinde (bfcache desteği)
+        window.addEventListener('pageshow', (event) => {
+            updateClock();
+            if (event.persisted) {
+                // Tarayıcı önbellekten geldiyse temayı kontrol et
+                const theme = localStorage.getItem('theme') || 'light';
+                body.setAttribute('data-theme', theme);
+            }
         });
+
+        setInterval(updateClock, 1000);
     </script>
 </body>
 </html>
