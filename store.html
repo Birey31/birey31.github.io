@@ -590,6 +590,17 @@ body:not([data-theme="light"]) {
                 transform: translateY(-50%) translateX(0);
             }
         }
+        /* Eser sahibi bilgisi için yeni stil */
+.artwork-credit {
+    position: absolute;
+    bottom: -15px; /* Beyaz dikdörtgenin hemen altına dışarıya yazar */
+    right: 0;
+    font-size: 8px; /* Çok küçük, zarif bir font */
+    opacity: 0.5;
+    text-transform: lowercase;
+    font-family: inherit;
+    pointer-events: none;
+}
     </style>
 </head>
 <body>
@@ -673,9 +684,10 @@ body:not([data-theme="light"]) {
     </nav>
 
     <main class="products-pool" id="productsPool">
-        <img src="media/sanat.webp" alt="Sanat" id="pool-initial-img" onclick="loadProducts('news')">
-        <div class="products-grid" id="productGrid"></div>
-    </main>
+    <img src="media/sanat.webp" alt="Sanat" id="pool-initial-img" onclick="expandPool(); loadProducts('news')">
+    <div id="artwork-info" class="artwork-credit">edward hopper, 1942</div>
+    <div class="products-grid" id="productGrid"></div>
+</main>
 
     <footer class="legal-footer">
         <div class="legal-link" onclick="openInfoPool('sales')" data-tr="mesafeli satış" data-en="distance sales">mesafeli satış</div>
@@ -768,6 +780,8 @@ body:not([data-theme="light"]) {
         function loadProducts(cat, e) {
             expandPool();
             document.getElementById('pool-initial-img').style.display = 'none';
+            if(document.getElementById('artwork-info')) {
+        document.getElementById('artwork-info').style.display = 'none';
             const grid = document.getElementById('productGrid');
             grid.style.display = 'grid';
 
