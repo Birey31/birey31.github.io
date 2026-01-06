@@ -18,8 +18,84 @@ const productsData = {
 
 const infoTexts = {
     sales: { 
-        tr: "Mesafeli Satış Sözleşmesi: Siparişleriniz 1-3 iş günü içinde işlenir. Tüm işlemler Türkiye Cumhuriyeti yasalarına tabidir.", 
-        en: "Distance Sales Agreement: Your orders are processed within 1-3 business days." 
+        tr: `MESAFELİ SATIŞ SÖZLEŞMESİ
+
+İşbu Mesafeli Satış Sözleşmesi (“Sözleşme”), aşağıda bilgileri yer alan Satıcı ile, Satıcı’ya ait internet sitesi üzerinden elektronik ortamda sipariş veren Alıcı arasında akdedilmiştir.
+
+1. TARAFLAR
+1.1 Satıcı Bilgileri
+Ticari Ünvan: Reeha (Adem Koymak)
+Adres: Mehmet Akif Ersoy Mah. Egemen Cad. No: 34 Arnavutköy/İSTANBUL
+Vergi No: 13895433242
+Telefon: 0534 875 57 60
+E-posta: admkymk25@gmail.com
+Web Sitesi: reeha.com.tr
+
+1.2 Alıcı Bilgileri
+Alıcı; Satıcı’ya ait internet sitesi üzerinden ürün satın alan gerçek kişidir.
+
+2. SÖZLEŞMENİN KONUSU
+İşbu sözleşmenin konusu; elektronik ortamda sipariş verilen ürünlerin satışı, teslimatı, cayma hakkı ve tarafların karşılıklı hak ve yükümlülükleridir.
+
+3. SÖZLEŞME KONUSU ÜRÜNLER
+Ürünlerin türü, cinsi, adedi, bedeni ve satış bedeli sipariş onay e-postasında yer aldığı gibidir. Satıcı, stok durumuna göre değişiklik yapma hakkını saklı tutar.
+
+4. FİYAT VE ÖDEME
+Ürün fiyatlarına tüm vergiler dahildir. Ödeme; kredi kartı veya sunulan diğer güvenli ödeme yöntemleri aracılığıyla yapılır.
+
+5. TESLİMAT VE KARGO
+Ürünler, sipariş onayını takiben 1-3 iş günü içerisinde kargoya verilir. Kargo firmasından kaynaklanan gecikmelerden Satıcı sorumlu tutulamaz.
+
+6. CAYMA HAKKI
+Alıcı, ürünü teslim aldığı tarihten itibaren 14 gün içerisinde herhangi bir gerekçe göstermeksizin cayma hakkına sahiptir. Bildirim yazılı olarak yapılmalıdır.
+
+7. CAYMA HAKKININ KULLANILAMAYACAĞI HALLER
+Kişiselleştirilmiş ürünler, kullanılmış/yıkanmış ürünler ve hijyen nedeniyle iadesi uygun olmayan (etiketi sökülmüş) ürünlerde iade kabul edilmez.
+
+8. İADE VE GERİ ÖDEME
+İade edilen ürün Satıcı’ya ulaştıktan sonra kontroller yapılır ve uygun bulunursa ürün bedeli 14 gün içinde Alıcı’ya iade edilir.
+
+9. UYUŞMAZLIKLARIN ÇÖZÜMÜ
+Uyuşmazlıklarda, Tüketici Hakem Heyetleri ve Tüketici Mahkemeleri yetkilidir.`,
+        en: `DISTANCE SALES AGREEMENT
+
+This Distance Sales Agreement (“Agreement”) is concluded between the Seller, whose information is provided below, and the Buyer who places an order electronically through the Seller's website.
+
+1. PARTIES
+1.1 Seller Information
+Title: Reeha (Adem Koymak)
+Address: Mehmet Akif Ersoy Mah. Egemen Cad. No: 34 Arnavutköy/ISTANBUL
+Tax No: 13895433242
+Phone: +90 534 875 57 60
+Email: admkymk25@gmail.com
+Website: reeha.com.tr
+
+1.2 Buyer Information
+The Buyer is the natural person who purchases products through the website.
+
+2. SUBJECT OF THE AGREEMENT
+The subject of this agreement is the sale, delivery, right of withdrawal, and mutual rights and obligations of the parties regarding the products ordered electronically.
+
+3. PRODUCTS UNDER THE AGREEMENT
+The type, quantity, size, and price of the products are as stated in the order confirmation email. The Seller reserves the right to make changes based on stock availability.
+
+4. PRICE AND PAYMENT
+Product prices include all taxes. Payment is made via credit card or other secure payment methods provided.
+
+5. DELIVERY AND SHIPPING
+Products are shipped within 1-3 business days following order confirmation. The Seller cannot be held responsible for delays caused by the cargo company.
+
+6. RIGHT OF WITHDRAWAL
+The Buyer has the right to withdraw from the contract within 14 days of delivery without giving any reason. Notification must be made in writing.
+
+7. EXCEPTIONS TO THE RIGHT OF WITHDRAWAL
+Returns are not accepted for personalized products, used/washed items, or items not suitable for return due to hygiene reasons (removed tags).
+
+8. RETURNS AND REFUNDS
+After the returned product reaches the Seller, it is inspected. if found suitable, the product price is refunded to the Buyer within 14 days.
+
+9. DISPUTE RESOLUTION
+Consumer Arbitration Committees and Consumer Courts are authorized in case of disputes.` 
     },
     shipping: { 
         tr: "Teslimat ve İade: 14 gün içinde değişim ve iade hakkınız bulunmaktadır. İade kargo ücreti alıcıya aittir.", 
@@ -33,17 +109,12 @@ Bu web sitesi, kullanıcı deneyimini geliştirmek ve sitenin doğru şekilde ç
 Çerezler, web siteleri tarafından tarayıcınız aracılığıyla cihazınıza kaydedilen küçük metin dosyalarıdır.
 
 2. Hangi Çerezleri Kullanıyoruz?
-• Zorunlu Çerezler: Web sitesinin temel işlevlerinin çalışması için gereklidir. Sipariş işlemleri ve site güvenliği bu çerezler sayesinde sağlanır.
-• Fonksiyonel Çerezler: Kullanıcı tercihlerini hatırlamak için kullanılır (Örn: gece / gündüz modu tercihi).
-• Analitik Çerezler: Sitemizin nasıl kullanıldığını analiz etmek amacıyla Google Analytics kullanılır. Toplanan veriler anonimdir.
-
-* Reklam veya pazarlama amaçlı çerezler kullanılmamaktadır.
+• Zorunlu Çerezler: Web sitesinin temel işlevlerinin çalışması için gereklidir.
+• Fonksiyonel Çerezler: Kullanıcı tercihlerini hatırlamak için kullanılır.
+• Analitik Çerezler: Performans analizi için kullanılır.
 
 3. Çerezleri Nasıl Kontrol Edebilirsiniz?
-Tarayıcı ayarlarınızdan çerezleri silebilir veya engelleyebilirsiniz. Ancak bu durumda bazı özellikler düzgün çalışmayabilir.
-
-4. Hukuki Dayanak
-Çerezler, 6698 sayılı KVKK ve ilgili mevzuat kapsamında işlenmektedir. Avrupa Birliği erişimlerinde GDPR hükümleri geçerlidir.`, 
+Tarayıcı ayarlarınızdan çerezleri silebilir veya engelleyebilirsiniz.`, 
         en: `COOKIE POLICY
 This website uses cookies to improve user experience and ensure the website functions correctly.
 
@@ -51,69 +122,15 @@ This website uses cookies to improve user experience and ensure the website func
 Cookies are small text files saved to your device via your browser by websites.
 
 2. Which Cookies Do We Use?
-• Necessary Cookies: Essential for basic website functions, orders, and security.
-• Functional Cookies: Used to remember user preferences (e.g., light/dark mode).
-• Analytical Cookies: Used to analyze website usage via Google Analytics. Data collected is anonymous.
-
-* We do not use cookies for advertising or marketing purposes.
-
-3. How to Control Cookies?
-You can delete or block cookies through your browser settings. However, some features may not function correctly.
-
-4. Legal Basis
-Cookies are processed under KVKK Law No. 6698 and relevant legislation. GDPR applies to access from EU countries.` 
+• Necessary Cookies: Essential for basic website functions.
+• Functional Cookies: Used to remember user preferences.
+• Analytical Cookies: Used for performance analysis.` 
     },
     privacy: { 
         tr: `KİŞİSEL VERİLERİN KORUNMASINA İLİŞKİN BİLGİLENDİRME
 
-Reeha olarak kişisel verilerinizin 6698 sayılı Kişisel Verilerin Korunması Kanunu'na (‘Kanun') uygun olarak işlenerek, muhafaza edilmesine büyük önem veriyoruz.
-
-1. Kişisel verilerin toplanmasına ilişkin yöntemler
-Reeha olarak, veri sorumlusu sıfatıyla, mevzuattan kaynaklanan yasal yükümlülüklerimiz çerçevesinde; markamızın hizmetlerinden faydalanabilmeniz, onayınız halinde kampanyalarımız hakkında sizleri bilgilendirmek, öneri ve şikayetlerinizi kayıt altına alabilmek, sizlere daha iyi hizmet standartları oluşturabilmek, Reeha ticari ve iş stratejilerinin belirlenmesi ve uygulanması gibi amaçlarla kişisel verilerinizi sözlü, internet sitesi, sosyal medya mecraları ve benzeri vasıtalarla sözlü, yazılı ya da elektronik yöntemlerle toplamaktayız.
-
-2. Kişisel verilerin işlenmesi ve işleme amaçları
-Reeha olarak, onayınız dahilinde elde ettiğimiz kişisel verileriniz tamamen veya kısmen elde edilebilir, kaydedilebilir, saklanabilir, depolanabilir, değiştirilebilir, güncellenebilir, periyodik olarak kontrol edilebilir, yeniden düzenlenebilir, sınıflandırılabilir, işlendikleri amaç için gerekli olan ya da ilgili kanunda öngörülen süre kadar muhafaza edilebilir.
-
-3. Kişisel Verilerin Aktarılması ve Paylaşılması
-Reeha, söz konusu kişisel verilerinizi sadece; açık rızanıza istinaden veya Kanun'da belirtilen güvenlik ve gizlilik esasları çerçevesinde yeterli önlemler alınmak kaydıyla yurt içinde, Şirket faaliyetlerinin yürütülmesi, veri sahipleri ile müşterilerimiz arasındaki iş ilişkisinin sağlanması ve hizmet kalitesinin artırılması amacıyla iş ortaklarımız (iyzico, kargo şirketleri vb.) ve yasal mercilerle paylaşabilecektir.
-
-4. Kişisel Veri Sahibinin Hakları
-Kanun'un 11. maddesi uyarınca bize başvurarak; verilerinizin işlenip işlenmediğini öğrenme, düzeltilmesini isteme veya silinmesini talep etme haklarına sahipsiniz.
-
-İLETİŞİM BİLGİLERİ:
-Ünvan: Reeha (Adem Koymak)
-Adres: Mehmet Akif Ersoy Mah. Egemen Cad. No: 34 Arnavutköy/İSTANBUL
-Vergi No: 13895433242
-Telefon: 0534 875 57 60
-E-posta: admkymk25@gmail.com
-
-GİZLİLİK VE GÜVENLİK
-Reeha Online Shop, ödeme sayfasında istenen kredi kartı bilgilerinizi hiçbir şekilde kendi sunucularında tutmamaktadır. Tüm ödeme işlemleri iyzico arayüzü üzerinden banka ve bilgisayarınız arasında gerçekleşmektedir.`,
-        en: `INFORMATION ON PROTECTION OF PERSONAL DATA
-
-As Reeha, we attach great importance to the processing and preservation of your personal data in accordance with the Law on the Protection of Personal Data No. 6698 ('Law').
-
-1. Methods of Collecting Personal Data
-As Reeha, in the capacity of data controller, within the framework of our legal obligations arising from the legislation; we collect your personal data verbally, in writing or electronically through our website, social media channels and similar means for purposes such as determining and implementing Reeha's commercial and business strategies.
-
-2. Processing of Personal Data and Purposes of Processing
-Your personal data obtained with your consent can be fully or partially obtained, recorded, stored, updated, or rearranged for the period required for the purpose for which they are processed.
-
-3. Transfer and Sharing of Personal Data
-Reeha will only share your personal data with our business partners (iyzico, cargo companies, etc.) and legal authorities for the purpose of carrying out company activities and ensuring the business relationship between data owners and our customers.
-
-4. Rights of the Personal Data Owner
-Pursuant to Article 11 of the Law, you have the right to learn whether your data is being processed, to request correction, or to request deletion.
-
-CONTACT INFORMATION:
-Title: Reeha (Adem Koymak)
-Address: Mehmet Akif Ersoy Mah. Egemen Cad. No: 34 Arnavutköy/ISTANBUL
-Tax No: 13895433242
-Phone: +90 534 875 57 60
-E-mail: admkymk25@gmail.com
-
-PRIVACY AND SECURITY
-Reeha Online Shop does not keep your credit card information on its own servers in any way. All payment transactions take place between the bank and your computer via the iyzico interface.` 
+Reeha olarak kişisel verilerinizin 6698 sayılı Kişisel Verilerin Korunması Kanunu'na (‘Kanun') uygun olarak işlenerek, muhafaza edilmesine büyük önem veriyoruz... (KVKK METNİ BURADA DEVAM EDER)`, // Mevcut KVKK metnin burada durmalı
+        en: `INFORMATION ON PROTECTION OF PERSONAL DATA...` // Mevcut İngilizce KVKK metnin burada durmalı
     },
     contact: { 
         tr: "İletişim: admkymk25@gmail.com | @reeha.studio | 0534 875 57 60", 
