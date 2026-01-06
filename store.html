@@ -230,7 +230,7 @@
             }
             .info-nav-link { font-size: 10px; }
             .info-content { 
-                padding: 45px 20px 20px 20px !important; /* Üstten kapat butonu için yer açıldı */
+                padding: 45px 20px 20px 20px !important; 
                 font-size: 11px; 
                 flex: 1;
                 overflow-y: auto;
@@ -247,13 +247,21 @@
                 opacity: 0.9 !important;
             }
 
+            /* MOBİL SEPET GÜNCELLEME */
             .side-cart { 
-                width: 100%; 
-                right: -100%; 
-                padding: 20px; 
-                border-left: none;
+                width: 85%; /* Genişlik kısıtlandı yanlarda boşluk için */
+                height: 80vh; /* Alt tarafta boşluk bırakıldı */
+                top: 50%; 
+                transform: translateY(-50%) translateX(100%); /* Başlangıçta sağda saklı */
+                right: 10px; /* Açıldığında sağ kenardan hafif içeride */
+                border: 1px solid var(--text-color);
+                border-radius: 4px;
+                padding: 20px;
             }
-            .side-cart.active { right: 0; }
+            .side-cart.active { 
+                transform: translateY(-50%) translateX(0); /* Ortalanmış şekilde açılır */
+                right: 10px; 
+            }
 
             #checkoutPool { width: 95% !important; height: 90% !important; }
             .checkout-container { flex-direction: column; overflow-y: auto; }
