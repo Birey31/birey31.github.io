@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr" style="background-color: #0e0e0e;">
+<html lang="tr" style="background-color: #fcfcfc;">
 <head>
     <link rel="icon" type="image/png" href="media/mobillogo.webp">
     <link rel="canonical" href="https://reeha.com.tr/">
@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Reeha</title>
     <style>
-        /* --- GENEL AYARLAR --- */
         * {
             -webkit-tap-highlight-color: transparent;
             outline: none;
@@ -15,35 +14,33 @@
         }
 
         :root {
-            --bg-color: #0e0e0e; 
-            --text-color: #ffffff;
-        }
-
-        [data-theme="light"] {
             --bg-color: #fcfcfc; 
             --text-color: #000000;
+        }
+
+        body[data-theme="dark"] {
+            --bg-color: #0e0e0e; 
+            --text-color: #ffffff;
         }
 
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
             background-color: var(--bg-color);
-            transition: background-color 0.8s ease;
+            transition: background-color 0.4s ease;
             overflow: hidden;
             font-family: 'Times New Roman', serif;
             display: flex;
             flex-direction: column;
         }
 
-        /* --- TEMA BUTONU --- */
         .theme-toggle {
             position: absolute; top: 30px; right: 30px;
             background: none; border: 1px solid var(--text-color); 
             width: 14px; height: 14px; border-radius: 50%;
             cursor: pointer; opacity: 0.4; z-index: 1000;
         }
-        body:not([data-theme="light"]) .theme-toggle { background: var(--text-color); }
+        body[data-theme="dark"] .theme-toggle { background: var(--text-color); }
 
-        /* --- ANA İÇERİK --- */
         .main-content {
             flex: 1;
             display: flex;
@@ -58,7 +55,6 @@
             gap: 25px;
         }
 
-        /* --- STORE (KİLİTLİ / YAKINDA) --- */
         .store-locked {
             position: relative;
             text-decoration: none;
@@ -69,9 +65,8 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             opacity: 0.5;
-            transition: 0.6s ease;
+            transition: 0.4s ease;
             padding: 10px;
-            cursor: default; /* Tıklanamaz hissi */
         }
 
         .store-locked .status-text {
@@ -81,39 +76,18 @@
             font-size: 9px;
             letter-spacing: 1px;
             opacity: 0;
-            transition: 0.6s ease;
+            transition: 0.4s ease;
             white-space: nowrap;
             color: var(--text-color);
         }
 
-        .store-locked:hover {
-            filter: blur(4px); /* Store yazısı bulanıklaşır */
-            opacity: 0.2;
-        }
-        
-        .store-locked:hover .status-text {
-            opacity: 1;
-            filter: blur(0px); /* Yazı bulanık olmaz */
-        }
+        .store-locked:hover { filter: blur(4px); opacity: 0.2; }
+        .store-locked:hover .status-text { opacity: 1; filter: blur(0px); }
 
-        /* --- 2027 LOGOSU (AKTİF / RENKLİ) --- */
-        .logo-link { 
-            display: flex; align-items: center; justify-content: center; 
-            text-decoration: none;
-        }
-        
-        .desktop-only { 
-            width: 250px;
-            filter: grayscale(100%) opacity(0.6); 
-            transition: 0.6s ease;
-        }
+        .logo-link { display: flex; align-items: center; justify-content: center; text-decoration: none; }
+        .desktop-only { width: 250px; filter: grayscale(100%) opacity(0.6); transition: 0.6s ease; }
+        .logo-link:hover .desktop-only { filter: grayscale(0%) opacity(1); transform: scale(1.02); }
 
-        .logo-link:hover .desktop-only {
-            filter: grayscale(0%) opacity(1); /* Üzerine gelince renklenir */
-            transform: scale(1.02);
-        }
-
-        /* --- FOOTER & SAAT --- */
         footer {
             height: 60px;
             display: flex; justify-content: center; align-items: center;
@@ -126,17 +100,15 @@
             font-size: 11px; color: var(--text-color); opacity: 0.4; font-family: monospace;
         }
 
-        /* --- MOBİL --- */
         @media (max-width: 768px) {
             #live-clock { display: none; } 
-            footer { opacity: 0.5; }
             .desktop-only { width: 180px; }
         }
     </style>
 </head>
-<body>
+<body data-theme="light">
 
-    <button class="theme-toggle" id="themeBtn" onclick="playSound()"></button>
+    <button class="theme-toggle" id="themeBtn"></button>
 
     <div class="main-content">
         <div class="content-wrapper">
@@ -144,7 +116,6 @@
                 Store
                 <span class="status-text">YAKINDA</span>
             </div>
-
             <a href="2027.html" class="logo-link">
                 <img src="media/logo2.webp" alt="2027" class="desktop-only">
             </a>
@@ -154,14 +125,9 @@
     <footer>Reeha © 2026</footer>
     <div id="live-clock">TR 00:00:00</div>
 
-    <audio id="clickSound" preload="auto">
-        <source src="https://www.fesliyanstudios.com/play-mp3/387" type="audio/mpeg">
-    </audio>
-
     <script>
+        const body = document.body;
         const themeBtn = document.getElementById('themeBtn');
-        const body = document.documentElement;
-        const clickSound = document.getElementById('clickSound');
         const clockElement = document.getElementById('live-clock');
 
         function updateClock() {
@@ -172,26 +138,25 @@
             });
             clockElement.textContent = `TR ${timeString}`;
         }
-        setInterval(updateClock, 1000);
-        updateClock();
 
-        function playSound() {
-            clickSound.currentTime = 0;
-            clickSound.volume = 0.2;
-            clickSound.play().catch(() => {});
-        }
-
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        if (savedTheme === 'light') body.setAttribute('data-theme', 'light');
-
-        themeBtn.addEventListener('click', () => {
+        function toggleTheme() {
             if (body.getAttribute('data-theme') === 'light') {
-                body.removeAttribute('data-theme');
+                body.setAttribute('data-theme', 'dark');
                 localStorage.setItem('theme', 'dark');
             } else {
                 body.setAttribute('data-theme', 'light');
                 localStorage.setItem('theme', 'light');
             }
+        }
+
+        themeBtn.addEventListener('click', toggleTheme);
+
+        // Sayfanın HTML'i hazır olduğu an (Resimleri beklemeden) çalışır
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            body.setAttribute('data-theme', savedTheme);
+            updateClock();
+            setInterval(updateClock, 1000);
         });
     </script>
 </body>
