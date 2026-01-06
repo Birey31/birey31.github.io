@@ -1,23 +1,43 @@
 const productsData = {
     news: [
         { id: 1, name: "basic t-shirt white", price: 40, img: "elbise/tshirt1.webp", desc: "100% heavy cotton, relaxed fit." }, 
-        { id: 2, name: "heavy cotton hoodie", price: 110, img: "elbise/tshirt2.webp", desc: "Oversized silhouette, premium fabric." },
-        { id: 5, name: "yakında", price: 0, img: "media/mobillogo.webp", desc: "yakında" }
+        { id: 2, name: "heavy cotton hoodie", price: 110, img: "elbise/tshirt2.webp", desc: "Oversized silhouette, premium fabric." }
+        // "news" (hepsi) kısmında 'yakında' olanlar görünmeyecek şekilde filtrelendi.
     ],
     tops: [
         { id: 1, name: "basic t-shirt white", price: 40, img: "elbise/tshirt1.webp", desc: "100% heavy cotton." },
-        { id: 2, name: "heavy cotton hoodie", price: 110, img: "elbise/tshirt2.webp", desc: "Oversized silhouette." }
+        { id: 2, name: "heavy cotton hoodie", price: 110, img: "elbise/tshirt2.webp", desc: "Oversized silhouette." },
+        { id: 3, name: "yakında", price: 0, img: "media/mobillogo.webp", desc: "yakında" }
     ],
-    bottoms: [],
-    accessories: []
+    bottoms: [
+        { id: 4, name: "yakında", price: 0, img: "media/mobillogo.webp", desc: "yakında" }
+    ],
+    accessories: [
+        { id: 5, name: "yakında", price: 0, img: "media/mobillogo.webp", desc: "yakında" }
+    ]
 };
 
 const infoTexts = {
-    sales: { tr: "Mesafeli Satış Sözleşmesi: Siparişleriniz 1-3 iş günü içinde işlenir.", en: "Distance Sales Agreement: Your orders are processed within 1-3 business days." },
-    shipping: { tr: "Teslimat ve İade: 14 gün içinde değişim ve iade hakkınız bulunmaktadır.", en: "Shipping & Returns: You have the right to exchange or return within 14 days." },
-    cookie: { tr: "Çerez Politikası: Deneyiminizi iyileştirmek için çerezler kullanıyoruz.", en: "Cookie Policy: We use cookies to improve your experience." },
-    privacy: { tr: "Kişisel Verilerin Korunması: Verileriniz Reeha güvencesindedir.", en: "Privacy Policy: Your data is protected by Reeha." },
-    contact: { tr: "İletişim: admkymk25@gmail.com | @reeha.studio", en: "Contact: admkymk25@gmail.com | @reeha.studio" }
+    sales: { 
+        tr: "Mesafeli Satış Sözleşmesi: Siparişleriniz 1-3 iş günü içinde işlenir. Tüm işlemler Türkiye Cumhuriyeti yasalarına tabidir.", 
+        en: "Distance Sales Agreement: Your orders are processed within 1-3 business days." 
+    },
+    shipping: { 
+        tr: "Teslimat ve İade: 14 gün içinde değişim ve iade hakkınız bulunmaktadır. İade kargo ücreti alıcıya aittir.", 
+        en: "Shipping & Returns: You have the right to exchange or return within 14 days." 
+    },
+    cookie: { 
+        tr: "ÇEREZ POLİTİKASI\n\nReeha olarak, web sitemizi ziyaret ettiğinizde deneyiminizi iyileştirmek için çerezler kullanıyoruz. Zorunlu çerezler, sepetinizin hatırlanması ve güvenli ödeme işlemleri için gereklidir. Tarayıcı ayarlarınızdan çerezleri dilediğiniz zaman silebilir veya engelleyebilirsiniz.", 
+        en: "Cookie Policy: We use cookies to improve your experience. You can manage cookies through your browser settings." 
+    },
+    privacy: { 
+        tr: "KİŞİSEL VERİLERİN KORUNMASINA İLİŞKİN BİLGİLENDİRME\n\nReeha olarak kişisel verilerinizin 6698 sayılı Kişisel Verilerin Korunması Kanunu'na uygun olarak işlenmesine büyük önem veriyoruz. Verileriniz sadece sipariş süreçlerini yönetmek amacıyla kullanılır ve üçüncü taraflarla paylaşılmaz.", 
+        en: "Privacy Policy: Your personal data is processed in accordance with KVKK Law No. 6698." 
+    },
+    contact: { 
+        tr: "İletişim: admkymk25@gmail.com | @reeha.studio | 0534 875 57 60", 
+        en: "Contact: admkymk25@gmail.com | @reeha.studio | 0534 875 57 60" 
+    }
 };
 
 const translations = {
@@ -28,7 +48,7 @@ const translations = {
 let currentLang = 'tr';
 let cart = [];
 
-// --- FONKSİYONLAR (GLOBAL BINDING) ---
+// --- FONKSİYONLAR ---
 
 window.updateTime = function() {
     const now = new Date();
@@ -58,12 +78,27 @@ window.loadProducts = function(cat, e) {
     if(!grid) return;
     grid.style.display = 'grid';
 
-    const products = productsData[cat] || [];
-    grid.innerHTML = products.map(p => `
-        <div class="product-card" onclick="openProductDetail('${cat}', ${p.id})">
-            <div class="product-box"><img src="${p.img}" onerror="this.src='media/mobillogo.webp';"></div>
-            <div class="product-info">${p.name}<br><span style="opacity:0.5">${p.price}€</span></div>
-        </div>`).join('');
+    // FİLTRELEME: Eğer kategori 'news' (hepsi) ise 'yakında' olanları gösterme
+    let products = productsData[cat] || [];
+    if (cat === 'news') {
+        products = products.filter(p => p.name !== "yakında");
+    }
+
+    grid.innerHTML = products.map(p => {
+        const isComingSoon = p.name === "yakında";
+        return `
+            <div class="product-card" 
+                 ${!isComingSoon ? `onclick="openProductDetail('${cat}', ${p.id})"` : ''} 
+                 style="${isComingSoon ? 'opacity: 0.5; cursor: default;' : ''}">
+                <div class="product-box">
+                    <img src="${p.img}" onerror="this.src='media/mobillogo.webp';">
+                </div>
+                <div class="product-info">
+                    ${p.name}<br>
+                    <span style="opacity:0.5">${isComingSoon ? 'coming soon' : p.price + '€'}</span>
+                </div>
+            </div>`;
+    }).join('');
     
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
     if(e && e.target) e.target.classList.add('active');
@@ -85,7 +120,8 @@ window.toggleTheme = function() {
 
 window.toggleLanguage = function() {
     currentLang = currentLang === 'tr' ? 'en' : 'tr';
-    document.getElementById('langTxt').innerText = currentLang;
+    const langEl = document.getElementById('langTxt');
+    if(langEl) langEl.innerText = currentLang;
     document.querySelectorAll('[data-tr]').forEach(el => {
         el.textContent = currentLang === 'tr' ? el.getAttribute('data-tr') : el.getAttribute('data-en');
     });
@@ -169,7 +205,7 @@ window.openInfoPool = function(type) {
     const pool = document.getElementById('infoPool');
     if(!pool) return;
     pool.style.display = 'flex';
-    loadInfo(type);
+    window.loadInfo(type);
     setTimeout(() => {
         pool.classList.add('active');
         document.getElementById('globalOverlay').classList.add('active');
@@ -180,7 +216,10 @@ window.loadInfo = function(type) {
     document.querySelectorAll('.info-nav-link').forEach(l => l.classList.remove('active'));
     document.getElementById('link-' + type)?.classList.add('active');
     const content = document.getElementById('infoContent');
-    if(content) content.innerText = infoTexts[type][currentLang];
+    if(content) {
+        content.style.whiteSpace = "pre-wrap"; // Alt satırları (n) görmesi için
+        content.innerText = infoTexts[type][currentLang];
+    }
 };
 
 window.closeAllPanels = function() {
@@ -194,7 +233,6 @@ window.closeAllPanels = function() {
 
 window.handleOverlayClick = function() { closeAllPanels(); };
 
-// --- BAŞLATMA ---
 window.addEventListener('load', () => {
     window.updateTime();
     setInterval(window.updateTime, 1000);
