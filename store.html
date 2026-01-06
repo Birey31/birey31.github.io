@@ -290,7 +290,7 @@ body:not([data-theme="light"]) {
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            overflow: visible;
             transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s;
         }
 
@@ -593,9 +593,9 @@ body:not([data-theme="light"]) {
         /* Eser sahibi bilgisi için yeni stil */
 .artwork-credit {
     position: absolute;
-    bottom: -15px; /* Beyaz dikdörtgenin hemen altına dışarıya yazar */
+    bottom: -20px; /* Çerçevenin dışına taşındı */
     right: 0;
-    font-size: 8px; /* Çok küçük, zarif bir font */
+    font-size: 8px; 
     opacity: 0.5;
     text-transform: lowercase;
     font-family: inherit;
