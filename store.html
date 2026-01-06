@@ -603,8 +603,7 @@ body:not([data-theme="light"]) {
 }
     </style>
 </head>
-<body>
-    <body data-theme="light">
+<body data-theme="light">
 
     <div id="globalOverlay" onclick="handleOverlayClick()"></div>
 
@@ -1012,10 +1011,6 @@ body:not([data-theme="light"]) {
         window.onload = () => { 
             updateTime(); 
             setInterval(updateTime, 1000); 
-            function expandPool() {
-    const pool = document.getElementById('productsPool');
-    if(pool) pool.classList.add('expanded');
-}
         };
     </script>
 </body>
