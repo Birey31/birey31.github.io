@@ -7,24 +7,16 @@
     <title>Reeha | Store</title>
     <style>
         :root {
-    --bg-color: #ffffff;
-    --text-color: #000000;
-    --accent-opacity: 0.05;
-}
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --accent-opacity: 0.1;
+        }
 
-/* Koyu Tema (Varsayılan) */
-body {
-    --bg-color: #000000;
-    --text-color: #ffffff;
-    --accent-opacity: 0.1;
-}
-
-/* Açık Tema */
-body[data-theme="light"] {
-    --bg-color: #ffffff;
-    --text-color: #000000;
-    --accent-opacity: 0.05;
-}
+        body[data-theme="light"] {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --accent-opacity: 0.05;
+        }
 
         * {
             margin: 0; padding: 0; box-sizing: border-box;
@@ -146,9 +138,9 @@ body[data-theme="light"] {
             cursor: pointer;
         }
 
-       body[data-theme="light"] .theme-toggle {
-    background: var(--text-color);
-}
+        body[data-theme="light"] .theme-toggle {
+            background: var(--text-color);
+        }
 
         .cart-toggle {
             background: none;
@@ -290,7 +282,7 @@ body[data-theme="light"] {
             top: 52%;
             left: 55%;
             transform: translate(-50%, -50%);
-            width: fit-content; /* Dar çerçeve başlangıcı */
+            width: fit-content;
             height: 65%;
             border: 1px solid var(--text-color);
             background-color: var(--bg-color);
@@ -298,12 +290,13 @@ body[data-theme="light"] {
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            overflow: visible;
             transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s;
         }
 
         .products-pool.expanded {
-            width: 65%; /* Genişletilmiş hal */
+            width: 65%;
+            overflow: hidden;
         }
 
         #pool-initial-img {
@@ -546,6 +539,17 @@ body[data-theme="light"] {
             text-transform: lowercase;
         }
 
+        .artwork-credit {
+            position: absolute;
+            bottom: -20px;
+            right: 0;
+            font-size: 8px; 
+            opacity: 0.5;
+            text-transform: lowercase;
+            font-family: inherit;
+            pointer-events: none;
+        }
+
         /* --- MOBILE SPECIAL --- */
         @media (max-width: 768px) {
             nav#main-nav {
@@ -598,20 +602,9 @@ body[data-theme="light"] {
                 transform: translateY(-50%) translateX(0);
             }
         }
-        /* Eser sahibi bilgisi için yeni stil */
-.artwork-credit {
-    position: absolute;
-    bottom: -15px; /* Beyaz dikdörtgenin hemen altına dışarıya yazar */
-    right: 0;
-    font-size: 8px; /* Çok küçük, zarif bir font */
-    opacity: 0.5;
-    text-transform: lowercase;
-    font-family: inherit;
-    pointer-events: none;
-}
     </style>
 </head>
-<body data-theme="light">
+<body data-theme="dark">
 
     <div id="globalOverlay" onclick="handleOverlayClick()"></div>
 
@@ -683,18 +676,18 @@ body[data-theme="light"] {
         </div>
     </div>
 
-    <div id="main-nav">
+    <nav id="main-nav">
         <a onclick="loadProducts('news', event)" class="nav-link" data-tr="hepsi" data-en="all">hepsi</a>
         <a onclick="loadProducts('tops', event)" class="nav-link" data-tr="üst giyim" data-en="tops">üst giyim</a>
         <a onclick="loadProducts('bottoms', event)" class="nav-link" data-tr="alt giyim" data-en="bottoms">alt giyim</a>
         <a onclick="loadProducts('accessories', event)" class="nav-link" data-tr="aksesuar" data-en="accessories">aksesuar</a>
-    </div>
+    </nav>
 
     <main class="products-pool" id="productsPool">
-    <img src="media/sanat.webp" alt="Sanat" id="pool-initial-img" onclick="loadProducts('news')">
-    <div id="artwork-info" class="artwork-credit">edward hopper, 1942</div>
-    <div class="products-grid" id="productGrid"></div>
-</main>
+        <img src="media/sanat.webp" alt="Sanat" id="pool-initial-img" onclick="loadProducts('news')">
+        <div id="artwork-info" class="artwork-credit">edward hopper, 1942</div>
+        <div class="products-grid" id="productGrid"></div>
+    </main>
 
     <footer class="legal-footer">
         <div class="legal-link" onclick="openInfoPool('sales')" data-tr="mesafeli satış" data-en="distance sales">mesafeli satış</div>
@@ -788,8 +781,8 @@ body[data-theme="light"] {
             expandPool();
             document.getElementById('pool-initial-img').style.display = 'none';
             if(document.getElementById('artwork-info')) {
-        document.getElementById('artwork-info').style.display = 'none';
-                }
+                document.getElementById('artwork-info').style.display = 'none';
+            }
             const grid = document.getElementById('productGrid');
             grid.style.display = 'grid';
 
@@ -1001,8 +994,8 @@ body[data-theme="light"] {
 
         function toggleTheme() {
             const body = document.body;
-            if (body.hasAttribute('data-theme')) {
-                body.removeAttribute('data-theme');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.setAttribute('data-theme', 'dark');
             } else {
                 body.setAttribute('data-theme', 'light');
             }
