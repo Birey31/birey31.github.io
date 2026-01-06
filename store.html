@@ -7,15 +7,15 @@
     <title>Reeha | Store</title>
     <style>
         :root {
-            --bg-color: #000000;
-            --text-color: #ffffff;
-            --accent-opacity: 0.1;
-        }
-
-        body[data-theme="light"] {
             --bg-color: #ffffff;
             --text-color: #000000;
             --accent-opacity: 0.05;
+        }
+
+        body[data-theme="dark"] {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --accent-opacity: 0.1;
         }
 
         * {
@@ -604,7 +604,7 @@
         }
     </style>
 </head>
-<body data-theme="dark">
+<body data-theme="light">
 
     <div id="globalOverlay" onclick="handleOverlayClick()"></div>
 
@@ -779,10 +779,11 @@
 
         function loadProducts(cat, e) {
             expandPool();
-            document.getElementById('pool-initial-img').style.display = 'none';
-            if(document.getElementById('artwork-info')) {
-                document.getElementById('artwork-info').style.display = 'none';
-            }
+            const initialImg = document.getElementById('pool-initial-img');
+            const artworkInfo = document.getElementById('artwork-info');
+            if(initialImg) initialImg.style.display = 'none';
+            if(artworkInfo) artworkInfo.style.display = 'none';
+            
             const grid = document.getElementById('productGrid');
             grid.style.display = 'grid';
 
@@ -994,10 +995,10 @@
 
         function toggleTheme() {
             const body = document.body;
-            if (body.getAttribute('data-theme') === 'light') {
-                body.setAttribute('data-theme', 'dark');
-            } else {
+            if (body.getAttribute('data-theme') === 'dark') {
                 body.setAttribute('data-theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
             }
         }
 
