@@ -127,6 +127,19 @@
             text-transform: lowercase; margin-top: 10px;
         }
 
+        /* --- BAŞLANGIÇ GÖRSELİ --- */
+        #initial-art-container {
+            position: fixed; top: 52%; left: 55%;
+            transform: translate(-50%, -50%);
+            width: 65%; height: 65%;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 4; transition: opacity 0.5s ease;
+        }
+        #initial-art-container img {
+            max-width: 100%; max-height: 100%; object-fit: contain;
+            border: 1px solid var(--text-color);
+        }
+
         /* --- ÜRÜN LİSTESİ --- */
         .products-pool {
             position: fixed; top: 52%; left: 55%;
@@ -135,6 +148,7 @@
             border: 1px solid var(--text-color);
             padding: 30px; overflow-y: auto;
             background-color: var(--bg-color); z-index: 5;
+            display: none; /* Başlangıçta gizli */
         }
         .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
         .product-card { cursor: pointer; }
@@ -215,6 +229,11 @@
                 padding-bottom: 10px;
             }
             .nav-link { font-size: 12px; }
+
+            #initial-art-container {
+                width: 90%; left: 50%; height: 55%; top: 45%;
+                transform: translate(-50%, -35%);
+            }
 
             .products-pool { 
                 width: 90%; 
@@ -375,13 +394,17 @@
     </div>
 
     <nav id="main-nav">
-        <a onclick="loadProducts('news', event)" class="nav-link active" data-tr="hepsi" data-en="all">hepsi</a>
+        <a onclick="loadProducts('news', event)" class="nav-link" data-tr="hepsi" data-en="all">hepsi</a>
         <a onclick="loadProducts('tops', event)" class="nav-link" data-tr="üst giyim" data-en="tops">üst giyim</a>
         <a onclick="loadProducts('bottoms', event)" class="nav-link" data-tr="alt giyim" data-en="bottoms">alt giyim</a>
         <a onclick="loadProducts('accessories', event)" class="nav-link" data-tr="aksesuar" data-en="accessories">aksesuar</a>
     </nav>
 
-    <main class="products-pool">
+    <div id="initial-art-container">
+        <img src="media/sanat.webp" alt="Sanat">
+    </div>
+
+    <main class="products-pool" id="productsPool">
         <div class="products-grid" id="productGrid"></div>
     </main>
 
@@ -505,6 +528,10 @@
         }
 
         function loadProducts(cat, e) {
+            // Fotoğrafı gizle ve ürün havuzunu göster
+            document.getElementById('initial-art-container').style.display = 'none';
+            document.getElementById('productsPool').style.display = 'block';
+
             const grid = document.getElementById('productGrid');
             grid.innerHTML = productsData[cat].map(p => `
                 <div class="product-card" onclick="openProductDetail('${cat}', ${p.id})">
@@ -721,7 +748,7 @@
         }
 
         window.onload = () => { 
-            loadProducts('news'); 
+            // Başlangıçta ürünleri yüklemiyoruz, sadece zamanı güncelliyoruz
             updateTime(); 
             setInterval(updateTime, 1000); 
         };
