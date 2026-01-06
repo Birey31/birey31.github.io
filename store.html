@@ -323,7 +323,7 @@
     </div>
 
     <div class="top-right-nav">
-        <button class="cart-toggle" onclick="toggleCart()" id="cartCount">cart (0)</button>
+        <button class="cart-toggle" onclick="toggleCart()" id="cartCount" data-tr-prefix="sepet" data-en-prefix="cart">sepet (0)</button>
         <button class="theme-toggle" onclick="toggleTheme()"></button>
     </div>
 
@@ -518,7 +518,6 @@
             if(existingItem) existingItem.qty++; else cart.push({ name, price, size, qty: 1 });
             updateCartUI();
             closeAllPanels();
-            toggleCart();
         }
 
         function updateCartUI() {
@@ -527,7 +526,10 @@
             const totalEl = document.getElementById('cartTotal');
             const t = translations[currentLang];
             
-            document.getElementById('cartCount').innerText = `cart (${cart.reduce((a, b) => a + b.qty, 0)})`;
+            const cartBtn = document.getElementById('cartCount');
+            const prefix = currentLang === 'tr' ? cartBtn.getAttribute('data-tr-prefix') : cartBtn.getAttribute('data-en-prefix');
+            cartBtn.innerText = `${prefix} (${cart.reduce((a, b) => a + b.qty, 0)})`;
+            
             document.getElementById('cartNotePlaceholder').placeholder = t.orderNote;
 
             if(cart.length === 0) { 
