@@ -291,6 +291,7 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            transition: width 0.3s, height 0.3s;
         }
 
         #pool-initial-img {
@@ -298,6 +299,7 @@
             height: 100%;
             object-fit: cover;
             display: block;
+            cursor: pointer;
         }
 
         .products-grid {
@@ -666,7 +668,7 @@
     </nav>
 
     <main class="products-pool" id="productsPool">
-        <img src="media/sanat.webp" alt="Sanat" id="pool-initial-img">
+        <img src="media/sanat.webp" alt="Sanat" id="pool-initial-img" onclick="loadProducts('news')">
         <div class="products-grid" id="productGrid"></div>
     </main>
 
@@ -982,7 +984,6 @@
         }
 
         window.onload = () => { 
-            // Başlangıçta ürünleri yüklemiyoruz, sadece zamanı güncelliyoruz
             updateTime(); 
             setInterval(updateTime, 1000); 
         };
