@@ -2,7 +2,6 @@ const productsData = {
     news: [
         { id: 1, name: "basic t-shirt white", price: 40, img: "elbise/tshirt1.webp", desc: "100% heavy cotton, relaxed fit." }, 
         { id: 2, name: "heavy cotton hoodie", price: 110, img: "elbise/tshirt2.webp", desc: "Oversized silhouette, premium fabric." }
-        // "news" (hepsi) kısmında 'yakında' olanlar görünmeyecek şekilde filtrelendi.
     ],
     tops: [
         { id: 1, name: "basic t-shirt white", price: 40, img: "elbise/tshirt1.webp", desc: "100% heavy cotton." },
@@ -27,8 +26,42 @@ const infoTexts = {
         en: "Shipping & Returns: You have the right to exchange or return within 14 days." 
     },
     cookie: { 
-        tr: "ÇEREZ POLİTİKASI\n\nReeha olarak, web sitemizi ziyaret ettiğinizde deneyiminizi iyileştirmek için çerezler kullanıyoruz. Zorunlu çerezler, sepetinizin hatırlanması ve güvenli ödeme işlemleri için gereklidir. Tarayıcı ayarlarınızdan çerezleri dilediğiniz zaman silebilir veya engelleyebilirsiniz.", 
-        en: "Cookie Policy: We use cookies to improve your experience. You can manage cookies through your browser settings." 
+        tr: `ÇEREZ POLİTİKASI
+Bu web sitesi, kullanıcı deneyimini geliştirmek ve sitenin doğru şekilde çalışmasını sağlamak amacıyla çerezler kullanır.
+
+1. Çerez Nedir?
+Çerezler, web siteleri tarafından tarayıcınız aracılığıyla cihazınıza kaydedilen küçük metin dosyalarıdır.
+
+2. Hangi Çerezleri Kullanıyoruz?
+• Zorunlu Çerezler: Web sitesinin temel işlevlerinin çalışması için gereklidir. Sipariş işlemleri ve site güvenliği bu çerezler sayesinde sağlanır.
+• Fonksiyonel Çerezler: Kullanıcı tercihlerini hatırlamak için kullanılır (Örn: gece / gündüz modu tercihi).
+• Analitik Çerezler: Sitemizin nasıl kullanıldığını analiz etmek amacıyla Google Analytics kullanılır. Toplanan veriler anonimdir.
+
+* Reklam veya pazarlama amaçlı çerezler kullanılmamaktadır.
+
+3. Çerezleri Nasıl Kontrol Edebilirsiniz?
+Tarayıcı ayarlarınızdan çerezleri silebilir veya engelleyebilirsiniz. Ancak bu durumda bazı özellikler düzgün çalışmayabilir.
+
+4. Hukuki Dayanak
+Çerezler, 6698 sayılı KVKK ve ilgili mevzuat kapsamında işlenmektedir. Avrupa Birliği erişimlerinde GDPR hükümleri geçerlidir.`, 
+        en: `COOKIE POLICY
+This website uses cookies to improve user experience and ensure the website functions correctly.
+
+1. What are Cookies?
+Cookies are small text files saved to your device via your browser by websites.
+
+2. Which Cookies Do We Use?
+• Necessary Cookies: Essential for basic website functions, orders, and security.
+• Functional Cookies: Used to remember user preferences (e.g., light/dark mode).
+• Analytical Cookies: Used to analyze website usage via Google Analytics. Data collected is anonymous.
+
+* We do not use cookies for advertising or marketing purposes.
+
+3. How to Control Cookies?
+You can delete or block cookies through your browser settings. However, some features may not function correctly.
+
+4. Legal Basis
+Cookies are processed under KVKK Law No. 6698 and relevant legislation. GDPR applies to access from EU countries.` 
     },
     privacy: { 
         tr: `KİŞİSEL VERİLERİN KORUNMASINA İLİŞKİN BİLGİLENDİRME
@@ -56,7 +89,31 @@ E-posta: admkymk25@gmail.com
 
 GİZLİLİK VE GÜVENLİK
 Reeha Online Shop, ödeme sayfasında istenen kredi kartı bilgilerinizi hiçbir şekilde kendi sunucularında tutmamaktadır. Tüm ödeme işlemleri iyzico arayüzü üzerinden banka ve bilgisayarınız arasında gerçekleşmektedir.`,
-        en: "Privacy Policy: Your personal data is processed in accordance with KVKK Law No. 6698." 
+        en: `INFORMATION ON PROTECTION OF PERSONAL DATA
+
+As Reeha, we attach great importance to the processing and preservation of your personal data in accordance with the Law on the Protection of Personal Data No. 6698 ('Law').
+
+1. Methods of Collecting Personal Data
+As Reeha, in the capacity of data controller, within the framework of our legal obligations arising from the legislation; we collect your personal data verbally, in writing or electronically through our website, social media channels and similar means for purposes such as determining and implementing Reeha's commercial and business strategies.
+
+2. Processing of Personal Data and Purposes of Processing
+Your personal data obtained with your consent can be fully or partially obtained, recorded, stored, updated, or rearranged for the period required for the purpose for which they are processed.
+
+3. Transfer and Sharing of Personal Data
+Reeha will only share your personal data with our business partners (iyzico, cargo companies, etc.) and legal authorities for the purpose of carrying out company activities and ensuring the business relationship between data owners and our customers.
+
+4. Rights of the Personal Data Owner
+Pursuant to Article 11 of the Law, you have the right to learn whether your data is being processed, to request correction, or to request deletion.
+
+CONTACT INFORMATION:
+Title: Reeha (Adem Koymak)
+Address: Mehmet Akif Ersoy Mah. Egemen Cad. No: 34 Arnavutköy/ISTANBUL
+Tax No: 13895433242
+Phone: +90 534 875 57 60
+E-mail: admkymk25@gmail.com
+
+PRIVACY AND SECURITY
+Reeha Online Shop does not keep your credit card information on its own servers in any way. All payment transactions take place between the bank and your computer via the iyzico interface.` 
     },
     contact: { 
         tr: "İletişim: admkymk25@gmail.com | @reeha.studio | 0534 875 57 60", 
@@ -111,8 +168,8 @@ window.loadProducts = function(cat, e) {
         const isComingSoon = p.name === "yakında";
         return `
             <div class="product-card" 
-                 ${!isComingSoon ? `onclick="openProductDetail('${cat}', ${p.id})"` : ''} 
-                 style="${isComingSoon ? 'opacity: 0.5; cursor: default;' : ''}">
+                  ${!isComingSoon ? `onclick="openProductDetail('${cat}', ${p.id})"` : ''} 
+                  style="${isComingSoon ? 'opacity: 0.5; cursor: default;' : ''}">
                 <div class="product-box">
                     <img src="${p.img}" onerror="this.src='media/mobillogo.webp';">
                 </div>
@@ -150,7 +207,6 @@ window.toggleLanguage = function() {
     });
     updateCartUI();
 
-    // DÜZELTME: Eğer bilgi havuzu açıksa, dili değiştirince metni de güncelle
     const activeInfoLink = document.querySelector('.info-nav-link.active');
     if (activeInfoLink) {
         const type = activeInfoLink.id.replace('link-', '');
@@ -235,7 +291,7 @@ window.openInfoPool = function(type) {
     const pool = document.getElementById('infoPool');
     if(!pool) return;
     pool.style.display = 'flex';
-    window.loadInfo(type); // DÜZELTME: Açılır açılmaz metni yükle
+    window.loadInfo(type);
     setTimeout(() => {
         pool.classList.add('active');
         document.getElementById('globalOverlay').classList.add('active');
@@ -248,7 +304,6 @@ window.loadInfo = function(type) {
     const content = document.getElementById('infoContent');
     if(content) {
         content.style.whiteSpace = "pre-wrap";
-        // DÜZELTME: Metni infoTexts'ten çek, eğer yoksa boş bırakma
         const text = infoTexts[type] ? infoTexts[type][currentLang] : "";
         content.innerText = text;
     }
