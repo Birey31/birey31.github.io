@@ -149,6 +149,13 @@ window.toggleLanguage = function() {
         el.textContent = currentLang === 'tr' ? el.getAttribute('data-tr') : el.getAttribute('data-en');
     });
     updateCartUI();
+
+    // DÜZELTME: Eğer bilgi havuzu açıksa, dili değiştirince metni de güncelle
+    const activeInfoLink = document.querySelector('.info-nav-link.active');
+    if (activeInfoLink) {
+        const type = activeInfoLink.id.replace('link-', '');
+        window.loadInfo(type);
+    }
 };
 
 window.openProductDetail = function(cat, id) {
@@ -228,7 +235,7 @@ window.openInfoPool = function(type) {
     const pool = document.getElementById('infoPool');
     if(!pool) return;
     pool.style.display = 'flex';
-    window.loadInfo(type);
+    window.loadInfo(type); // DÜZELTME: Açılır açılmaz metni yükle
     setTimeout(() => {
         pool.classList.add('active');
         document.getElementById('globalOverlay').classList.add('active');
@@ -240,8 +247,10 @@ window.loadInfo = function(type) {
     document.getElementById('link-' + type)?.classList.add('active');
     const content = document.getElementById('infoContent');
     if(content) {
-        content.style.whiteSpace = "pre-wrap"; // Satır sonlarını (\n) ve paragrafları korur
-        content.innerText = infoTexts[type][currentLang];
+        content.style.whiteSpace = "pre-wrap";
+        // DÜZELTME: Metni infoTexts'ten çek, eğer yoksa boş bırakma
+        const text = infoTexts[type] ? infoTexts[type][currentLang] : "";
+        content.innerText = text;
     }
 };
 
