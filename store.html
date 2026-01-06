@@ -12,10 +12,18 @@
     --accent-opacity: 0.05;
 }
 
-body:not([data-theme="light"]) {
+/* Koyu Tema (Varsayılan) */
+body {
     --bg-color: #000000;
     --text-color: #ffffff;
     --accent-opacity: 0.1;
+}
+
+/* Açık Tema */
+body[data-theme="light"] {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --accent-opacity: 0.05;
 }
 
         * {
@@ -290,7 +298,7 @@ body:not([data-theme="light"]) {
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: visible;
+            overflow: hidden;
             transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s;
         }
 
@@ -593,9 +601,9 @@ body:not([data-theme="light"]) {
         /* Eser sahibi bilgisi için yeni stil */
 .artwork-credit {
     position: absolute;
-    bottom: -20px; /* Çerçevenin dışına taşındı */
+    bottom: -15px; /* Beyaz dikdörtgenin hemen altına dışarıya yazar */
     right: 0;
-    font-size: 8px; 
+    font-size: 8px; /* Çok küçük, zarif bir font */
     opacity: 0.5;
     text-transform: lowercase;
     font-family: inherit;
@@ -675,12 +683,12 @@ body:not([data-theme="light"]) {
         </div>
     </div>
 
-    <nav id="main-nav">
+    <div id="main-nav">
         <a onclick="loadProducts('news', event)" class="nav-link" data-tr="hepsi" data-en="all">hepsi</a>
         <a onclick="loadProducts('tops', event)" class="nav-link" data-tr="üst giyim" data-en="tops">üst giyim</a>
         <a onclick="loadProducts('bottoms', event)" class="nav-link" data-tr="alt giyim" data-en="bottoms">alt giyim</a>
         <a onclick="loadProducts('accessories', event)" class="nav-link" data-tr="aksesuar" data-en="accessories">aksesuar</a>
-    </nav>
+    </div>
 
     <main class="products-pool" id="productsPool">
     <img src="media/sanat.webp" alt="Sanat" id="pool-initial-img" onclick="loadProducts('news')">
@@ -992,8 +1000,12 @@ body:not([data-theme="light"]) {
         }
 
         function toggleTheme() {
-            const isLight = document.documentElement.hasAttribute('data-theme');
-            if (isLight) document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', 'light');
+            const body = document.body;
+            if (body.hasAttribute('data-theme')) {
+                body.removeAttribute('data-theme');
+            } else {
+                body.setAttribute('data-theme', 'light');
+            }
         }
 
         function toggleLanguage() {
