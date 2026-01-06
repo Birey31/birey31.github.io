@@ -52,7 +52,6 @@
             display: none;
         }
 
-        /* NOISE DOKUSU YOLU GÜNCELLENDİ (İsteğe bağlı silebilirsin demiştik) */
         body::before {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Noise_Texture.png');
@@ -78,37 +77,6 @@
             background: none; border: none; color: var(--text);
             font-size: 24px; cursor: pointer; opacity: 0.6;
             transition: 0.3s; padding: 10px; z-index: 10001;
-        }
-
-        .player-container {
-            position: fixed; bottom: 35px; left: 50%;
-            transform: translateX(-50%);
-            display: flex; align-items: center;
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(25px);
-            border-radius: 100px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            z-index: 10005;
-            box-shadow: 0 15px 45px rgba(0,0,0,0.12);
-            transition: opacity 0.5s ease, transform 0.3s ease;
-        }
-        [data-theme="dark"] .player-container { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); }
-
-        .player-btn { background: none; border: none; color: var(--text); cursor: pointer; transition: 0.3s; outline: none; display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
-        .arrow-btn { opacity: 0.3; }
-        .arrow-btn:hover { opacity: 1; transform: scale(1.1); }
-        .play-pause-btn { font-family: 'Playfair Display', serif; font-weight: bold; letter-spacing: 4px; }
-
-        @media (min-width: 769px) {
-            .player-container { gap: 25px; padding: 10px 30px; min-width: 200px; }
-            .play-pause-btn { font-size: 0.8rem; min-width: 70px; }
-            .arrow-btn { font-size: 1.1rem; }
-        }
-
-        @media (max-width: 768px) {
-            .player-container { gap: 20px; padding: 10px 25px; bottom: 25px; min-width: 160px; }
-            .play-pause-btn { font-size: 0.75rem; min-width: 60px; letter-spacing: 3px; }
-            .arrow-btn { font-size: 1rem; }
         }
 
         .gallery { column-count: 2; column-gap: 15px; width: 100%; max-width: 1200px; margin-top: 100px; margin-bottom: 120px; }
@@ -148,16 +116,6 @@
     <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()"></button>
 </div>
 
-<div class="player-container" id="playerBar" onclick="event.stopPropagation()">
-    <button class="player-btn arrow-btn" onclick="changeTrack(-1)">←</button>
-    <button class="player-btn play-pause-btn" id="music-toggle" onclick="toggleMusic()"><span>▶</span></button>
-    <button class="player-btn arrow-btn" onclick="changeTrack(1)">→</button>
-</div>
-
-<audio id="bgMusic">
-    <source src="media/askim.mp3" type="audio/mpeg">
-</audio>
-
 <div class="gallery" id="mainGallery">
     <img src="./media/ask.webp" onclick="handleImageClick(event, this)" style="--i:1">
     <img src="media/ask1.webp" onclick="handleImageClick(event, this)" style="--i:2">
@@ -179,14 +137,8 @@
 <script>
     const body = document.documentElement;
     const gallery = document.getElementById('mainGallery');
-    const music = document.getElementById('bgMusic');
-    const playerBar = document.getElementById('playerBar');
     const metaTheme = document.getElementById('meta-theme');
     
-    // ŞARKI LİSTESİ YOLLARI GÜNCELLENDİ
-    const tracks = ["media/askim.mp3", "media/askim2.mp3"];
-    let currentTrackIndex = 0;
-
     function updateStatusColor(color) {
         if (metaTheme) metaTheme.setAttribute('content', color);
     }
@@ -219,25 +171,6 @@
         }
     }
 
-    function toggleMusic() {
-        const btn = document.getElementById('music-toggle');
-        if (music.paused) {
-            music.play();
-            btn.innerHTML = "SUS";
-        } else {
-            music.pause();
-            btn.innerHTML = "<span>▶</span>";
-        }
-    }
-
-    function changeTrack(direction) {
-        const btn = document.getElementById('music-toggle');
-        currentTrackIndex = (currentTrackIndex + direction + tracks.length) % tracks.length;
-        music.src = tracks[currentTrackIndex];
-        music.play();
-        btn.innerHTML = "SUS";
-    }
-
     function handleImageClick(event, img) {
         event.stopPropagation();
         if (img.classList.contains('focused')) { 
@@ -266,18 +199,11 @@
         currentIndex = galleryImgs.findIndex(img => img.src === src);
         document.getElementById('modalImg').src = src;
         document.getElementById('modal').style.display = 'flex';
-        
-        playerBar.style.opacity = "0";
-        playerBar.style.pointerEvents = "none";
-        
         history.pushState({modalOpen: true}, "");
     }
 
     function closeModal() {
         document.getElementById('modal').style.display = 'none';
-        playerBar.style.opacity = "1";
-        playerBar.style.pointerEvents = "auto";
-        
         if (history.state && history.state.modalOpen) history.back();
     }
 
@@ -293,7 +219,6 @@
 
     window.onpopstate = closeModal;
     document.addEventListener('contextmenu', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
-    music.onended = () => changeTrack(1);
 
     if (window.location.pathname.endsWith('.html')) {
         let cleanUrl = window.location.pathname.replace(/\.html$/, '');
