@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" style="background-color: #ffffff;">
 <head>
     <link rel="icon" type="image/png" href="media/mobillogo.webp">
     <link rel="canonical" href="https://reeha.com.tr/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Reeha</title>
-    
     <style>
         /* --- GENEL AYARLAR --- */
         * {
@@ -28,7 +27,6 @@
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
             background-color: var(--bg-color);
-            /* Efektler kaldırıldı: transition silindi */
             overflow: hidden;
             font-family: 'Times New Roman', serif;
             display: flex;
@@ -59,8 +57,8 @@
             gap: 25px;
         }
 
-        /* --- STORE (KİLİTLİ / YAKINDA) --- */
-        .store-locked {
+        /* --- STORE (AKTİF) --- */
+        .store-link {
             position: relative;
             text-decoration: none;
             color: var(--text-color);
@@ -70,30 +68,16 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             opacity: 0.5;
+            transition: 0.3s ease;
             padding: 10px;
-            cursor: default;
+            cursor: pointer;
         }
 
-        .store-locked .status-text {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 9px;
-            letter-spacing: 1px;
-            opacity: 0;
-            white-space: nowrap;
-            color: var(--text-color);
+        .store-link:hover {
+            opacity: 1; /* Blur kaldırıldı, sadece netleşiyor */
         }
 
-        .store-locked:hover {
-            opacity: 0.2;
-        }
-        
-        .store-locked:hover .status-text {
-            opacity: 1;
-        }
-
-        /* --- LOGO --- */
+        /* --- 2027 LOGOSU --- */
         .logo-link { 
             display: flex; align-items: center; justify-content: center; 
             text-decoration: none;
@@ -102,7 +86,6 @@
         .desktop-only { 
             width: 250px;
             filter: grayscale(100%) opacity(0.6); 
-            /* Logo üzerindeki yavaş geçiş efekti de kaldırıldı */
         }
 
         .logo-link:hover .desktop-only {
@@ -136,10 +119,9 @@
 
     <div class="main-content">
         <div class="content-wrapper">
-            <div class="store-locked">
+            <a href="store.html" class="store-link">
                 Store
-                <span class="status-text">YAKINDA</span>
-            </div>
+            </a>
 
             <a href="2027.html" class="logo-link">
                 <img src="media/logo2.webp" alt="2027" class="desktop-only">
@@ -164,7 +146,6 @@
             clockElement.textContent = `TR ${timeString}`;
         }
 
-        // DOMContentLoaded ile sayfa hızını artırıyoruz
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme') || 'light';
             body.setAttribute('data-theme', savedTheme);
