@@ -31,7 +31,31 @@ const infoTexts = {
         en: "Cookie Policy: We use cookies to improve your experience. You can manage cookies through your browser settings." 
     },
     privacy: { 
-        tr: "KİŞİSEL VERİLERİN KORUNMASINA İLİŞKİN BİLGİLENDİRME\n\nReeha olarak kişisel verilerinizin 6698 sayılı Kişisel Verilerin Korunması Kanunu'na uygun olarak işlenmesine büyük önem veriyoruz. Verileriniz sadece sipariş süreçlerini yönetmek amacıyla kullanılır ve üçüncü taraflarla paylaşılmaz.", 
+        tr: `KİŞİSEL VERİLERİN KORUNMASINA İLİŞKİN BİLGİLENDİRME
+
+Reeha olarak kişisel verilerinizin 6698 sayılı Kişisel Verilerin Korunması Kanunu'na (‘Kanun') uygun olarak işlenerek, muhafaza edilmesine büyük önem veriyoruz.
+
+1. Kişisel verilerin toplanmasına ilişkin yöntemler
+Reeha olarak, veri sorumlusu sıfatıyla, mevzuattan kaynaklanan yasal yükümlülüklerimiz çerçevesinde; markamızın hizmetlerinden faydalanabilmeniz, onayınız halinde kampanyalarımız hakkında sizleri bilgilendirmek, öneri ve şikayetlerinizi kayıt altına alabilmek, sizlere daha iyi hizmet standartları oluşturabilmek, Reeha ticari ve iş stratejilerinin belirlenmesi ve uygulanması gibi amaçlarla kişisel verilerinizi sözlü, internet sitesi, sosyal medya mecraları ve benzeri vasıtalarla sözlü, yazılı ya da elektronik yöntemlerle toplamaktayız.
+
+2. Kişisel verilerin işlenmesi ve işleme amaçları
+Reeha olarak, onayınız dahilinde elde ettiğimiz kişisel verileriniz tamamen veya kısmen elde edilebilir, kaydedilebilir, saklanabilir, depolanabilir, değiştirilebilir, güncellenebilir, periyodik olarak kontrol edilebilir, yeniden düzenlenebilir, sınıflandırılabilir, işlendikleri amaç için gerekli olan ya da ilgili kanunda öngörülen süre kadar muhafaza edilebilir.
+
+3. Kişisel Verilerin Aktarılması ve Paylaşılması
+Reeha, söz konusu kişisel verilerinizi sadece; açık rızanıza istinaden veya Kanun'da belirtilen güvenlik ve gizlilik esasları çerçevesinde yeterli önlemler alınmak kaydıyla yurt içinde, Şirket faaliyetlerinin yürütülmesi, veri sahipleri ile müşterilerimiz arasındaki iş ilişkisinin sağlanması ve hizmet kalitesinin artırılması amacıyla iş ortaklarımız (iyzico, kargo şirketleri vb.) ve yasal mercilerle paylaşabilecektir.
+
+4. Kişisel Veri Sahibinin Hakları
+Kanun'un 11. maddesi uyarınca bize başvurarak; verilerinizin işlenip işlenmediğini öğrenme, düzeltilmesini isteme veya silinmesini talep etme haklarına sahipsiniz.
+
+İLETİŞİM BİLGİLERİ:
+Ünvan: Reeha (Adem Koymak)
+Adres: Mehmet Akif Ersoy Mah. Egemen Cad. No: 34 Arnavutköy/İSTANBUL
+Vergi No: 13895433242
+Telefon: 0534 875 57 60
+E-posta: admkymk25@gmail.com
+
+GİZLİLİK VE GÜVENLİK
+Reeha Online Shop, ödeme sayfasında istenen kredi kartı bilgilerinizi hiçbir şekilde kendi sunucularında tutmamaktadır. Tüm ödeme işlemleri iyzico arayüzü üzerinden banka ve bilgisayarınız arasında gerçekleşmektedir.`,
         en: "Privacy Policy: Your personal data is processed in accordance with KVKK Law No. 6698." 
     },
     contact: { 
@@ -78,7 +102,6 @@ window.loadProducts = function(cat, e) {
     if(!grid) return;
     grid.style.display = 'grid';
 
-    // FİLTRELEME: Eğer kategori 'news' (hepsi) ise 'yakında' olanları gösterme
     let products = productsData[cat] || [];
     if (cat === 'news') {
         products = products.filter(p => p.name !== "yakında");
@@ -217,7 +240,7 @@ window.loadInfo = function(type) {
     document.getElementById('link-' + type)?.classList.add('active');
     const content = document.getElementById('infoContent');
     if(content) {
-        content.style.whiteSpace = "pre-wrap"; // Alt satırları (n) görmesi için
+        content.style.whiteSpace = "pre-wrap"; // Satır sonlarını (\n) ve paragrafları korur
         content.innerText = infoTexts[type][currentLang];
     }
 };
