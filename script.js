@@ -37,12 +37,36 @@ const infoTexts = {
         en: "Shipping & Returns: You have the right to exchange or return within 14 days. Return shipping costs are the responsibility of the buyer." 
     },
     privacy: { 
-        tr: "KVKK: Verileriniz Reeha bünyesinde güvendedir. Kişisel verileriniz 6698 sayılı kanun kapsamında korunmaktadır.", 
+        tr: `KİŞİSEL VERİLERİN KORUNMASINA İLİŞKİN BİLGİLENDİRME
+
+Reeha olarak kişisel verilerinizin 6698 sayılı Kişisel Verilerin Korunması Kanunu'na (‘Kanun') uygun olarak işlenerek, muhafaza edilmesine büyük önem veriyoruz.
+
+1. Kişisel verilerin toplanmasına ilişkin yöntemler
+Reeha olarak, veri sorumlusu sıfatıyla, mevzuattan kaynaklanan yasal yükümlülüklerimiz çerçevesinde; markamızın hizmetlerinden faydalanabilmeniz, onayınız halinde kampanyalarımız hakkında sizleri bilgilendirmek, öneri ve şikayetlerinizi kayıt altına alabilmek, sizlere daha iyi hizmet standartları oluşturabilmek, Reeha ticari ve iş stratejilerinin belirlenmesi ve uygulanması gibi amaçlarla kişisel verilerinizi sözlü, internet sitesi, sosyal medya mecraları ve benzeri vasıtalarla sözlü, yazılı ya da elektronik yöntemlerle toplamaktayız.
+
+2. Kişisel verilerin işlenmesi ve işleme amaçları
+Reeha olarak, onayınız dahilinde elde ettiğimiz kişisel verileriniz tamamen veya kısmen elde edilebilir, kaydedilebilir, saklanabilir, depolanabilir, değiştirilebilir, güncellenebilir, periyodik olarak kontrol edilebilir, yeniden düzenlenebilir, sınıflandırılabilir, işlendikleri amaç için gerekli olan ya da ilgili kanunda öngörülen süre kadar muhafaza edilebilir.
+
+3. Kişisel Verilerin Aktarılması ve Paylaşılması
+Reeha, söz konusu kişisel verilerinizi sadece; açık rızanıza istinaden veya Kanun'da belirtilen güvenlik ve gizlilik esasları çerçevesinde yeterli önlemler alınmak kaydıyla yurt içinde, Şirket faaliyetlerinin yürütülmesi, veri sahipleri ile müşterilerimiz arasındaki iş ilişkisinin sağlanması ve hizmet kalitesinin artırılması amacıyla iş ortaklarımız (iyzico, kargo şirketleri vb.) ve yasal mercilerle paylaşabilecektir.
+
+4. Kişisel Veri Sahibinin Hakları
+Kanun'un 11. maddesi uyarınca bize başvurarak; verilerinizin işlenip işlenmediğini öğrenme, düzeltilmesini isteme veya silinmesini talep etme haklarına sahipsiniz.
+
+İLETİŞİM BİLGİLERİ:
+Ünvan: Reeha (Adem Koymak)
+Adres: Mehmet Akif Ersoy Mah. Egemen Cad. No: 34 Arnavutköy/İSTANBUL
+Vergi No: 13895433242
+Telefon: 0534 875 57 60
+E-posta: admkymk25@gmail.com
+
+GİZLİLİK VE GÜVENLİK
+Reeha Online Shop, ödeme sayfasında istenen kredi kartı bilgilerinizi hiçbir şekilde kendi sunucularında tutmamaktadır. Tüm ödeme işlemleri iyzico arayüzü üzerinden banka ve bilgisayarınız arasında gerçekleşmektedir.`,
         en: "Privacy Policy: Your data is secure with Reeha. Your personal data is protected under law no. 6698." 
     },
     contact: { 
-        tr: "İletişim: info@reeha.com | @reeha.studio | +90 000 000 00 00", 
-        en: "Contact: info@reeha.com | @reeha.studio | +90 000 000 00 00" 
+        tr: "İletişim: admkymk25@gmail.com | @reeha.studio | 0534 875 57 60", 
+        en: "Contact: admkymk25@gmail.com | @reeha.studio | 0534 875 57 60" 
     }
 };
 
@@ -56,15 +80,17 @@ let cart = [];
 
 function updateTime() {
     const now = new Date();
-    document.getElementById('current-time').innerText = now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString('tr-TR');
+    const timeStr = now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString('tr-TR');
+    const timeEl = document.getElementById('current-time');
+    if(timeEl) timeEl.innerText = timeStr;
 }
 
 function closeHero() {
     const hero = document.getElementById('hero-section');
-    hero.style.opacity = '0';
-    setTimeout(() => {
-        hero.style.display = 'none';
-    }, 500);
+    if(hero) {
+        hero.style.opacity = '0';
+        setTimeout(() => { hero.style.display = 'none'; }, 500);
+    }
 }
 
 function expandPool() {
@@ -80,6 +106,7 @@ function loadProducts(cat, e) {
     if(artworkInfo) artworkInfo.style.display = 'none';
     
     const grid = document.getElementById('productGrid');
+    if(!grid) return;
     grid.style.display = 'grid';
 
     grid.innerHTML = (cat === 'news' ? productsData[cat].filter(p => p.name !== "yakında") : productsData[cat]).map(p => `
@@ -94,6 +121,7 @@ function loadProducts(cat, e) {
 function openProductDetail(cat, id) {
     const product = productsData[cat].find(p => p.id === id);
     const content = document.getElementById('productDetailContent');
+    if(!content) return;
     const btnTxt = currentLang === 'tr' ? 'sepete ekle' : 'add to cart';
     const sizeTxt = currentLang === 'tr' ? 'beden' : 'size';
     content.innerHTML = `
@@ -148,16 +176,20 @@ function updateCartUI() {
     const totalEl = document.getElementById('cartTotal');
     const t = translations[currentLang];
     const cartBtn = document.getElementById('cartCount');
+    if(!container || !cartBtn) return;
+
     const prefix = currentLang === 'tr' ? cartBtn.getAttribute('data-tr-prefix') : cartBtn.getAttribute('data-en-prefix');
     cartBtn.innerText = `${prefix} (${cart.reduce((a, b) => a + b.qty, 0)})`;
-    document.getElementById('cartNotePlaceholder').placeholder = t.orderNote;
+    
+    const noteEl = document.getElementById('cartNotePlaceholder');
+    if(noteEl) noteEl.placeholder = t.orderNote;
 
     if(cart.length === 0) {
         container.innerHTML = `<div style="opacity:0.5; font-size:10px;">${t.emptyCart}</div>`;
-        footer.style.display = 'none';
+        if(footer) footer.style.display = 'none';
         return;
     }
-    footer.style.display = 'block';
+    if(footer) footer.style.display = 'block';
     let total = 0;
     container.innerHTML = cart.map((item, index) => {
         total += (item.price * item.qty);
@@ -176,7 +208,7 @@ function updateCartUI() {
             </div>
         `;
     }).join('');
-    totalEl.innerText = total + '€';
+    if(totalEl) totalEl.innerText = total + '€';
 }
 
 function changeQty(index, delta) {
@@ -187,6 +219,7 @@ function changeQty(index, delta) {
 
 function openInfoPool(type) {
     const pool = document.getElementById('infoPool');
+    if(!pool) return;
     pool.style.display = 'flex';
     loadInfo(type);
     setTimeout(() => {
@@ -199,22 +232,38 @@ function loadInfo(type) {
     document.querySelectorAll('.info-nav-link').forEach(link => link.classList.remove('active'));
     const linkEl = document.getElementById('link-' + type);
     if(linkEl) linkEl.classList.add('active');
-    document.getElementById('infoContent').innerText = infoTexts[type][currentLang];
+    const contentEl = document.getElementById('infoContent');
+    if(contentEl) {
+        // preserve line breaks in display
+        contentEl.style.whiteSpace = "pre-wrap"; 
+        contentEl.innerText = infoTexts[type][currentLang];
+    }
 }
 
 function startCheckout() {
-    document.getElementById('sideCart').classList.remove('active');
+    const sideCart = document.getElementById('sideCart');
+    if(sideCart) sideCart.classList.remove('active');
     const pool = document.getElementById('checkoutPool');
+    if(!pool) return;
     pool.style.display = 'flex';
-    document.getElementById('summaryTitle').innerText = translations[currentLang].summary;
+    
+    const summaryTitle = document.getElementById('summaryTitle');
+    if(summaryTitle) summaryTitle.innerText = translations[currentLang].summary;
+
     const summary = document.getElementById('checkoutSummaryItems');
-    summary.innerHTML = cart.map(i => `
-        <div style="display:flex; justify-content:space-between; margin-bottom:5px; opacity:0.8;">
-            <span>${i.qty}x ${i.name}</span>
-            <span>${i.price * i.qty}€</span>
-        </div>
-    `).join('');
-    document.getElementById('checkoutTotal').innerText = document.getElementById('cartTotal').innerText;
+    if(summary) {
+        summary.innerHTML = cart.map(i => `
+            <div style="display:flex; justify-content:space-between; margin-bottom:5px; opacity:0.8;">
+                <span>${i.qty}x ${i.name}</span>
+                <span>${i.price * i.qty}€</span>
+            </div>
+        `).join('');
+    }
+    
+    const checkoutTotal = document.getElementById('checkoutTotal');
+    const cartTotal = document.getElementById('cartTotal');
+    if(checkoutTotal && cartTotal) checkoutTotal.innerText = cartTotal.innerText;
+    
     showAddressStep();
     setTimeout(() => {
         pool.classList.add('active');
@@ -224,6 +273,7 @@ function startCheckout() {
 
 function showAddressStep() {
     const content = document.getElementById('checkoutFormContent');
+    if(!content) return;
     const t = translations[currentLang];
     content.innerHTML = `
         <div class="checkout-step-title">${t.addrTitle}</div>
@@ -240,6 +290,7 @@ function showAddressStep() {
 
 function showPaymentStep() {
     const content = document.getElementById('checkoutFormContent');
+    if(!content) return;
     const t = translations[currentLang];
     content.innerHTML = `
         <div class="checkout-step-title">${t.payTitle}</div>
@@ -257,6 +308,7 @@ function showPaymentStep() {
 
 function completeOrder() {
     const content = document.getElementById('checkoutFormContent');
+    if(!content) return;
     const t = translations[currentLang];
     content.innerHTML = `
         <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
@@ -272,8 +324,10 @@ function completeOrder() {
 
 function closeAllPanels() {
     document.querySelectorAll('#infoPool, #productDetailPool, #checkoutPool').forEach(p => p.classList.remove('active'));
-    document.getElementById('sideCart').classList.remove('active');
-    document.getElementById('globalOverlay').classList.remove('active');
+    const sideCart = document.getElementById('sideCart');
+    const overlay = document.getElementById('globalOverlay');
+    if(sideCart) sideCart.classList.remove('active');
+    if(overlay) overlay.classList.remove('active');
     setTimeout(() => {
         document.querySelectorAll('#infoPool, #productDetailPool, #checkoutPool').forEach(p => p.style.display = 'none');
     }, 300);
@@ -284,6 +338,7 @@ function handleOverlayClick() { closeAllPanels(); }
 function toggleCart() {
     const sideCart = document.getElementById('sideCart');
     const overlay = document.getElementById('globalOverlay');
+    if(!sideCart || !overlay) return;
     sideCart.classList.toggle('active');
     if(sideCart.classList.contains('active')) overlay.classList.add('active'); else overlay.classList.remove('active');
 }
@@ -299,12 +354,14 @@ function toggleTheme() {
 
 function toggleLanguage() {
     currentLang = currentLang === 'tr' ? 'en' : 'tr';
-    document.getElementById('langTxt').innerText = currentLang;
+    const langEl = document.getElementById('langTxt');
+    if(langEl) langEl.innerText = currentLang;
     document.querySelectorAll('[data-tr]').forEach(el => {
         el.textContent = currentLang === 'tr' ? el.getAttribute('data-tr') : el.getAttribute('data-en');
     });
     updateCartUI();
-    if(document.getElementById('checkoutPool').classList.contains('active')) { startCheckout(); }
+    const checkoutPool = document.getElementById('checkoutPool');
+    if(checkoutPool && checkoutPool.classList.contains('active')) { startCheckout(); }
     const activeInfoLink = document.querySelector('.info-nav-link.active');
     if(activeInfoLink) { loadInfo(activeInfoLink.id.split('-')[1]); }
 }
