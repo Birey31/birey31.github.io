@@ -7,9 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Reeha</title>
     
-    <link rel="preload" href="media/logo2.webp" as="image">
-
     <style>
+        /* --- GENEL AYARLAR --- */
         * {
             -webkit-tap-highlight-color: transparent;
             outline: none;
@@ -17,31 +16,26 @@
         }
 
         :root {
-            --bg-color: #fcfcfc; 
+            --bg-color: #ffffff; /* Store ile aynı saf beyaz */
             --text-color: #000000;
         }
 
         body[data-theme="dark"] {
-            --bg-color: #0e0e0e; 
+            --bg-color: #000000; /* Store ile aynı saf siyah */
             --text-color: #ffffff;
         }
 
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
             background-color: var(--bg-color);
-            /* Başlangıçta transition kapalı (Takılmayı önleyen ana ayar) */
+            /* Efektler kaldırıldı: transition silindi */
             overflow: hidden;
             font-family: 'Times New Roman', serif;
             display: flex;
             flex-direction: column;
-            -webkit-font-smoothing: antialiased;
         }
 
-        /* Sayfa yüklendikten sonra aktif olacak sınıf */
-        body.ready {
-            transition: background-color 0.3s ease-out;
-        }
-
+        /* --- TEMA BUTONU --- */
         .theme-toggle {
             position: absolute; top: 30px; right: 30px;
             background: none; border: 1px solid var(--text-color); 
@@ -50,12 +44,12 @@
         }
         body[data-theme="dark"] .theme-toggle { background: var(--text-color); }
 
+        /* --- ANA İÇERİK --- */
         .main-content {
             flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            transform: translateZ(0); /* Donanım hızlandırma */
         }
 
         .content-wrapper {
@@ -65,6 +59,7 @@
             gap: 25px;
         }
 
+        /* --- STORE (KİLİTLİ / YAKINDA) --- */
         .store-locked {
             position: relative;
             text-decoration: none;
@@ -75,7 +70,6 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             opacity: 0.5;
-            transition: 0.4s ease;
             padding: 10px;
             cursor: default;
         }
@@ -87,34 +81,35 @@
             font-size: 9px;
             letter-spacing: 1px;
             opacity: 0;
-            transition: 0.4s ease;
             white-space: nowrap;
             color: var(--text-color);
         }
 
-        .store-locked:hover { filter: blur(4px); opacity: 0.2; }
-        .store-locked:hover .status-text { opacity: 1; filter: blur(0px); }
+        .store-locked:hover {
+            opacity: 0.2;
+        }
+        
+        .store-locked:hover .status-text {
+            opacity: 1;
+        }
 
+        /* --- LOGO --- */
         .logo-link { 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            text-decoration: none; 
+            display: flex; align-items: center; justify-content: center; 
+            text-decoration: none;
         }
-
+        
         .desktop-only { 
-            width: 250px; 
+            width: 250px;
             filter: grayscale(100%) opacity(0.6); 
-            transition: filter 0.6s ease, opacity 0.6s ease, transform 0.6s ease;
-            will-change: filter, transform;
-            transform: translateZ(0); /* GPU'yu uyarır */
+            /* Logo üzerindeki yavaş geçiş efekti de kaldırıldı */
         }
 
-        .logo-link:hover .desktop-only { 
-            filter: grayscale(0%) opacity(1); 
-            transform: scale(1.02); 
+        .logo-link:hover .desktop-only {
+            filter: grayscale(0%) opacity(1);
         }
 
+        /* --- FOOTER & SAAT --- */
         footer {
             height: 60px;
             display: flex; justify-content: center; align-items: center;
@@ -127,22 +122,17 @@
             font-size: 11px; color: var(--text-color); opacity: 0.4; font-family: monospace;
         }
 
+        /* --- MOBİL --- */
         @media (max-width: 768px) {
             #live-clock { display: none; } 
+            footer { opacity: 0.5; }
             .desktop-only { width: 180px; }
         }
     </style>
 </head>
 <body data-theme="light">
-    <script>
-        // Tema sayfa render edilmeden hemen burada set edilmeli
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.body.setAttribute('data-theme', savedTheme);
-        // Geri tuşuyla gelindiğinde arka planın beyaz kalmasını önlemek için HTML seviyesinde de set ediyoruz
-        document.documentElement.style.backgroundColor = savedTheme === 'dark' ? '#0e0e0e' : '#fcfcfc';
-    </script>
 
-    <button class="theme-toggle" id="themeBtn" aria-label="Tema Değiştir"></button>
+    <button class="theme-toggle" id="themeBtn"></button>
 
     <div class="main-content">
         <div class="content-wrapper">
@@ -150,8 +140,9 @@
                 Store
                 <span class="status-text">YAKINDA</span>
             </div>
+
             <a href="2027.html" class="logo-link">
-                <img src="media/logo2.webp" alt="2027" class="desktop-only" decoding="async">
+                <img src="media/logo2.webp" alt="2027" class="desktop-only">
             </a>
         </div>
     </div>
@@ -160,8 +151,8 @@
     <div id="live-clock">TR 00:00:00</div>
 
     <script>
-        const body = document.body;
         const themeBtn = document.getElementById('themeBtn');
+        const body = document.body;
         const clockElement = document.getElementById('live-clock');
 
         function updateClock() {
@@ -170,42 +161,27 @@
                 timeZone: 'Europe/Istanbul', 
                 hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' 
             });
-            if(clockElement) clockElement.textContent = `TR ${timeString}`;
+            clockElement.textContent = `TR ${timeString}`;
         }
 
-        function toggleTheme() {
-            const current = body.getAttribute('data-theme');
-            const target = current === 'light' ? 'dark' : 'light';
-            body.setAttribute('data-theme', target);
-            localStorage.setItem('theme', target);
-            document.documentElement.style.backgroundColor = target === 'dark' ? '#0e0e0e' : '#fcfcfc';
-        }
-
-        themeBtn.addEventListener('click', toggleTheme);
-
-        // Geri Tuşu (bfcache) ve Normal Yükleme için ortak başlatıcı
-        function initPage() {
+        // DOMContentLoaded ile sayfa hızını artırıyoruz
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            body.setAttribute('data-theme', savedTheme);
+            
             updateClock();
-            // 100ms sonra transition'ı açarak navigasyon takılmasını engelliyoruz
-            setTimeout(() => {
-                body.classList.add('ready');
-            }, 100);
-        }
-
-        // Sayfa normal açıldığında
-        document.addEventListener('DOMContentLoaded', initPage);
-
-        // Geri-İleri tuşlarıyla gelindiğinde (bfcache desteği)
-        window.addEventListener('pageshow', (event) => {
-            updateClock();
-            if (event.persisted) {
-                // Tarayıcı önbellekten geldiyse temayı kontrol et
-                const theme = localStorage.getItem('theme') || 'light';
-                body.setAttribute('data-theme', theme);
-            }
+            setInterval(updateClock, 1000);
         });
 
-        setInterval(updateClock, 1000);
+        themeBtn.addEventListener('click', () => {
+            if (body.getAttribute('data-theme') === 'light') {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }
+        });
     </script>
 </body>
 </html>
