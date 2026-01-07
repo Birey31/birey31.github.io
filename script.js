@@ -231,4 +231,4 @@ window.startCheckout = function() {
     // Proxy linki yerine direkt çalışan ürün linkini koyuyoruz
     window.location.href = "https://www.shopier.com/Reeha/42972271";
 };
-};
+
