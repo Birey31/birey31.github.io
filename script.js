@@ -49,7 +49,7 @@ window.loadProducts = function(cat, e) {
                 </div>
                 <div class="product-info">
                     ${p.name}<br>
-                    <span style="opacity:0.5">${isComingSoon ? 'coming soon' : p.price + '€'}</span>
+                    <span style="opacity:0.5">${isComingSoon ? 'coming soon' : p.price + 'TL'}</span>
                 </div>
             </div>`;
     }).join('');
@@ -107,7 +107,7 @@ window.openProductDetail = function(cat, id) {
         <div class="detail-info-box">
             <div class="desktop-prod-title" style="font-size: 18px; font-weight: bold;">${product.name}</div>
             
-            <div class="prod-price" style="font-size: 16px; margin-bottom: 10px;">${product.price}€</div>
+            <div class="prod-price" style="font-size: 16px; margin-bottom: 10px;">${product.price}TL</div>
             
             <div class="size-selector">
                 <button class="size-btn" onclick="selectSize(this)">S</button>
@@ -177,10 +177,10 @@ window.updateCartUI = function() {
         total += (item.price * item.qty);
         return `<div class="cart-item">
             <div><b>${item.name}</b> (${item.size}) x ${item.qty}</div>
-            <div>${item.price * item.qty}€</div>
+            <div>${item.price * item.qty}TL</div>
         </div>`;
     }).join('');
-    if(totalEl) totalEl.innerText = total + '€';
+    if(totalEl) totalEl.innerText = total + 'TL';
 };
 
 window.openInfoPool = function(type) {
