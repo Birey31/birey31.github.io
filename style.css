@@ -600,18 +600,25 @@ nav#main-nav {
         position: relative;
     }
 
-    /* 2. MENÜYÜ ÜSTE SABİTLE */
+    /* 2. MENÜ VE ÜST PANEL ARKA PLANI (DÜZELTİLDİ) */
     nav#main-nav {
         position: fixed;
-        top: 90px;
+        top: 0;                /* En tepeden başla */
         left: 0;
         width: 100%;
+        height: 130px;         /* Logo ve menüyü kapsayacak kadar yükseklik */
+        
+        display: flex;
         flex-direction: row;
         justify-content: center;
-        gap: 20px;
-        padding: 10px 0;
-        z-index: 500;
-        background: var(--bg-color); /* Menü arkası görünsün */
+        align-items: flex-end; /* Linkleri kutunun en altına it */
+        padding-bottom: 15px;  /* Linkler ile çizgi arasına boşluk */
+        
+        background-color: var(--bg-color); /* Katı renk (Şeffaflığı kapatır) */
+        z-index: 400;          /* Logonun (1000) altında, içeriğin üstünde */
+        
+        /* İstersen menünün bittiği yere ince bir çizgi ekle, panel hissi verir */
+        border-bottom: 1px solid var(--text-color); 
     }
 
     /* 3. ÜRÜN HAVUZU: KAYDIRILABİLİR YAPI */
