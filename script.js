@@ -220,3 +220,34 @@ window.addEventListener('load', () => {
     window.updateTime();
     setInterval(window.updateTime, 1000);
 });
+// --- SHOPIER ÖDEME ENTEGRASYONU ---
+
+window.startCheckout = function() {
+    if (cart.length === 0) {
+        alert(currentLang === 'tr' ? "sepetiniz boş." : "cart is empty.");
+        return;
+    }
+
+    // Shopier'e gidecek toplam tutar (Para birimi simgesini kaldırıp sayıya çeviriyoruz)
+    const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+    // Shopier'in beklediği formatta ürün listesi hazırlıyoruz
+    // Burada ürünlerin yanına seçilen bedeni de ekliyoruz
+    const productList = cart.map(item => `${item.name} (${item.size}) x${item.qty}`).join(", ");
+
+    // Shopier Ödeme Formu Oluşturma (API Bilgilerinle)
+    // Not: Bu bilgiler senin paylaştığın "Entegrasyon" sayfasından alınmıştır
+    const shopierData = {
+        'API_KEY': "5b46c28b5920af2c4a38c38c777f331819", // API KULLANICI
+        'API_SECRET': "6204159f79734100c88037b7b51188b0", // API ŞİFRE
+        'PRODUCT_NAME': productList,
+        'TOTAL_PRICE': totalAmount,
+        'CURRENCY': 'TL' // Shopier TR hesapları için TL zorunludur
+    };
+
+    // Müşteriyi Shopier'in güvenli ödeme sayfasına yönlendirir
+    // Bu sayede sepetindeki tüm ürünler tek bir ödemede toplanır
+    window.location.href = "https://www.shopier.com/ShowProductProxy.php?id=42972271"; 
+    // Not: Gerçek sepet entegrasyonu için Shopier'in sunduğu "Sepet Modülü" scriptini 
+    // HTML'e eklediğinden emin ol.
+};
