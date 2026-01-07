@@ -96,18 +96,36 @@ window.openProductDetail = function(cat, id) {
     if(!product || !content || !pool) return;
 
     const btnTxt = currentLang === 'tr' ? 'sepete ekle' : 'add to cart';
+    
     content.innerHTML = `
-        <div class="detail-img-box"><img src="${product.img}"></div>
+        <div class="mobile-prod-title">${product.name}</div>
+
+        <div class="detail-img-box">
+            <img src="${product.img}">
+        </div>
+
         <div class="detail-info-box">
-            <div style="font-size: 18px; font-weight: bold;">${product.name}</div>
-            <div style="font-size: 12px; opacity: 0.7;">${product.desc}</div>
-            <div style="font-size: 16px;">${product.price}€</div>
+            <div class="desktop-prod-title" style="font-size: 18px; font-weight: bold;">${product.name}</div>
+            
+            <div class="prod-price" style="font-size: 16px; margin-bottom: 10px;">${product.price}€</div>
+            
             <div class="size-selector">
                 <button class="size-btn" onclick="selectSize(this)">S</button>
                 <button class="size-btn" onclick="selectSize(this)">M</button>
                 <button class="size-btn" onclick="selectSize(this)">L</button>
             </div>
+
             <button class="add-to-cart-btn" onclick="addToCart('${product.name}', ${product.price})">${btnTxt}</button>
+
+            <div class="prod-desc-formal">
+                <hr style="opacity:0.2; margin: 15px 0;">
+                <div style="opacity: 0.6; font-size: 10px;">
+                    INFO:<br>
+                    ${product.desc}<br>
+                    Free shipping worldwide.<br>
+                    14 days return policy.
+                </div>
+            </div>
         </div>`;
     
     pool.style.display = 'flex';
