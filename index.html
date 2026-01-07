@@ -16,12 +16,12 @@
         }
 
         :root {
-            --bg-color: #ffffff; /* Store ile aynı saf beyaz */
+            --bg-color: #ffffff;
             --text-color: #000000;
         }
 
         body[data-theme="dark"] {
-            --bg-color: #000000; /* Store ile aynı saf siyah */
+            --bg-color: #000000;
             --text-color: #ffffff;
         }
 
@@ -32,6 +32,7 @@
             font-family: 'Times New Roman', serif;
             display: flex;
             flex-direction: column;
+            transition: background-color 0.5s ease;
         }
 
         /* --- TEMA BUTONU --- */
@@ -40,6 +41,7 @@
             background: none; border: 1px solid var(--text-color); 
             width: 14px; height: 14px; border-radius: 50%;
             cursor: pointer; opacity: 0.4; z-index: 1000;
+            transition: all 0.3s ease;
         }
         body[data-theme="dark"] .theme-toggle { background: var(--text-color); }
 
@@ -55,42 +57,50 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 25px;
+            gap: 30px; /* Logo ile yazı arasındaki boşluk */
         }
 
-        /* --- STORE (AKTİF) --- */
-        .store-link {
-            position: relative;
-            text-decoration: none;
-            color: var(--text-color);
-            font-family: "Arial Black", sans-serif;
-            font-size: 11px;
-            font-style: italic;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            opacity: 0.5;
-            transition: 0.3s ease;
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        .store-link:hover {
-            opacity: 1; /* Blur kaldırıldı, sadece netleşiyor */
-        }
-
-        /* --- 2027 LOGOSU --- */
+        /* --- LOGO (STORE LINK) --- */
         .logo-link { 
             display: flex; align-items: center; justify-content: center; 
             text-decoration: none;
+            transition: transform 0.5s ease;
         }
         
         .desktop-only { 
             width: 250px;
-            filter: grayscale(100%) opacity(0.6); 
+            filter: grayscale(100%) opacity(0.8); 
+            transition: filter 0.5s ease;
         }
 
         .logo-link:hover .desktop-only {
             filter: grayscale(0%) opacity(1);
+        }
+
+        .logo-link:hover {
+            transform: scale(1.02); /* Logo hafif büyür */
+        }
+
+        /* --- GALERİ BUTONU (YENİ ESTETİK TASARIM) --- */
+        .gallery-btn {
+            text-decoration: none;
+            color: var(--text-color);
+            font-family: 'Times New Roman', serif;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 4px; /* Harf aralığı */
+            opacity: 0.6;
+            padding: 10px 20px;
+            border-top: 1px solid transparent;
+            border-bottom: 1px solid transparent;
+            transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1); /* Yumuşak animasyon */
+            position: relative;
+        }
+
+        .gallery-btn:hover {
+            opacity: 1;
+            letter-spacing: 8px; /* Hoverda harfler açılır */
+            border-bottom: 1px solid var(--text-color); /* Alt çizgi gelir */
         }
 
         /* --- FOOTER & SAAT --- */
@@ -111,6 +121,8 @@
             #live-clock { display: none; } 
             footer { opacity: 0.5; }
             .desktop-only { width: 180px; }
+            .gallery-btn { font-size: 12px; letter-spacing: 3px; }
+            .gallery-btn:hover { letter-spacing: 5px; }
         }
     </style>
 </head>
@@ -120,14 +132,11 @@
 
     <div class="main-content">
         <div class="content-wrapper">
-            <a href="2027.html" class="2027-link">
-                
-            </a>
-
             <a href="store.html" class="logo-link">
                 <img src="media/logo2.webp" alt="store" class="desktop-only">
             </a>
-            <a href="2027.html" class="nav-link" data-tr="galeri" data-en="gallery"a>
+
+            <a href="2027.html" class="gallery-btn">GALERİ</a>
         </div>
     </div>
 
