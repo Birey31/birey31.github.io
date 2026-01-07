@@ -516,7 +516,7 @@ nav#main-nav {
     text-decoration: underline;
 }
 
-/* --- FOOTER & SAĞ ALT ELEMENTLER --- */
+/* --- FOOTER & SAĞ ALT ELEMENTLER (MASAÜSTÜ) --- */
 .legal-footer {
     position: fixed;
     bottom: 40px;
@@ -591,39 +591,36 @@ nav#main-nav {
    ========================================================================= */
 @media (max-width: 768px) {
     
-    /* 1. EKRAN KAYDIRMAYI AKTİF ET */
+    /* 1. SAYFA YAPISI: KAYDIRMA AÇIK */
     body {
         height: auto;          
         min-height: 100vh;     
         overflow-y: auto;      
         overflow-x: hidden;    
         position: relative;
+        padding-bottom: 20px; /* En altta biraz güvenli boşluk */
     }
 
-    /* 2. MENÜ VE ÜST PANEL ARKA PLANI (DÜZELTİLDİ) */
+    /* 2. MENÜ VE ÜST PANEL (SABİT KALIYOR) */
     nav#main-nav {
         position: fixed;
-        top: 0;                /* En tepeden başla */
+        top: 0;
         left: 0;
         width: 100%;
-        height: 130px;         /* Logo ve menüyü kapsayacak kadar yükseklik */
-        
+        height: 130px;         /* Üstü kapatan panel */
         display: flex;
         flex-direction: row;
         justify-content: center;
-        align-items: flex-end; /* Linkleri kutunun en altına it */
-        padding-bottom: 15px;  /* Linkler ile çizgi arasına boşluk */
-        
-        background-color: var(--bg-color); /* Katı renk (Şeffaflığı kapatır) */
-        z-index: 400;          /* Logonun (1000) altında, içeriğin üstünde */
-        
-        /* İstersen menünün bittiği yere ince bir çizgi ekle, panel hissi verir */
-        border-bottom: 1px solid var(--text-color); 
+        align-items: flex-end;
+        padding-bottom: 15px;
+        background-color: var(--bg-color); /* Arkadaki yazıları gizler */
+        z-index: 400;
+        border-bottom: 1px solid var(--text-color);
     }
 
-    /* 3. ÜRÜN HAVUZU: KAYDIRILABİLİR YAPI */
+    /* 3. ÜRÜN HAVUZU (AKIŞKAN YAPI) */
     .products-pool {
-        position: relative !important; 
+        position: relative !important; /* Fixed değil Relative */
         top: auto !important;
         left: auto !important;
         transform: none !important;
@@ -632,8 +629,8 @@ nav#main-nav {
         height: auto !important;
         min-height: 50vh;
         
-        /* ÖNEMLİ: ALTTA ÇOK BOŞLUK BIRAK Kİ FOOTER KAPATMASIN */
-        margin: 160px auto 200px auto !important; 
+        /* Üstten panel payı, alttan ise footer payı */
+        margin: 160px auto 50px auto !important; 
         
         border: 1px solid var(--text-color);
         padding: 0;
@@ -660,74 +657,75 @@ nav#main-nav {
         overflow: visible;
     }
 
-    /* 4. FOOTER & YASAL METİNLER (SABİT) */
+    /* -----------------------------------------------------------
+       4. FOOTER ELEMENTLERİ (ARTIK SABİT DEĞİL, EN ALTA SIRALANIYOR)
+    ----------------------------------------------------------- */
+    
+    /* A) Yasal Metinler */
     .legal-footer {
-        position: fixed;
-        bottom: 90px;           /* En üstte */
-        left: 0;
+        position: relative; /* Fixed değil */
+        bottom: auto;
+        left: auto;
         width: 100%;
         display: flex;
         justify-content: center;
-        flex-wrap: wrap;       
+        flex-wrap: wrap;
         gap: 10px 20px;
-        padding: 10px 20px;
-        z-index: 600;           /* İçerikten daha üstte */
-        
-        /* Arkası görünsün ama yazılar karışmasın diye blur efekti */
-        background: rgba(255, 255, 255, 0.0); /* Tam şeffaf başlangıç */
-        backdrop-filter: blur(2px); /* Hafif bulanıklık */
-        pointer-events: auto;
+        padding: 20px;
+        margin-top: 20px; /* Ürünlerden sonra boşluk */
+        background: none;
+        z-index: 1;
     }
     
-    /* Dark mode uyumu için blur arka planı */
-    body[data-theme="dark"] .legal-footer {
-         background: rgba(0, 0, 0, 0.0);
-    }
-
     .legal-link {
         font-size: 10px;
         white-space: nowrap;
-        background: var(--bg-color); /* Yazının arkası temiz olsun */
-        padding: 2px 5px;
+        background: none;
+        padding: 0;
     }
 
-    /* ORTA KATMAN: İKONLAR */
+    /* B) İkonlar ve Dil (Ortada) */
     .bottom-right-container {
-        position: fixed;
-        bottom: 50px;           
-        left: 50%;
-        transform: translateX(-50%);
+        position: relative; /* Fixed değil */
+        bottom: auto;
         right: auto;
+        left: auto;
+        transform: none;
+        
+        width: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 25px;
-        z-index: 600;
-        width: auto;
+        padding: 10px 0;
+        z-index: 1;
     }
-
-    /* İkon ve Dil arkasına da ufak bir temizlik */
+    
     .lang-wrapper, .social-link {
-        background: var(--bg-color);
-        padding: 5px;
+        background: none;
+        padding: 0;
     }
+    
+    .social-link svg { width: 18px; height: 18px; }
+    .lang-wrapper { font-size: 12px; }
 
-    /* EN ALT: COPYRIGHT */
+    /* C) Copyright (En Altta) */
     .copyright-text {
-        position: fixed;
-        bottom: 15px;           
-        left: 50%;
-        transform: translateX(-50%);
+        position: relative; /* Fixed değil */
+        bottom: auto;
+        left: auto;
+        transform: none;
+        
         width: 100%;
         text-align: center;
+        padding: 20px 0 40px 0; /* En alta güvenli boşluk */
+        background: none;
         font-size: 9px;
-        opacity: 0.5;
-        z-index: 600;
-        background: var(--bg-color); /* Arka plan temizliği */
-        padding: 2px 0;
+        opacity: 0.4;
+        z-index: 1;
     }
 
-    /* 5. ÜRÜN DETAY SAYFASI */
+    /* 5. POP-UP PENCERELER (BUNLAR HALA SABİT/FIXED) */
     #productDetailPool, #infoPool, #checkoutPool {
         position: fixed;
         top: 50%;
@@ -741,6 +739,7 @@ nav#main-nav {
         overflow-y: auto; 
     }
     
+    /* Detay Sayfası İç Dizilimi */
     .detail-container {
         flex-direction: column;
         height: auto;
@@ -796,12 +795,9 @@ nav#main-nav {
         opacity: 0.7;
         margin-top: 20px;
     }
-
-    /* DİĞER PENCERELER */
-    .info-container, .checkout-container {
-        flex-direction: column;
-    }
     
+    /* Diğer Pencereler */
+    .info-container, .checkout-container { flex-direction: column; }
     .info-sidebar, .checkout-summary-box {
         width: 100%;
         border-right: none;
@@ -810,13 +806,11 @@ nav#main-nav {
         height: auto;
     }
 
-    /* YAN SEPET */
+    /* Yan Sepet */
     .side-cart {
         width: 90%;
         right: -100%;
         z-index: 4000;
     }
-    .side-cart.active {
-        right: 0;
-    }
+    .side-cart.active { right: 0; }
 }
