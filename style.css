@@ -672,4 +672,119 @@ nav#main-nav {
     .side-cart.active {
         right: 0;
     }
+/* --- ÜRÜN DETAY SAYFASI ÖZEL AYARLARI --- */
+
+/* Mobil Başlık Varsayılan Olarak Gizli (Masaüstünde görünmesin) */
+.mobile-prod-title {
+    display: none;
+}
+
+/* Masaüstü Başlık Görünür */
+.desktop-prod-title {
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Formalite Bilgileri */
+.prod-desc-formal {
+    margin-top: auto; /* Kutunun en altına iter */
+    width: 100%;
+}
+
+/* --- MOBİL İÇİN ÖZEL DÜZENLEME (EN ALTTA) --- */
+@media (max-width: 768px) {
+
+    /* 1. Ürün Detay Havuzu */
+    #productDetailPool {
+        width: 90% !important;
+        height: 85% !important; /* Ekranı kaplasın ama kenar boşluğu kalsın */
+        padding: 0;
+        flex-direction: column; /* Alt alta diz */
+        overflow-y: auto;       /* Kaydırma özelliği */
+    }
+
+    /* 2. İçerik Konteynerı */
+    .detail-container {
+        flex-direction: column;
+        height: auto;
+        padding: 20px;
+        align-items: center;
+        text-align: center; /* Her şeyi ortala */
+    }
+
+    /* 3. İSİM (En Üstte) */
+    .mobile-prod-title {
+        display: block;
+        font-family: 'Averta', sans-serif;
+        font-weight: 900;
+        font-size: 20px;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+        order: 1; /* Sıralama: 1 */
+        width: 100%;
+        border-bottom: 1px solid var(--text-color);
+        padding-bottom: 10px;
+    }
+
+    .desktop-prod-title {
+        display: none; /* Mobilde masaüstü başlığı gizle */
+    }
+
+    /* 4. RESİM (Ortada) */
+    .detail-img-box {
+        order: 2; /* Sıralama: 2 */
+        width: 100%;
+        height: 250px; /* Resim yüksekliğini sınırla */
+        border: none;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+
+    /* 5. KONTROLLER VE BİLGİ (Altta) */
+    .detail-info-box {
+        order: 3; /* Sıralama: 3 */
+        width: 100%;
+        padding: 0;
+        border: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    /* Fiyat Yazısı */
+    .prod-price {
+        font-size: 18px !important;
+        font-weight: bold;
+    }
+
+    /* Beden Seçici */
+    .size-selector {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .size-btn {
+        padding: 10px 20px; /* Butonları parmakla basılacak kadar büyüt */
+        font-size: 12px;
+    }
+
+    /* Sepete Ekle Butonu */
+    .add-to-cart-btn {
+        width: 100%;
+        padding: 15px;
+        font-weight: bold;
+        font-size: 14px;
+        background: var(--text-color);
+        color: var(--bg-color);
+    }
+
+    /* Formalite Bilgileri (En altta) */
+    .prod-desc-formal {
+        text-align: left;
+        width: 100%;
+        font-size: 10px;
+        opacity: 0.7;
+        margin-top: 20px;
+    }
 }
