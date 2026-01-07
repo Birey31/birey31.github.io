@@ -140,6 +140,7 @@ body[data-theme="light"] .theme-toggle {
     text-transform: lowercase;
 }
 
+/* --- HAVUZLAR (Modal Pencereler) --- */
 #infoPool, #productDetailPool, #checkoutPool {
     position: fixed;
     top: 50%;
@@ -162,6 +163,7 @@ body[data-theme="light"] .theme-toggle {
     transform: translate(-50%, -50%) scale(1);
 }
 
+/* Bilgi Havuzu İçeriği */
 .info-container {
     display: flex;
     width: 100%;
@@ -200,6 +202,7 @@ body[data-theme="light"] .theme-toggle {
     line-height: 1.8;
 }
 
+/* Ürün Detay İçeriği */
 .detail-container {
     display: flex;
     width: 100%;
@@ -228,6 +231,19 @@ body[data-theme="light"] .theme-toggle {
     flex-direction: column;
     justify-content: center;
     gap: 25px;
+}
+
+/* Mobil için özel başlıklar (Masaüstünde gizli) */
+.mobile-prod-title {
+    display: none;
+}
+.desktop-prod-title {
+    display: block;
+    margin-bottom: 10px;
+}
+.prod-desc-formal {
+    margin-top: auto;
+    width: 100%;
 }
 
 .size-selector {
@@ -264,6 +280,7 @@ body[data-theme="light"] .theme-toggle {
     margin-top: 10px;
 }
 
+/* --- ANA ÜRÜN LİSTELEME HAVUZU --- */
 .products-pool {
     position: fixed;
     top: 52%;
@@ -337,6 +354,7 @@ body[data-theme="light"] .theme-toggle {
     text-align: center;
 }
 
+/* --- YAN SEPET --- */
 .side-cart {
     position: fixed;
     top: 0;
@@ -422,6 +440,7 @@ body[data-theme="light"] .theme-toggle {
     font-weight: bold;
 }
 
+/* --- CHECKOUT SAYFASI --- */
 .checkout-container {
     display: flex;
     width: 100%;
@@ -471,6 +490,7 @@ body[data-theme="light"] .theme-toggle {
     padding-bottom: 10px;
 }
 
+/* --- MENÜ (NAV) --- */
 nav#main-nav {
     position: fixed;
     left: 40px;
@@ -496,6 +516,7 @@ nav#main-nav {
     text-decoration: underline;
 }
 
+/* --- FOOTER & SAĞ ALT ELEMENTLER --- */
 .legal-footer {
     position: fixed;
     bottom: 40px;
@@ -512,7 +533,6 @@ nav#main-nav {
     text-transform: lowercase;
 }
 
-/* --- COPYRIGHT: TAM ORTADA VE ALTTA --- */
 .copyright-text {
     position: fixed;
     bottom: 30px;
@@ -525,7 +545,6 @@ nav#main-nav {
     z-index: 100;
 }
 
-/* --- SAĞ ALT KONTEYNER (INSTA + DİL) --- */
 .bottom-right-container {
     position: fixed;
     right: 40px;
@@ -567,81 +586,186 @@ nav#main-nav {
     pointer-events: none;
 }
 
-/* --- MOBİL İÇİN ÖZEL DÜZENLEME (EN ALTTA OLACAK) --- */
+/* =========================================================================
+   MOBİL İÇİN ÖZEL DÜZENLEMELER (RESPONSIVE - 768px ALTI)
+   ========================================================================= */
 @media (max-width: 768px) {
+    
+    /* 1. MENÜYÜ ÜSTE TAŞI VE ORTALA */
     nav#main-nav {
         top: 100px;
         left: 0;
         width: 100%;
         flex-direction: row;
-        justify-content: center; /* Menü linklerini ortalar */
+        justify-content: center;
         gap: 20px;
         padding: 0 10px;
     }
 
-    /* ÜRÜN HAVUZU: ORTALI VE TAŞMAYAN */
+    /* 2. ÜRÜN HAVUZU: ORTALI VE KESİNLİKLE TAŞMAZ */
     .products-pool {
-        width: 90% !important;        /* Yanlardan boşluk */
-        height: 60vh !important;      /* Yükseklik kontrollü */
+        width: 90% !important;
+        height: 60vh !important;
         position: absolute;
-        top: 55%;                     /* Dikeyde biraz aşağıda */
+        top: 55%;
         left: 50%;
         transform: translate(-50%, -50%);
         border: 1px solid var(--text-color);
-        padding: 10px;                /* İçerik kenara yapışmasın */
+        padding: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
-        overflow: hidden;             /* Taşanları kes */
+        overflow: hidden;
     }
     
-    /* İLK AÇILIŞ RESMİ (MOBİL) */
     #pool-initial-img {
         max-width: 100%;
         max-height: 100%;
         width: auto;
         height: auto;
-        object-fit: contain;          /* Resmi kutuya sığdır */
+        object-fit: contain;
     }
 
-    /* ÜRÜN LİSTELEME GRID (MOBİL) */
+    /* 3. GRID SİSTEMİ (2 SÜTUN) */
     .products-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2 sütun */
+        grid-template-columns: repeat(2, 1fr);
         gap: 10px;
-        padding: 10px;
+        padding: 15px;
     }
 
-    /* FOOTER (YASAL) */
+    /* 4. FOOTER & YASAL METİNLER (HİYERARŞİK DÜZEN) */
     .legal-footer {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        bottom: 70px;
+        position: fixed;
+        bottom: 90px;           /* En üstte */
         left: 0;
         width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;        /* Sığmazsa alt satıra geçsin */
+        gap: 15px 20px;
+        padding: 0 20px;
+        z-index: 100;
+        pointer-events: auto;
+    }
+
+    .legal-link {
+        font-size: 10px;
+        white-space: nowrap;
+    }
+
+    /* ORTA KATMAN: İKONLAR */
+    .bottom-right-container {
+        position: fixed;
+        bottom: 50px;           /* Yasal metinlerin altında */
+        left: 50%;
+        transform: translateX(-50%);
+        right: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 25px;
+        z-index: 100;
+        width: auto;
+    }
+
+    .social-link svg {
+        width: 18px; 
+        height: 18px;
+    }
+    .lang-wrapper {
+        font-size: 12px;
+        padding: 5px;
+    }
+
+    /* EN ALT: COPYRIGHT */
+    .copyright-text {
+        position: fixed;
+        bottom: 15px;           /* En altta */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        text-align: center;
+        font-size: 9px;
+        opacity: 0.3;
+        z-index: 90;
+    }
+
+    /* 5. ÜRÜN DETAY SAYFASI (MOBİL SIRALAMA) */
+    #productDetailPool {
+        width: 95% !important;
+        height: 90% !important;
+        padding: 0;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+    
+    .detail-container {
+        flex-direction: column;
+        height: auto;
+        padding: 20px;
+        align-items: center;
+        text-align: center;
+    }
+
+    /* Başlık (En Üst) */
+    .mobile-prod-title {
+        display: block;
+        font-family: 'Averta', sans-serif;
+        font-weight: 900;
+        font-size: 20px;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+        order: 1;
+        width: 100%;
+        border-bottom: 1px solid var(--text-color);
+        padding-bottom: 10px;
+    }
+    
+    .desktop-prod-title { display: none; }
+
+    /* Resim (Orta) */
+    .detail-img-box {
+        order: 2;
+        width: 100%;
+        height: 250px;
+        border: none;
+        border-bottom: none;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+    
+    /* Bilgiler ve Butonlar (Alt) */
+    .detail-info-box {
+        order: 3;
+        width: 100%;
+        padding: 0;
+        border: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         gap: 15px;
     }
 
-    /* COPYRIGHT */
-    .copyright-text {
-        bottom: 10px;
-        font-size: 8px;
+    .prod-price { font-size: 18px !important; font-weight: bold; }
+    .size-selector { justify-content: center; width: 100%; }
+    .size-btn { padding: 10px 20px; font-size: 12px; }
+    .add-to-cart-btn { width: 100%; padding: 15px; font-size: 14px; }
+    
+    .prod-desc-formal {
+        text-align: left;
+        font-size: 10px;
+        opacity: 0.7;
+        margin-top: 20px;
     }
 
-    /* SAĞ ALT (INSTA + DİL) */
-    .bottom-right-container {
-        right: 15px;
-        bottom: 10px;
-    }
-
-    /* BİLGİ PENCERELERİ (MOBİL) */
-    #infoPool, #productDetailPool, #checkoutPool {
+    /* 6. DİĞER PENCERELER (INFO/CHECKOUT) */
+    #infoPool, #checkoutPool {
         width: 95% !important;
         height: 90% !important;
     }
     
-    .info-container, .detail-container, .checkout-container {
-        flex-direction: column; /* İçeriği alt alta diz */
+    .info-container, .checkout-container {
+        flex-direction: column;
     }
     
     .info-sidebar, .checkout-summary-box {
@@ -651,140 +775,14 @@ nav#main-nav {
         padding: 20px;
         height: auto;
     }
-    
-    .detail-img-box {
-        border-right: none;
-        border-bottom: 1px solid var(--text-color);
-        height: 40%; /* Resim üstte %40 yer kaplasın */
-    }
-    
-    .detail-info-box {
-        width: 100%;
-        padding: 20px;
-    }
 
-    /* YAN SEPET (MOBİL) */
+    /* 7. YAN SEPET */
     .side-cart {
         width: 90%;
-        right: -100%; /* Tamamen gizle */
+        right: -100%;
+        z-index: 3000;
     }
-    
     .side-cart.active {
         right: 0;
-    }
-/* --- ÜRÜN DETAY SAYFASI ÖZEL AYARLARI --- */
-
-/* Mobil Başlık Varsayılan Olarak Gizli (Masaüstünde görünmesin) */
-.mobile-prod-title {
-    display: none;
-}
-
-/* Masaüstü Başlık Görünür */
-.desktop-prod-title {
-    display: block;
-    margin-bottom: 10px;
-}
-
-/* Formalite Bilgileri */
-.prod-desc-formal {
-    margin-top: auto; /* Kutunun en altına iter */
-    width: 100%;
-}
-
-/* --- MOBİL İÇİN ÖZEL DÜZENLEME (EN ALTTA) --- */
-@media (max-width: 768px) {
-
-    /* 1. Ürün Detay Havuzu */
-    #productDetailPool {
-        width: 90% !important;
-        height: 85% !important; /* Ekranı kaplasın ama kenar boşluğu kalsın */
-        padding: 0;
-        flex-direction: column; /* Alt alta diz */
-        overflow-y: auto;       /* Kaydırma özelliği */
-    }
-
-    /* 2. İçerik Konteynerı */
-    .detail-container {
-        flex-direction: column;
-        height: auto;
-        padding: 20px;
-        align-items: center;
-        text-align: center; /* Her şeyi ortala */
-    }
-
-    /* 3. İSİM (En Üstte) */
-    .mobile-prod-title {
-        display: block;
-        font-family: 'Averta', sans-serif;
-        font-weight: 900;
-        font-size: 20px;
-        text-transform: uppercase;
-        margin-bottom: 15px;
-        order: 1; /* Sıralama: 1 */
-        width: 100%;
-        border-bottom: 1px solid var(--text-color);
-        padding-bottom: 10px;
-    }
-
-    .desktop-prod-title {
-        display: none; /* Mobilde masaüstü başlığı gizle */
-    }
-
-    /* 4. RESİM (Ortada) */
-    .detail-img-box {
-        order: 2; /* Sıralama: 2 */
-        width: 100%;
-        height: 250px; /* Resim yüksekliğini sınırla */
-        border: none;
-        padding: 0;
-        margin-bottom: 20px;
-    }
-
-    /* 5. KONTROLLER VE BİLGİ (Altta) */
-    .detail-info-box {
-        order: 3; /* Sıralama: 3 */
-        width: 100%;
-        padding: 0;
-        border: none;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
-    }
-
-    /* Fiyat Yazısı */
-    .prod-price {
-        font-size: 18px !important;
-        font-weight: bold;
-    }
-
-    /* Beden Seçici */
-    .size-selector {
-        justify-content: center;
-        width: 100%;
-    }
-
-    .size-btn {
-        padding: 10px 20px; /* Butonları parmakla basılacak kadar büyüt */
-        font-size: 12px;
-    }
-
-    /* Sepete Ekle Butonu */
-    .add-to-cart-btn {
-        width: 100%;
-        padding: 15px;
-        font-weight: bold;
-        font-size: 14px;
-        background: var(--text-color);
-        color: var(--bg-color);
-    }
-
-    /* Formalite Bilgileri (En altta) */
-    .prod-desc-formal {
-        text-align: left;
-        width: 100%;
-        font-size: 10px;
-        opacity: 0.7;
-        margin-top: 20px;
     }
 }
