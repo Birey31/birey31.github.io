@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <title>Reeha | Exclusive Streetwear & Art Gallery</title>
-<meta name="description" content="Reeha - İstanbul merkezli özel tasarım streetwear koleksiyonu ve dijital sanat deneyimi. Sınırlı üretim parçalar ve modern estetik.">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/webp" href="media/mobillogo.webp">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>Reeha | Store</title>
+    <title>Reeha | Exclusive Streetwear & Art Gallery</title>
+    <meta name="description" content="Reeha - İstanbul merkezli özel tasarım streetwear koleksiyonu ve dijital sanat deneyimi. Sınırlı üretim parçalar ve modern estetik.">
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/webp" href="media/mobillogo.webp">
     <link rel="stylesheet" href="style.css">
 </head>
 <body data-theme="light">
@@ -40,21 +40,6 @@
         </div>
     </div>
 
-    <div id="checkoutPool">
-        <div style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:10px; opacity:0.5; z-index:3000;" onclick="closeAllPanels()">[iptal]</div>
-        <div class="checkout-container">
-            <div class="checkout-form-box" id="checkoutFormContent"></div>
-            <div class="checkout-summary-box">
-                <div id="summaryTitle" style="margin-bottom:20px; font-weight:bold; border-bottom:1px solid var(--text-color); padding-bottom:5px;">özet</div>
-                <div id="checkoutSummaryItems"></div>
-                <div style="margin-top:20px; font-size:14px; display:flex; justify-content:space-between; font-weight:bold;">
-                    <span>total:</span>
-                    <span id="checkoutTotal">0€</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="header-left">
         <div class="brand-logo" onclick="window.location.href='index.html'" style="cursor: pointer;">REEHA</div>
         <div id="current-time"></div>
@@ -70,13 +55,12 @@
             <span id="cartHeaderLabel" data-tr="sepet" data-en="cart">sepet</span>
             <span onclick="toggleCart()" style="cursor:pointer; opacity:0.5;">[x]</span>
         </div>
-        <div id="cartItems" class="cart-items-container">
-            </div>
+        <div id="cartItems" class="cart-items-container"></div>
         <div class="cart-footer" id="cartFooter" style="display:none;">
             <textarea id="cartNotePlaceholder" class="cart-note"></textarea>
             <div style="font-size:12px; margin-bottom:15px; display:flex; justify-content:space-between;">
                 <span>total:</span>
-                <span id="cartTotal">0€</span>
+                <span id="cartTotal">0TL</span>
             </div>
             <button class="checkout-btn" onclick="startCheckout()" id="checkoutBtnLabel" data-tr="ödeme" data-en="checkout">ödeme</button>
         </div>
@@ -113,10 +97,8 @@
     </div>
 
     <script src="data.js?v=1.0.1"></script> 
-    <script src="script.js?v=1.0.1"></script>
     <script src="https://www.shopier.com/static/js/shopierClient.js"></script>
-    <script src="shopier_handler.js"></script>
-    <script src="script.js"></script>
+    <script src="shopier_handler.js"></script> <script src="script.js?v=1.0.1"></script>
 
 </body>
 </html>
