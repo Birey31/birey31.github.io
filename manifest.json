@@ -7,12 +7,12 @@
   "theme_color": "#0e0e0e",
   "icons": [
     {
-      "src": "media/mobillogo.webp",
+      "src": "media/logo2.webp",
       "sizes": "192x192",
       "type": "image/webp"
     },
     {
-      "src": "media/mobillogo.webp",
+      "src": "media/logo2.webp",
       "sizes": "512x512",
       "type": "image/webp"
     }
