@@ -7,10 +7,10 @@ const productsData = {
     tops: [
         { id: 1, name: "basic t-shirt white", price: 40, img: "elbise/tshirt1.webp", desc: "100% heavy cotton." },
         { id: 2, name: "heavy cotton hoodie", price: 110, img: "elbise/tshirt2.webp", desc: "Oversized silhouette." },
-        { id: 3, name: "yakında", price: 0, img: "media/mobillogo.webp", desc: "yakında" }
+        
     ],
-    bottoms: [ { id: 4, name: "yakında", price: 0, img: "media/mobillogo.webp", desc: "yakında" } ],
-    accessories: [ { id: 5, name: "yakında", price: 0, img: "media/mobillogo.webp", desc: "yakında" } ]
+    bottoms: [ { id: 4, name: "yakında", price: 0, img: "media/yakinda.webp", desc: "yakında" } ],
+    accessories: [ { id: 5, name: "yakında", price: 0, img: "media/yakinda.webp", desc: "yakında" } ]
 };
 
 const infoTexts = {
