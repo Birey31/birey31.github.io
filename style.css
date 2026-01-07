@@ -630,7 +630,7 @@ nav#main-nav {
         min-height: 50vh;
         
         /* Üstten panel payı, alttan ise footer payı */
-        margin: 160px auto 50px auto !important; 
+        margin: 200px auto 50px auto !important; 
         
         border: 1px solid var(--text-color);
         padding: 0;
