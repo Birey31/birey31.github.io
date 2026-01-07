@@ -1,4 +1,3 @@
-// script.js
 let currentLang = 'tr';
 let cart = [];
 
@@ -32,7 +31,6 @@ window.loadProducts = function(cat, e) {
     if(!grid) return;
     grid.style.display = 'grid';
 
-    // Ürünleri data.js'den çeker
     let products = productsData[cat] || [];
     if (cat === 'news') {
         products = products.filter(p => p.name !== "yakında");
@@ -99,24 +97,18 @@ window.openProductDetail = function(cat, id) {
     
     content.innerHTML = `
         <div class="mobile-prod-title">${product.name}</div>
-
         <div class="detail-img-box">
             <img src="${product.img}">
         </div>
-
         <div class="detail-info-box">
             <div class="desktop-prod-title" style="font-size: 18px; font-weight: bold;">${product.name}</div>
-            
             <div class="prod-price" style="font-size: 16px; margin-bottom: 10px;">${product.price}TL</div>
-            
             <div class="size-selector">
                 <button class="size-btn" onclick="selectSize(this)">S</button>
                 <button class="size-btn" onclick="selectSize(this)">M</button>
                 <button class="size-btn" onclick="selectSize(this)">L</button>
             </div>
-
             <button class="add-to-cart-btn" onclick="addToCart('${product.name}', ${product.price})">${btnTxt}</button>
-
             <div class="prod-desc-formal">
                 <hr style="opacity:0.2; margin: 15px 0;">
                 <div style="opacity: 0.6; font-size: 10px;">
@@ -143,7 +135,7 @@ window.selectSize = function(btn) {
 window.addToCart = function(name, price) {
     const size = document.querySelector('.size-btn.selected')?.innerText;
     if(!size) { 
-        alert(translations[currentLang].selectSize); 
+        alert(currentLang === 'tr' ? "Lütfen beden seçiniz." : "Please select a size."); 
         return; 
     }
     
@@ -166,7 +158,7 @@ window.updateCartUI = function() {
     cartBtn.innerText = `${prefix} (${totalQty})`;
 
     if(cart.length === 0) {
-        container.innerHTML = `<div style="opacity:0.5; font-size:10px;">${translations[currentLang].emptyCart}</div>`;
+        container.innerHTML = `<div style="opacity:0.5; font-size:10px;">${currentLang === 'tr' ? "sepetiniz boş" : "cart is empty"}</div>`;
         if(footer) footer.style.display = 'none';
         return;
     }
@@ -220,7 +212,8 @@ window.addEventListener('load', () => {
     window.updateTime();
     setInterval(window.updateTime, 1000);
 });
-// --- SHOPIER ÖDEME ENTEGRASYONU
+
+// --- SHOPIER ÖDEME ENTEGRASYONU ---
 
 window.startCheckout = function() {
     if (cart.length === 0) {
@@ -228,17 +221,7 @@ window.startCheckout = function() {
         return;
     }
 
-    // Sepetteki ilk ürünü ve bedenini alıyoruz
-    const item = cart[0]; 
-    
-    // Bedenlere göre Shopier linklerini buraya tanımla
-    const shopierLinks = {
-        'S': 'https://www.shopier.com/Reeha/42972271',
-        'M': 'https://www.shopier.com/Reeha/42972271', 
-        'L': 'https://www.shopier.com/Reeha/42972271'  
-    };
-
-    // Müşteriyi seçtiği bedenin linkine gönder
-    const targetLink = shopierLinks[item.size] || "https://www.shopier.com/Reeha/42972271";
-    window.location.href = targetLink;
+    // Sepetteki ilk ürünün bedeni M ise direkt ödeme sayfasına gider
+    // Shopier panelinden varyantları kapatırsan direkt adres formu açılır
+    window.location.href = "https://www.shopier.com/Reeha/42972271";
 };
