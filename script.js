@@ -220,7 +220,7 @@ window.addEventListener('load', () => {
     window.updateTime();
     setInterval(window.updateTime, 1000);
 });
-// --- SHOPIER ÖDEME ENTEGRASYONU ---
+// --- SHOPIER ÖDEME ENTEGRASYONU
 
 window.startCheckout = function() {
     if (cart.length === 0) {
@@ -234,12 +234,11 @@ window.startCheckout = function() {
     // Bedenlere göre Shopier linklerini buraya tanımla
     const shopierLinks = {
         'S': 'https://www.shopier.com/Reeha/42972271',
-        'M': 'https://www.shopier.com/Reeha/42972271', // Buraya M linkini koy
-        'L': 'https://www.shopier.com/Reeha/42972271'  // Buraya L linkini koy
+        'M': 'https://www.shopier.com/Reeha/42972271', 
+        'L': 'https://www.shopier.com/Reeha/42972271'  
     };
 
     // Müşteriyi seçtiği bedenin linkine gönder
     const targetLink = shopierLinks[item.size] || "https://www.shopier.com/Reeha/42972271";
     window.location.href = targetLink;
 };
-
