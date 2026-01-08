@@ -1,43 +1,62 @@
-/* --- HERO SECTION --- */
+/* --- HERO SECTION (FULLSCREEN & WHITE) --- */
 #hero-section {
-    /* display: none !important;  <-- EĞER BURASI DURUYORSA SİL VEYA BAŞINA // KOY */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
-    background: var(--bg-color); /* Temaya göre siyah veya beyaz başlar */
+    background-color: #ffffff; /* Arka planı bembeyaz yaptık */
     z-index: 5000;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: opacity 0.5s ease;
 }
 
 .hero-img-box {
-    width: 100%;      /* %80'den %100'e çıkarıldı */
-    height: 100%;     /* %80'den %100'e çıkarıldı */
-    border: none;     /* Kenarlardaki çizgiyi kaldırdık */
+    width: 100%;      /* Ekranın tamamını kapla */
+    height: 100%;     /* Ekranın tamamını kapla */
+    border: none;     /* Siyah çerçeveyi tamamen kaldırdık */
     position: relative;
     overflow: hidden;
+    background-color: #ffffff;
 }
 
 .hero-img-box img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Fotoğrafı ekranı kaplayacak şekilde yayar, boşluk bırakmaz */
-    object-position: center; /* Fotoğrafı ortalar */
+    object-fit: cover;    /* Fotoğrafı boşluk kalmadan yayar */
+    object-position: center; /* Fotoğrafı tam ortalar */
 }
 
 .hero-close {
     position: absolute;
-    bottom: 40px;      /* Biraz daha yukarı aldık, mobilde kolay basılsın */
-    right: 40px;
+    bottom: 50px;         /* Mobilde baş parmak hizasına yakın */
+    right: 50px;
     cursor: pointer;
-    font-size: 14px;   /* Okunabilirlik için büyütüldü */
-    background: var(--bg-color);
-    color: var(--text-color);
-    padding: 10px 20px;
-    border: 1px solid var(--text-color);
-    z-index: 5001;     /* Resmin üstünde kalsın */
+    font-size: 13px;
+    letter-spacing: 1px;
+    background-color: #ffffff; /* Butonun içi beyaz */
+    color: #000000;            /* Yazı siyah */
+    padding: 12px 24px;
+    border: 1px solid #000000; /* İnce zarif bir siyah çizgi */
+    z-index: 5001;
     text-transform: lowercase;
+    font-family: "Courier New", Courier, monospace;
+    transition: all 0.3s ease;
+}
+
+.hero-close:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+/* --- DİĞER SİYAH ÇERÇEVELERİ BEYAZLATMA --- */
+.products-pool {
+    border: 1px solid #ffffff !important; /* Büyük kutunun çerçevesini beyaz yaptık */
+    background-color: #ffffff !important;
+}
+
+.product-box {
+    border: 1px solid #ffffff !important; /* Ürün kutularının çerçevesini beyaz yaptık */
 }
