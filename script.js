@@ -24,13 +24,29 @@ body {
     flex-direction: column;
 }
 
-/* --- HERO SECTION (KAPALI) --- */
+/* --- HERO SECTION (KAPALI - İSTEK ÜZERİNE GİZLENDİ) --- */
 #hero-section { display: none !important; }
 
-/* --- NAVİGASYON --- */
+/* --- NAVİGASYON (ÜST MENÜ) --- */
 .header-left { position: fixed; top: 30px; left: 40px; z-index: 1000; }
-.brand-logo { font-family: 'Averta', sans-serif; font-weight: 900; font-size: 24px; letter-spacing: 1px; line-height: 1; margin-bottom: 8px; text-transform: uppercase; color: var(--text-color); }
-#current-time { font-size: 11px; opacity: 0.8; letter-spacing: 0.5px; min-height: 15px; display: block !important; color: var(--text-color); }
+.brand-logo { 
+    font-family: 'Averta', sans-serif; 
+    font-weight: 900; 
+    font-size: 24px; 
+    letter-spacing: 1px; 
+    line-height: 1; 
+    margin-bottom: 8px; 
+    text-transform: uppercase; 
+    color: var(--text-color); 
+}
+#current-time { 
+    font-size: 11px; 
+    opacity: 0.8; 
+    letter-spacing: 0.5px; 
+    min-height: 15px; 
+    display: block !important; 
+    color: var(--text-color); 
+}
 
 .top-right-nav { position: fixed; top: 30px; right: 30px; display: flex; align-items: center; gap: 20px; z-index: 1000; }
 .theme-toggle { background: none; border: 1px solid var(--text-color); width: 14px; height: 14px; border-radius: 50%; cursor: pointer; }
@@ -40,7 +56,7 @@ body[data-theme="light"] .theme-toggle { background: var(--text-color); }
 #globalOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1500; display: none; cursor: pointer; backdrop-filter: blur(4px); }
 #globalOverlay.active { display: block; }
 
-/* --- MODAL PENCERELER --- */
+/* --- MODAL PENCERELER (ARKA PLAN RENGİ DÜZELTİLDİ) --- */
 #infoPool, #productDetailPool, #checkoutPool, #soundsPool {
     position: fixed;
     top: 50%;
@@ -48,9 +64,12 @@ body[data-theme="light"] .theme-toggle { background: var(--text-color); }
     transform: translate(-50%, -50%) scale(0.95);
     width: 80%;
     height: 75%;
-    border: 1px solid var(--text-color);     
+    
+    /* Gece modunda siyah olması için değişken kullanıldı */
     background-color: var(--bg-color);
+    border: 1px solid var(--text-color);
     color: var(--text-color);
+    
     z-index: 2500;
     display: none;
     opacity: 0;
@@ -80,10 +99,10 @@ body[data-theme="light"] .theme-toggle { background: var(--text-color); }
     width: 65%;
     height: 65%;
     
-    /* İSTEK 3: ÇERÇEVE SİLİNDİ AMA HAVUZ DURUYOR */
+    /* İSTEK: ÇERÇEVE SİLİNDİ */
     border: none; 
     
-    /* İSTEK 2: RENK DEĞİŞİMİ GARANTİLENDİ */
+    /* İSTEK: RENK DEĞİŞİMİ GARANTİLENDİ (Siyah/Beyaz) */
     background-color: var(--bg-color) !important;
     
     z-index: 5;
@@ -100,13 +119,14 @@ body[data-theme="light"] .theme-toggle { background: var(--text-color); }
 .product-box { 
     width: 100%; 
     aspect-ratio: 1/1; 
-    /* İSTEK 3: ÜRÜN KUTUSUNUN DA ÇERÇEVESİ SİLİNDİ */
-    border: none; 
+    border: none; /* Ürün kutusunun çerçevesi de silindi */
     display: flex; 
     align-items: center; 
     justify-content: center; 
     overflow: hidden; 
     margin-bottom: 8px; 
+    
+    /* Ürün kutuları da temaya göre renk değiştirecek */
     background-color: var(--bg-color) !important; 
 }
 .product-box img { width: 90%; height: 90%; object-fit: contain; }
@@ -147,11 +167,11 @@ nav#main-nav { position: fixed; left: 40px; top: 180px; display: flex; flex-dire
    MOBİL İÇİN ÖZEL DÜZENLEMELER (RESPONSIVE) - DÜZELTİLDİ
    ========================================================================= */
 @media (max-width: 768px) {
-    /* İSTEK 1: MOBİL DÜZENİ */
+    /* İSTEK: MOBİL BOZUKLUĞU GİDERİLDİ */
     body { 
         height: auto !important; 
         min-height: 100vh; 
-        overflow-y: auto !important; 
+        overflow-y: auto !important; /* Kaydırma açıldı */
         overflow-x: hidden; 
         position: relative; 
         padding-bottom: 40px;
@@ -181,7 +201,7 @@ nav#main-nav { position: fixed; left: 40px; top: 180px; display: flex; flex-dire
         width: 90% !important; 
         height: auto !important; 
         
-        /* Menüyle çakışmasın diye yukarıdan boşluk */
+        /* Menünün altında kalsın diye yukarıdan boşluk verildi */
         margin: 160px auto 40px auto !important; 
         
         border: none !important; /* Mobilde de çerçeve yok */
@@ -193,7 +213,7 @@ nav#main-nav { position: fixed; left: 40px; top: 180px; display: flex; flex-dire
         overflow: visible; 
     }
 
-    /* İSTEK 4: ALTTAKİ BİLGİLER AŞAĞI ALINDI */
+    /* İSTEK: MOBİLDE ALT METİNLER AŞAĞIYA ALINDI */
     .legal-footer { 
         position: relative !important; 
         bottom: auto !important; 
@@ -239,7 +259,9 @@ nav#main-nav { position: fixed; left: 40px; top: 180px; display: flex; flex-dire
         z-index: 1; 
     }
 
+    /* Havuzun içindeki ana resmi mobilde küçülttük ki ekranı patlatmasın */
     #pool-initial-img { width: 100%; height: auto; max-height: 400px; object-fit: contain; }
+    
     .products-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0; width: 100%; height: auto; overflow: visible; }
     
     #productDetailPool, #infoPool, #checkoutPool, #soundsPool { width: 95% !important; height: 90% !important; padding: 0; flex-direction: column; overflow-y: auto; }
