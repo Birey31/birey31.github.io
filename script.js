@@ -1,8 +1,10 @@
+// REEHA - Global Değişkenler
 let currentLang = 'tr';
 let cart = [];
 
 // --- FONKSİYONLAR (GLOBAL BINDING) ---
 
+// Zamanı Güncelle
 window.updateTime = function() {
     const now = new Date();
     const timeStr = now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString('tr-TR');
@@ -10,6 +12,7 @@ window.updateTime = function() {
     if(timeEl) timeEl.innerText = timeStr;
 };
 
+// Hero Ekranını Kapat
 window.closeHero = function() {
     const hero = document.getElementById('hero-section');
     if(hero) {
@@ -18,6 +21,7 @@ window.closeHero = function() {
     }
 };
 
+// Ürünleri Listele
 window.loadProducts = function(cat, e) {
     const pool = document.getElementById('productsPool');
     if(pool) pool.classList.add('expanded');
@@ -56,6 +60,7 @@ window.loadProducts = function(cat, e) {
     if(e && e.target) e.target.classList.add('active');
 };
 
+// Sepeti Aç/Kapat
 window.toggleCart = function() {
     const sideCart = document.getElementById('sideCart');
     const overlay = document.getElementById('globalOverlay');
@@ -64,12 +69,14 @@ window.toggleCart = function() {
     overlay.classList.toggle('active', sideCart.classList.contains('active'));
 };
 
+// Tema Değiştir (Light/Dark)
 window.toggleTheme = function() {
     const body = document.body;
     const isDark = body.getAttribute('data-theme') === 'dark';
     body.setAttribute('data-theme', isDark ? 'light' : 'dark');
 };
 
+// Dil Değiştir (TR/EN)
 window.toggleLanguage = function() {
     currentLang = currentLang === 'tr' ? 'en' : 'tr';
     const langEl = document.getElementById('langTxt');
@@ -79,14 +86,9 @@ window.toggleLanguage = function() {
         el.textContent = currentLang === 'tr' ? el.getAttribute('data-tr') : el.getAttribute('data-en');
     });
     updateCartUI();
-
-    const activeInfoLink = document.querySelector('.info-nav-link.active');
-    if (activeInfoLink) {
-        const type = activeInfoLink.id.replace('link-', '');
-        window.loadInfo(type);
-    }
 };
 
+// Ürün Detayını Aç
 window.openProductDetail = function(cat, id) {
     const product = productsData[cat].find(p => p.id === id);
     const content = document.getElementById('productDetailContent');
@@ -127,13 +129,17 @@ window.openProductDetail = function(cat, id) {
     }, 10);
 };
 
+// Beden Seçimi
 window.selectSize = function(btn) {
     document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
 };
 
+// Sepete Ekle
 window.addToCart = function(name, price) {
-    const size = document.querySelector('.size-btn.selected')?.innerText;
+    const sizeBtn = document.querySelector('.size-btn.selected');
+    const size = sizeBtn ? sizeBtn.innerText : null;
+    
     if(!size) { 
         alert(currentLang === 'tr' ? "Lütfen beden seçiniz." : "Please select a size."); 
         return; 
@@ -145,8 +151,10 @@ window.addToCart = function(name, price) {
     
     updateCartUI();
     closeAllPanels();
+    toggleCart(); // Eklendiğinde sepeti otomatik açar
 };
 
+// Sepet Arayüzünü Güncelle
 window.updateCartUI = function() {
     const container = document.getElementById('cartItems');
     const cartBtn = document.getElementById('cartCount');
@@ -158,7 +166,7 @@ window.updateCartUI = function() {
     cartBtn.innerText = `${prefix} (${totalQty})`;
 
     if(cart.length === 0) {
-        container.innerHTML = `<div style="opacity:0.5; font-size:10px;">${currentLang === 'tr' ? "sepetiniz boş" : "cart is empty"}</div>`;
+        container.innerHTML = `<div style="opacity:0.5; font-size:10px; padding:20px;">${currentLang === 'tr' ? "sepetiniz boş" : "cart is empty"}</div>`;
         if(footer) footer.style.display = 'none';
         return;
     }
@@ -167,7 +175,7 @@ window.updateCartUI = function() {
     let total = 0;
     container.innerHTML = cart.map((item, index) => {
         total += (item.price * item.qty);
-        return `<div class="cart-item">
+        return `<div class="cart-item" style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:12px;">
             <div><b>${item.name}</b> (${item.size}) x ${item.qty}</div>
             <div>${item.price * item.qty}TL</div>
         </div>`;
@@ -175,6 +183,7 @@ window.updateCartUI = function() {
     if(totalEl) totalEl.innerText = total + 'TL';
 };
 
+// Bilgi Havuzunu Aç (KVKK vb.)
 window.openInfoPool = function(type) {
     const pool = document.getElementById('infoPool');
     if(!pool) return;
@@ -186,36 +195,27 @@ window.openInfoPool = function(type) {
     }, 10);
 };
 
-window.loadInfo = function(type) {
-    document.querySelectorAll('.info-nav-link').forEach(l => l.classList.remove('active'));
-    document.getElementById('link-' + type)?.classList.add('active');
-    const content = document.getElementById('infoContent');
-    if(content) {
-        content.style.whiteSpace = "pre-wrap";
-        const text = infoTexts[type] ? infoTexts[type][currentLang] : "";
-        content.innerText = text;
-    }
-};
-
+// Panelleri Kapat
 window.closeAllPanels = function() {
-    document.querySelectorAll('#infoPool, #productDetailPool, #checkoutPool').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('#infoPool, #productDetailPool').forEach(p => p.classList.remove('active'));
     document.getElementById('sideCart')?.classList.remove('active');
     document.getElementById('globalOverlay')?.classList.remove('active');
     setTimeout(() => {
-        document.querySelectorAll('#infoPool, #productDetailPool, #checkoutPool').forEach(p => p.style.display = 'none');
+        document.querySelectorAll('#infoPool, #productDetailPool').forEach(p => p.style.display = 'none');
     }, 300);
 };
 
 window.handleOverlayClick = function() { closeAllPanels(); };
 
+// Başlangıç Ayarları
 window.addEventListener('load', () => {
     window.updateTime();
     setInterval(window.updateTime, 1000);
 });
 
-// --- SHOPIER ÖDEME ENTEGRASYONU ---
-
 // --- SHOPIER ÖDEME ENTEGRASYONU (VERCEL API) ---
+
+
 
 window.startCheckout = function() {
     if (cart.length === 0) {
@@ -223,8 +223,14 @@ window.startCheckout = function() {
         return;
     }
 
-    // şimdilik ilk ürünü gönderiyoruz (tek ürün mantığı)
+    // Sepetteki ilk ürünü ve bedenini al
     const item = cart[0];
+    const checkoutBtn = document.getElementById('checkoutBtnLabel');
+    const originalText = checkoutBtn.innerText;
+    
+    // Butonu işlem sırasında kilitle
+    checkoutBtn.disabled = true;
+    checkoutBtn.innerText = currentLang === 'tr' ? "bağlanıyor..." : "connecting...";
 
     fetch("https://shopier-backend-1.vercel.app/api/odeme", {
         method: "POST",
@@ -235,18 +241,30 @@ window.startCheckout = function() {
             beden: item.size
         })
     })
-    .then(res => res.json())
+    .then(async res => {
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || "Sunucu hatası");
+        }
+        return res.json();
+    })
     .then(data => {
         if (data.url) {
+            // Shopier'den gelen ham HTML veya URL ise yönlendir
+            // Eğer backend direkt URL dönüyorsa:
             window.location.href = data.url;
         } else {
-            alert("Shopier link oluşturulamadı");
-            console.log(data);
+            alert(currentLang === 'tr' ? "Ödeme linki oluşturulamadı." : "Failed to create payment link.");
+            console.error("Backend Verisi:", data);
         }
     })
     .catch(err => {
-        alert("Ödeme bağlantısı hatası");
-        console.error(err);
+        alert(currentLang === 'tr' ? "Bağlantı hatası: " + err.message : "Connection error: " + err.message);
+        console.error("Hata Detayı:", err);
+    })
+    .finally(() => {
+        // Butonu eski haline getir
+        checkoutBtn.disabled = false;
+        checkoutBtn.innerText = originalText;
     });
 };
-
