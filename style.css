@@ -3,12 +3,18 @@
     --text-color: #000000;
     --accent-opacity: 0.05;
 }
+
 body[data-theme="dark"] {
     --bg-color: #000000;
     --text-color: #ffffff;
     --accent-opacity: 0.1;
 }
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+* {
+    margin: 0; padding: 0; box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
@@ -20,21 +26,89 @@ body {
     flex-direction: column;
 }
 
-/* --- HERO SECTION --- */
-#hero-section { display: none !important; }
+/* --- HERO SECTION (GİRİŞ EKRANI - KAPALI) --- */
+#hero-section {
+    display: none !important;
+}
 
-/* --- NAVİGASYON --- */
-.header-left { position: fixed; top: 30px; left: 40px; z-index: 1000; }
-.brand-logo { font-family: 'Averta', sans-serif; font-weight: 900; font-size: 24px; letter-spacing: 1px; line-height: 1; margin-bottom: 8px; text-transform: uppercase; color: var(--text-color); }
-#current-time { font-size: 11px; opacity: 0.8; letter-spacing: 0.5px; min-height: 15px; display: block !important; color: var(--text-color); }
-#globalOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1500; display: none; cursor: pointer; backdrop-filter: blur(4px); }
-#globalOverlay.active { display: block; }
-.top-right-nav { position: fixed; top: 30px; right: 30px; display: flex; align-items: center; gap: 20px; z-index: 1000; }
-.theme-toggle { background: none; border: 1px solid var(--text-color); width: 14px; height: 14px; border-radius: 50%; cursor: pointer; }
-body[data-theme="light"] .theme-toggle { background: var(--text-color); }
-.cart-toggle { background: none; border: none; color: var(--text-color); font-size: 13px; cursor: pointer; text-transform: lowercase; }
+/* --- NAVİGASYON (ÜST MENÜ) --- */
+.header-left {
+    position: fixed;
+    top: 30px;
+    left: 40px;
+    z-index: 1000;
+}
 
-/* --- MODAL PENCERELER --- */
+.brand-logo {
+    font-family: 'Averta', sans-serif;
+    font-weight: 900;
+    font-size: 24px;
+    letter-spacing: 1px;
+    line-height: 1;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    color: var(--text-color);
+}
+
+#current-time {
+    font-size: 11px;
+    opacity: 0.8;
+    letter-spacing: 0.5px;
+    min-height: 15px;
+    display: block !important;
+    color: var(--text-color);
+}
+
+#globalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    z-index: 1500;
+    display: none;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+}
+
+#globalOverlay.active {
+    display: block;
+}
+
+.top-right-nav {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    z-index: 1000;
+}
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--text-color);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+body[data-theme="light"] .theme-toggle {
+    background: var(--text-color);
+}
+
+.cart-toggle {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 13px;
+    cursor: pointer;
+    text-transform: lowercase;
+}
+
+/* --- MODAL PENCERELER (GENEL AYARLAR) --- */
 #infoPool, #productDetailPool, #checkoutPool, #soundsPool {
     position: fixed;
     top: 50%;
@@ -42,27 +116,135 @@ body[data-theme="light"] .theme-toggle { background: var(--text-color); }
     transform: translate(-50%, -50%) scale(0.95);
     width: 80%;
     height: 75%;
-    border: 1px solid var(--text-color);     
+    
+    /* BURASI DÜZELTİLDİ: ARTIK TEMAYA GÖRE DEĞİŞİYOR */
     background-color: var(--bg-color);
+    border: 1px solid var(--text-color);
     color: var(--text-color);
+    
     z-index: 2500;
     display: none;
     opacity: 0;
     transition: all 0.3s ease;
     overflow: hidden;
 }
-#infoPool.active, #productDetailPool.active, #checkoutPool.active, #soundsPool.active { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+#infoPool.active, #productDetailPool.active, #checkoutPool.active, #soundsPool.active {
+    display: flex;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* --- BİLGİ HAVUZU --- */
+.info-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.info-sidebar {
+    width: 200px;
+    border-right: 1px solid var(--text-color);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex-shrink: 0;
+}
+
+.info-nav-link {
+    font-size: 11px;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: 0.3s;
+    text-transform: lowercase;
+    color: var(--text-color);
+}
+
+.info-nav-link.active {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+.info-content {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+    font-size: 12px;
+    line-height: 1.8;
+}
 
 /* --- ÜRÜN DETAY --- */
-.detail-container { display: flex; width: 100%; height: 100%; }
-.detail-img-box { flex: 1; display: flex; align-items: center; justify-content: center; border-right: 1px solid var(--text-color); padding: 40px; }
-.detail-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
-.detail-info-box { width: 400px; padding: 40px; display: flex; flex-direction: column; justify-content: center; gap: 25px; }
-.size-btn { border: 1px solid var(--text-color); background: none; color: var(--text-color); padding: 5px 12px; cursor: pointer; font-size: 10px; transition: 0.3s; font-family: inherit; }
-.size-btn.selected { background: var(--text-color); color: var(--bg-color); }
-.add-to-cart-btn { background: var(--text-color); color: var(--bg-color); border: none; padding: 12px; cursor: pointer; font-family: inherit; font-size: 11px; text-transform: lowercase; }
+.detail-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
 
-/* --- ANA ÜRÜN HAVUZU --- */
+.detail-img-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid var(--text-color);
+    padding: 40px;
+}
+
+.detail-img-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.detail-info-box {
+    width: 400px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 25px;
+}
+
+.mobile-prod-title { display: none; }
+.desktop-prod-title { display: block; margin-bottom: 10px; }
+.prod-desc-formal { margin-top: auto; width: 100%; }
+
+.size-selector {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.size-btn {
+    border: 1px solid var(--text-color);
+    background: none;
+    color: var(--text-color);
+    padding: 5px 12px;
+    cursor: pointer;
+    font-size: 10px;
+    transition: 0.3s;
+    font-family: inherit;
+}
+
+.size-btn.selected {
+    background: var(--text-color);
+    color: var(--bg-color);
+}
+
+.add-to-cart-btn {
+    background: var(--text-color);
+    color: var(--bg-color);
+    border: none;
+    padding: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 11px;
+    text-transform: lowercase;
+    margin-top: 10px;
+}
+
+/* --- ANA ÜRÜN HAVUZU (ORTADAKİ BÜYÜK KUTU) --- */
 .products-pool {
     position: fixed;
     top: 52%;
@@ -70,8 +252,11 @@ body[data-theme="light"] .theme-toggle { background: var(--text-color); }
     transform: translate(-50%, -50%);
     width: 65%;
     height: 65%;
+    
+    /* BURASI DÜZELTİLDİ: TEMAYA GÖRE DEĞİŞEN RENKLER */
     border: 1px solid var(--text-color);
     background-color: var(--bg-color);
+    
     z-index: 5;
     display: flex;
     align-items: center;
@@ -79,26 +264,494 @@ body[data-theme="light"] .theme-toggle { background: var(--text-color); }
     overflow: visible;
     transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s;
 }
-#pool-initial-img { height: 100%; width: 100%; object-fit: contain; display: block; cursor: pointer; padding: 20px; }
-.products-grid { display: none; grid-template-columns: repeat(4, 1fr); gap: 20px; width: 100%; height: 100%; padding: 30px; overflow-y: auto; }
-.product-box { width: 100%; aspect-ratio: 1/1; border: 1px solid var(--text-color); display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 8px; background-color: var(--bg-color); }
-.product-box img { width: 90%; height: 90%; object-fit: contain; }
-.product-info { font-size: 9px; text-transform: lowercase; color: var(--text-color); text-align: center; }
+
+.products-pool.expanded {
+    width: 65%;
+    overflow: hidden;
+}
+
+#pool-initial-img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    display: block;
+    cursor: pointer;
+    padding: 20px;
+}
+
+.products-grid {
+    display: none;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.product-card { cursor: pointer; }
+
+.product-box {
+    width: 100%;
+    aspect-ratio: 1/1;
+    
+    /* BURASI DÜZELTİLDİ */
+    border: 1px solid var(--text-color);
+    background-color: var(--bg-color);
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.product-box img {
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+    transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-box img {
+    transform: scale(1.1);
+}
+
+.product-info {
+    font-size: 9px;
+    text-transform: lowercase;
+    opacity: 0.8;
+    text-align: center;
+    color: var(--text-color);
+}
 
 /* --- YAN SEPET --- */
-.side-cart { position: fixed; top: 0; right: -400px; width: 350px; height: 100vh; background-color: var(--bg-color); color: var(--text-color); transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); z-index: 2000; padding: 30px; display: flex; flex-direction: column; border-left: 1px solid var(--text-color); }
-.side-cart.active { right: 0; }
-.cart-item { border-bottom: 1px solid var(--text-color); padding-bottom: 10px; margin-bottom: 15px; font-size: 11px; }
+.side-cart {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 350px;
+    height: 100vh;
+    
+    background-color: var(--bg-color);
+    border-left: 1px solid var(--text-color);
+    color: var(--text-color);
+    
+    transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 2000;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+}
 
-/* --- MENÜ (NAV) --- */
-nav#main-nav { position: fixed; left: 40px; top: 180px; display: flex; flex-direction: column; gap: 12px; z-index: 10; }
-.nav-link { text-decoration: none; color: var(--text-color); font-size: 14px; text-transform: lowercase; cursor: pointer; opacity: 0.5; }
-.nav-link.active { opacity: 1; font-weight: bold; text-decoration: underline; }
+.side-cart.active {
+    right: 0;
+}
 
-/* --- MOBİL AYARLAR --- */
+.cart-items-container {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--text-color);
+    padding-bottom: 10px;
+    font-size: 11px;
+}
+
+.qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.qty-btn {
+    background: none;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1;
+}
+
+.cart-footer {
+    border-top: 1px solid var(--text-color);
+    padding-top: 20px;
+}
+
+.cart-note {
+    width: 100%;
+    background: none;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    font-family: inherit;
+    font-size: 10px;
+    padding: 10px;
+    height: 60px;
+    resize: none;
+    margin-bottom: 15px; outline: none;
+}
+
+.checkout-btn {
+    width: 100%;
+    background: var(--text-color);
+    color: var(--bg-color);
+    border: none;
+    padding: 15px;
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    text-transform: lowercase;
+    font-weight: bold;
+}
+
+/* --- CHECKOUT --- */
+.checkout-container { display: flex; width: 100%; height: 100%; }
+.checkout-form-box { flex: 1; padding: 60px; overflow-y: auto; }
+.checkout-summary-box { width: 300px; border-left: 1px solid var(--text-color); padding: 40px; font-size: 11px; }
+
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-size: 10px; margin-bottom: 5px; opacity: 0.7; }
+.form-input {
+    width: 100%;
+    background: none;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    padding: 10px;
+    font-family: inherit;
+    font-size: 16px;
+    outline: none;
+}
+
+.checkout-step-title {
+    font-size: 18px;
+    margin-bottom: 30px;
+    text-transform: lowercase;
+    border-bottom: 1px solid var(--text-color);
+    padding-bottom: 10px;
+}
+
+/* --- SOL MENÜ (NAV) --- */
+nav#main-nav {
+    position: fixed;
+    left: 40px;
+    top: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 10;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 14px;
+    text-transform: lowercase;
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+.nav-link.active {
+    opacity: 1;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* --- FOOTER (ALT KISIM) --- */
+.legal-footer {
+    position: fixed;
+    bottom: 40px;
+    left: 40px;
+    display: flex;
+    gap: 20px;
+}
+
+.legal-link {
+    font-size: 11px;
+    opacity: 0.5;
+    cursor: pointer;
+    color: var(--text-color);
+    text-transform: lowercase;
+}
+
+.copyright-text {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    opacity: 0.4;
+    text-transform: lowercase;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.bottom-right-container {
+    position: fixed;
+    right: 40px;
+    bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 100;
+}
+
+.lang-wrapper {
+    cursor: pointer;
+    font-size: 11px;
+    opacity: 0.6;
+    text-transform: lowercase;
+}
+
+.social-link svg {
+    width: 14px;
+    height: 14px;
+    fill: var(--text-color);
+    opacity: 0.6;
+    transition: opacity 0.3s;
+    display: block;
+}
+
+.social-link:hover svg {
+    opacity: 1;
+}
+
+.artwork-credit {
+    position: absolute;
+    bottom: -20px;
+    right: 0;
+    font-size: 8px;
+    opacity: 0.5;
+    text-transform: lowercase;
+    font-family: inherit;
+    pointer-events: none;
+}
+
+/* --- SOUNDS POOL (SPOTIFY) --- */
+#soundsPool {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    width: 350px;
+    height: auto;
+    padding: 30px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--text-color);
+    z-index: 3500;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+#soundsPool.active {
+    display: flex;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* =========================================================================
+   MOBİL İÇİN ÖZEL DÜZENLEMELER (RESPONSIVE)
+   ========================================================================= */
 @media (max-width: 768px) {
-    body { height: auto; min-height: 100vh; overflow-y: auto; overflow-x: hidden; position: relative; }
-    nav#main-nav { position: fixed; top: 0; left: 0; width: 100%; height: 130px; display: flex; flex-direction: row; justify-content: center; align-items: flex-end; padding-bottom: 15px; background-color: var(--bg-color); z-index: 400; border-bottom: 1px solid var(--text-color); }
-    .products-pool { position: relative !important; top: auto !important; left: auto !important; transform: none !important; width: 90% !important; height: auto !important; margin: 200px auto 50px auto !important; border: 1px solid var(--text-color); }
-    #productDetailPool, #infoPool, #checkoutPool, #soundsPool { width: 95% !important; height: 90% !important; }
+    
+    body {
+        height: auto;          
+        min-height: 100vh;     
+        overflow-y: auto;      
+        overflow-x: hidden;    
+        position: relative;
+        padding-bottom: 20px;
+    }
+
+    nav#main-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 130px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-end;
+        padding-bottom: 15px;
+        background-color: var(--bg-color);
+        z-index: 400;
+        border-bottom: 1px solid var(--text-color);
+    }
+
+    .products-pool {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        
+        width: 90% !important;
+        height: auto !important;
+        margin: 200px auto 50px auto !important; 
+        
+        border: 1px solid var(--text-color);
+        background-color: var(--bg-color);
+        
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: visible;
+    }
+    
+    #pool-initial-img {
+        width: 100%;
+        height: auto;
+        max-height: 300px;
+        object-fit: contain;
+        padding: 20px;
+    }
+
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding: 15px;
+        width: 100%;
+        height: auto;
+        overflow: visible;
+    }
+
+    .legal-footer {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px 20px;
+        padding: 20px;
+        margin-top: 20px;
+        background: none;
+        z-index: 1;
+    }
+    
+    .bottom-right-container {
+        position: relative;
+        bottom: auto;
+        right: auto;
+        left: auto;
+        transform: none;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 25px;
+        padding: 10px 0;
+        z-index: 1;
+    }
+    
+    .copyright-text {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        transform: none;
+        width: 100%;
+        text-align: center;
+        padding: 20px 0 40px 0;
+        background: none;
+        font-size: 9px;
+        opacity: 0.4;
+        z-index: 1;
+    }
+
+    #productDetailPool, #infoPool, #checkoutPool, #soundsPool {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 95% !important;
+        height: 90% !important;
+        z-index: 3000;
+        padding: 0;
+        flex-direction: column;
+        overflow-y: auto; 
+    }
+    
+    .detail-container {
+        flex-direction: column;
+        height: auto;
+        padding: 20px;
+        align-items: center;
+        text-align: center;
+    }
+
+    .mobile-prod-title {
+        display: block;
+        font-family: 'Averta', sans-serif;
+        font-weight: 900;
+        font-size: 20px;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+        order: 1;
+        width: 100%;
+        border-bottom: 1px solid var(--text-color);
+        padding-bottom: 10px;
+    }
+    
+    .desktop-prod-title { display: none; }
+
+    .detail-img-box {
+        order: 2;
+        width: 100%;
+        height: auto;
+        max-height: 300px;
+        border: none;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+    
+    .detail-info-box {
+        order: 3;
+        width: 100%;
+        padding: 0;
+        border: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .prod-price { font-size: 18px !important; font-weight: bold; }
+    .size-selector { justify-content: center; width: 100%; }
+    .size-btn { padding: 10px 20px; font-size: 12px; }
+    .add-to-cart-btn { width: 100%; padding: 15px; font-size: 14px; }
+    
+    .prod-desc-formal {
+        text-align: left;
+        font-size: 10px;
+        opacity: 0.7;
+        margin-top: 20px;
+    }
+    
+    .info-container, .checkout-container { flex-direction: column; }
+    .info-sidebar, .checkout-summary-box {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--text-color);
+        padding: 20px;
+        height: auto;
+    }
+
+    .side-cart {
+        width: 90%;
+        right: -100%;
+        z-index: 4000;
+    }
+    .side-cart.active { right: 0; }
 }
