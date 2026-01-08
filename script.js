@@ -214,7 +214,7 @@ window.startCheckout = function() {
     btn.innerText = "bağlanıyor...";
 
     // Vercel backend adresin
-    fetch("https://shopier-backend.vercel.app/", { 
+    fetch("https://shopier-backend-68ik19ntq-adems-projects-05581eb9.vercel.app/api/odeme", { 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
