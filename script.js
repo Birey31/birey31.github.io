@@ -151,7 +151,7 @@ window.addToCart = function(name, price) {
     
     updateCartUI();
     closeAllPanels();
-    toggleCart(); // Eklendiğinde sepeti otomatik açar
+    toggleCart();
 };
 
 // Sepet Arayüzünü Güncelle
@@ -183,18 +183,6 @@ window.updateCartUI = function() {
     if(totalEl) totalEl.innerText = total + 'TL';
 };
 
-// Bilgi Havuzunu Aç (KVKK vb.)
-window.openInfoPool = function(type) {
-    const pool = document.getElementById('infoPool');
-    if(!pool) return;
-    pool.style.display = 'flex';
-    window.loadInfo(type);
-    setTimeout(() => {
-        pool.classList.add('active');
-        document.getElementById('globalOverlay').classList.add('active');
-    }, 10);
-};
-
 // Panelleri Kapat
 window.closeAllPanels = function() {
     document.querySelectorAll('#infoPool, #productDetailPool').forEach(p => p.classList.remove('active'));
@@ -213,9 +201,7 @@ window.addEventListener('load', () => {
     setInterval(window.updateTime, 1000);
 });
 
-// --- SHOPIER ÖDEME ENTEGRASYONU (VERCEL API) ---
-
-
+// --- SHOPIER DİREKT ÖDEME ---
 
 window.startCheckout = function() {
     if (cart.length === 0) {
@@ -223,48 +209,7 @@ window.startCheckout = function() {
         return;
     }
 
-    // Sepetteki ilk ürünü ve bedenini al
-    const item = cart[0];
-    const checkoutBtn = document.getElementById('checkoutBtnLabel');
-    const originalText = checkoutBtn.innerText;
-    
-    // Butonu işlem sırasında kilitle
-    checkoutBtn.disabled = true;
-    checkoutBtn.innerText = currentLang === 'tr' ? "bağlanıyor..." : "connecting...";
-
-    fetch("https://shopier-backend-1.vercel.app/api/odeme", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            beden: item.size
-        })
-    })
-    .then(async res => {
-        if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error || "Sunucu hatası");
-        }
-        return res.json();
-    })
-    .then(data => {
-        if (data.url) {
-            // Shopier'den gelen ham HTML veya URL ise yönlendir
-            // Eğer backend direkt URL dönüyorsa:
-            window.location.href = data.url;
-        } else {
-            alert(currentLang === 'tr' ? "Ödeme linki oluşturulamadı." : "Failed to create payment link.");
-            console.error("Backend Verisi:", data);
-        }
-    })
-    .catch(err => {
-        alert(currentLang === 'tr' ? "Bağlantı hatası: " + err.message : "Connection error: " + err.message);
-        console.error("Hata Detayı:", err);
-    })
-    .finally(() => {
-        // Butonu eski haline getir
-        checkoutBtn.disabled = false;
-        checkoutBtn.innerText = originalText;
-    });
+    // Doğrudan Shopier'in "Hızlı Satın Al" (Adres Formu) linkine gönderiyoruz.
+    // Bu sayede hiçbir Vercel veya Cloudflare hatası almazsın.
+    window.location.href = "https://www.shopier.com/s/shipping/Reeha";
 };
