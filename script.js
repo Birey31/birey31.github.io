@@ -201,7 +201,7 @@ window.addEventListener('load', () => {
     setInterval(window.updateTime, 1000);
 });
 
-// --- SHOPIER DİREKT ÖDEME ---
+// --- SHOPIER API ENTEGRASYONU ---
 
 window.startCheckout = function() {
     if (cart.length === 0) {
@@ -209,7 +209,40 @@ window.startCheckout = function() {
         return;
     }
 
-    // Doğrudan Shopier'in "Hızlı Satın Al" (Adres Formu) linkine gönderiyoruz.
-    // Bu sayede hiçbir Vercel veya Cloudflare hatası almazsın.
-    window.location.href = "https://www.shopier.com/s/shipping/Reeha";
+    const item = cart[0]; 
+    const btn = document.getElementById('checkoutBtnLabel');
+    btn.innerText = "bağlanıyor...";
+
+    // Vercel backend adresin
+    fetch("https://shopier-backend.vercel.app/api/odeme", { 
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: item.name,
+            price: 650, // Shopier panelindeki fiyatla birebir aynı olmalı
+            size: item.size
+        })
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Backend bağlantı hatası");
+        return res.text();
+    })
+    .then(html => {
+        // Shopier'den dönen gizli HTML formunu sayfaya bas ve otomatik gönder
+        const div = document.createElement('div');
+        div.style.display = 'none';
+        div.innerHTML = html;
+        document.body.appendChild(div);
+        
+        const form = div.querySelector('form');
+        if (form) {
+            form.submit();
+        } else {
+            throw new Error("Shopier formu alınamadı.");
+        }
+    })
+    .catch(err => {
+        alert("Hata: " + err.message);
+        btn.innerText = "ödeme";
+    });
 };
