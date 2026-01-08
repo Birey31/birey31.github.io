@@ -574,14 +574,14 @@ body[data-theme="light"] .theme-toggle {
 
     transform: translate(-50%, -50%);
 
-    width: fit-content;
+    width: 65%;
 
     height: 65%;
 
     border: 1px solid var(--text-color);
 
     background-color: var(--bg-color);
-
+    
     z-index: 5;
 
     display: flex;
@@ -610,15 +610,17 @@ body[data-theme="light"] .theme-toggle {
 
 #pool-initial-img {
 
-    height: 70%;
+    height: 100%;
 
-    width: auto;
+    width: 100%;
 
     object-fit: contain;
 
     display: block;
 
     cursor: pointer;
+    
+    padding: 20px;
 
 }
 
