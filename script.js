@@ -201,7 +201,7 @@ window.addEventListener('load', () => {
     setInterval(window.updateTime, 1000);
 });
 
-// --- SHOPIER API ENTEGRASYONU ---
+// --- ÖDEME SİSTEMİ (PAYTR GEÇİŞ SÜRECİ) ---
 
 window.startCheckout = function() {
     if (cart.length === 0) {
@@ -209,40 +209,13 @@ window.startCheckout = function() {
         return;
     }
 
-    const item = cart[0]; 
-    const btn = document.getElementById('checkoutBtnLabel');
-    btn.innerText = "bağlanıyor...";
+    // PayTR incelemesi ve teknik geçiş mesajı
+    const message = currentLang === 'tr' 
+        ? "🛒 Ödeme Sistemimiz Güncelleniyor!\n\nŞu anda yeni ve daha güvenli bir ödeme altyapısına geçiş yapıyoruz. Kısa bir süre sonra tekrar hizmetinizde olacağız.\n\nAnlayışınız için teşekkürler." 
+        : "🛒 Payment System Update!\n\nWe are currently switching to a new and more secure payment infrastructure. We will be back shortly.\n\nThank you for your patience.";
 
-    // Vercel backend adresin
-    fetch("https://shopier-backend-68ik19ntq-adems-projects-05581eb9.vercel.app/api/odeme", { 
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            name: item.name,
-            price: 650, // Shopier panelindeki fiyatla birebir aynı olmalı
-            size: item.size
-        })
-    })
-    .then(res => {
-        if (!res.ok) throw new Error("Backend bağlantı hatası");
-        return res.text();
-    })
-    .then(html => {
-        // Shopier'den dönen gizli HTML formunu sayfaya bas ve otomatik gönder
-        const div = document.createElement('div');
-        div.style.display = 'none';
-        div.innerHTML = html;
-        document.body.appendChild(div);
-        
-        const form = div.querySelector('form');
-        if (form) {
-            form.submit();
-        } else {
-            throw new Error("Shopier formu alınamadı.");
-        }
-    })
-    .catch(err => {
-        alert("Hata: " + err.message);
-        btn.innerText = "ödeme";
-    });
+    alert(message);
+
+    const btnLabel = document.getElementById('checkoutBtnLabel');
+    if(btnLabel) btnLabel.innerText = (currentLang === 'tr' ? "yakında" : "soon");
 };
