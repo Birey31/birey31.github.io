@@ -215,13 +215,38 @@ window.addEventListener('load', () => {
 
 // --- SHOPIER ÖDEME ENTEGRASYONU ---
 
+// --- SHOPIER ÖDEME ENTEGRASYONU (VERCEL API) ---
+
 window.startCheckout = function() {
     if (cart.length === 0) {
         alert(currentLang === 'tr' ? "sepetiniz boş." : "cart is empty.");
         return;
     }
 
-    // Sepetteki ilk ürünün bedeni M ise direkt ödeme sayfasına gider
-    // Shopier panelinden varyantları kapatırsan direkt adres formu açılır
-    window.location.href = "https://www.shopier.com/Reeha/42972271";
+    // şimdilik ilk ürünü gönderiyoruz (tek ürün mantığı)
+    const item = cart[0];
+
+    fetch("https://shopier-backend-1.vercel.app/api/odeme", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            beden: item.size
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.url) {
+            window.location.href = data.url;
+        } else {
+            alert("Shopier link oluşturulamadı");
+            console.log(data);
+        }
+    })
+    .catch(err => {
+        alert("Ödeme bağlantısı hatası");
+        console.error(err);
+    });
 };
+
