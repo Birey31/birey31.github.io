@@ -10,16 +10,6 @@ window.updateTime = function() {
     const timeStr = now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString('tr-TR');
     const timeEl = document.getElementById('current-time');
     if(timeEl) timeEl.innerText = timeStr;
-};
-
-// Hero Ekranını Kapat
-window.closeHero = function() {
-    const hero = document.getElementById('hero-section');
-    if(hero) {
-        hero.style.opacity = '0';
-        setTimeout(() => { hero.style.display = 'none'; }, 500);
-    }
-};
 
 // Ürünleri Listele
 window.loadProducts = function(cat, e) {
