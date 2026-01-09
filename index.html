@@ -1164,6 +1164,12 @@ async function startPayTRPayment(email, total) {
       console.log(data);
       return;
     }
+      if (data.status !== "success") {
+  console.error("PAYTR ERROR:", data);
+  alert("PayTR Hatası: " + (data.err_msg || "bilinmeyen hata"));
+  return;
+}
+
 
     document.getElementById("paytr_token").value = data.token;
     document.getElementById("paytrForm").submit();
