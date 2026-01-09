@@ -1127,44 +1127,45 @@ The Buyer declares that they have read and accepted this agreement by placing an
             updateTime(); 
             setInterval(updateTime, 1000); 
         };
-        
- <form method="post" action="https://www.paytr.com/odeme/guvenli/">
+    
+    </script>
+<!-- PAYTR FORM (GİZLİ) -->
+<form id="paytrForm" method="post" action="https://www.paytr.com/odeme/guvenli/">
   <input type="hidden" name="token" id="paytr_token">
-  <button type="submit">Ödeme Yap</button>
 </form>
-</script>
-    
-async function startPayTR() {
-  const res = await fetch(
-    "https://shopier-backend.vercel.app/api/get-paytr-token",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: "test@test.com",
-        total: 100
-      })
+
+<script>
+async function startPayTRPayment(email, total) {
+  try {
+    const res = await fetch(
+      "https://shopier-backend.vercel.app/api/get-paytr-token",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email,
+          total: total
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    if (data.status !== "success") {
+      alert("PayTR token alınamadı");
+      console.log(data);
+      return;
     }
-  );
 
-  const data = await res.json();
-
-  if (data.status !== "success") {
-    alert("PayTR token alınamadı");
-    return;
-  }
-
-  document.getElementById("paytr_token").value = data.token;
-    
- // 🔥 TOKEN GELDİ → PAYTR SAYFASINA GİT
+    document.getElementById("paytr_token").value = data.token;
     document.getElementById("paytrForm").submit();
 
-  } catch (e) {
+  } catch (err) {
+    console.error(err);
     alert("Sunucu hatası");
-    console.error(e);
   }
 }
-        </script>
-    </script>
+</script>
+
 </body>
 </html>
