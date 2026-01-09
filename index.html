@@ -942,7 +942,12 @@ The Buyer declares that they have read and accepted this agreement by placing an
             cpText.innerText = currentLang === 'tr' ? '© 2026 reeha. tüm hakları saklıdır.' : '© 2026 reeha. all rights reserved.';
         }
 
-        window.onload = () => { 
+       window.onload = () => {
+            // URL'den index.html'i gizler
+            if (window.location.href.includes("index.html")) {
+                window.history.replaceState({}, document.title, window.location.pathname.replace("index.html", ""));
+            }
+
             showLandingImage(); 
             updateTime(); 
             setInterval(updateTime, 1000); 
