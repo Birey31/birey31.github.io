@@ -220,6 +220,26 @@
             .detail-info-box { width: 100%; }
             .side-cart { width: 90%; }
         }
+        /* Mobilde linklerin altında durur */
+        #copyright-text {
+            font-size: 9px;
+            opacity: 0.4;
+            margin-top: 10px;
+            text-transform: lowercase;
+        }
+
+        /* Bilgisayar ekranı (Masaüstü) için tam ortalama */
+        @media (min-width: 769px) {
+            #copyright-text {
+                position: fixed;
+                bottom: 40px;
+                left: 50%;
+                transform: translateX(-50%);
+                margin-top: 0;
+                width: auto;
+                white-space: nowrap;
+            }
+        }
     </style>
 </head>
 <body>
@@ -300,8 +320,8 @@
         <div class="legal-link" onclick="openInfoPool('shipping')" data-tr="teslimat ve iade" data-en="shipping & returns">teslimat ve iade</div>
         <div class="legal-link" onclick="openInfoPool('privacy')" data-tr="kvkk & çerez" data-en="privacy & cookies">kvkk & çerez</div>
         <div class="legal-link" onclick="openInfoPool('contact')" data-tr="iletişim" data-en="contact">iletişim</div>
-        <div id="copyright-text" style="font-size: 9px; opacity: 0.4; margin-top: 10px; text-transform: lowercase;">
-            © 2026 reeha. tüm hakları saklıdır.
+        <div id="copyright-text">
+    © 2026 reeha. tüm hakları saklıdır.
         </div>
     </footer>
 
