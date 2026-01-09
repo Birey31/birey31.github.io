@@ -20,21 +20,7 @@ window.expandPool = function() {
     if(initialImg) initialImg.style.display = 'none';
     if(grid) grid.style.display = 'grid';
 };
-window.toggleLanguage = function() {
-    currentLang = currentLang === 'tr' ? 'en' : 'tr';
-    const langBtn = document.querySelector('.lang-wrapper');
-    if(langBtn) langBtn.innerText = currentLang === 'tr' ? 'tr/en' : 'en/tr';
-    
-    // Menü yazılarını da değiştirebilirsin
-    const navLinks = document.querySelectorAll('.nav-link');
-    if(currentLang === 'en') {
-        navLinks[0].innerText = 'tops';
-        navLinks[1].innerText = 'bottoms';
-    } else {
-        navLinks[0].innerText = 'üst';
-        navLinks[1].innerText = 'alt';
-    }
-};
+
 window.filterCategory = function(cat) {
     // Havuz kapalıysa önce aç
     window.expandPool();
@@ -101,15 +87,34 @@ window.toggleTheme = function() {
 };
 
 // Dil Değiştir (TR/EN)
+// Dil Değiştirme (Tek bir tane ve doğru ID'leri kullanan fonksiyon olmalı)
 window.toggleLanguage = function() {
     currentLang = currentLang === 'tr' ? 'en' : 'tr';
-    const langEl = document.getElementById('langTxt');
-    if(langEl) langEl.innerText = currentLang;
+    const langBtn = document.querySelector('.lang-wrapper');
+    if(langBtn) langBtn.innerText = currentLang === 'tr' ? 'tr/en' : 'en/tr';
     
-    document.querySelectorAll('[data-tr]').forEach(el => {
-        el.textContent = currentLang === 'tr' ? el.getAttribute('data-tr') : el.getAttribute('data-en');
-    });
-    updateCartUI();
+    // Menü yazılarını güncelle
+    const navLinks = document.querySelectorAll('.nav-link');
+    if(navLinks.length >= 2) {
+        if(currentLang === 'en') {
+            navLinks[0].innerText = 'tops';
+            navLinks[1].innerText = 'bottoms';
+        } else {
+            navLinks[0].innerText = 'üst';
+            navLinks[1].innerText = 'alt';
+        }
+    }
+};
+
+// Havuzu Açma Fonksiyonu (ID'ler HTML ile tam uyumlu)
+window.expandPool = function() {
+    const pool = document.getElementById('mainPool');
+    const grid = document.getElementById('productsGrid');
+    const initialImg = document.getElementById('pool-initial-img');
+
+    if(pool) pool.classList.add('expanded');
+    if(initialImg) initialImg.style.display = 'none';
+    if(grid) grid.style.display = 'grid';
 };
 
 // Ürün Detayını Aç
