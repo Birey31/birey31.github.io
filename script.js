@@ -53,8 +53,8 @@ body {
 body[data-theme="light"] .theme-toggle { background: var(--text-color); }
 .cart-toggle { background: none; border: none; color: var(--text-color); font-size: 13px; cursor: pointer; text-transform: lowercase; }
 
-#globalOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1500; display: none; cursor: pointer; backdrop-filter: blur(4px); }
-#globalOverlay.active { display: block; }
+#globalOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1500; display: none; pointer-events: none; cursor: pointer; backdrop-filter: blur(4px); }
+#globalOverlay.active { display: block; pointer-events: auto !important;}
 
 /* --- MODAL PENCERELER (ARKA PLAN RENGİ DÜZELTİLDİ) --- */
 #infoPool, #productDetailPool, #checkoutPool, #soundsPool {
@@ -141,7 +141,7 @@ body[data-theme="light"] .theme-toggle { background: var(--text-color); }
 .cart-note { width: 100%; background: none; border: 1px solid var(--text-color); color: var(--text-color); font-family: inherit; font-size: 10px; padding: 10px; height: 60px; resize: none; margin-bottom: 15px; outline: none; }
 
 /* --- MENÜ (NAV) --- */
-nav#main-nav { position: fixed; left: 40px; top: 180px; display: flex; flex-direction: column; gap: 12px; z-index: 10; }
+nav#main-nav { position: fixed; left: 40px; top: 180px; display: flex; flex-direction: column; gap: 12px; z-index: 20000; }
 .nav-link { text-decoration: none; color: var(--text-color); font-size: 14px; text-transform: lowercase; cursor: pointer; opacity: 0.5; }
 .nav-link.active { opacity: 1; font-weight: bold; text-decoration: underline; }
 
