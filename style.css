@@ -109,13 +109,78 @@ nav#main-nav {
 }
 #infoPool.active, #productDetailPool.active, #checkoutPool.active, #soundsPool.active { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
+/* --- YAN SEPET (GÜNCEL) --- */
 .side-cart {
-    position: fixed; top: 0; right: -400px; width: 350px; height: 100vh;
+    position: fixed; 
+    top: 0; 
+    right: -400px; 
+    width: 350px; 
+    height: 100vh;
     background-color: var(--bg-color);
     border-left: 1px solid var(--text-color);
     color: var(--text-color);
     z-index: 3000;
-    transition: right 0.4s ease;
+    transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 30px;
+    display: flex;
+    flex-direction: column; /* İçeriği alt alta dizer */
+}
+
+.side-cart.active { right: 0; }
+
+/* Sepet Başlığı */
+.cart-header {
+    font-family: 'Averta', sans-serif; /* Marka fontun */
+    font-weight: 900;
+    font-size: 24px;
+    text-transform: uppercase;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--text-color); /* Altındaki çizgi */
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Ürünlerin Listelendiği Orta Alan */
+.cart-items-container {
+    flex: 1; /* Kalan boşluğu doldurur */
+    overflow-y: auto; /* Ürün çoksa kaydırılabilir yapar */
+    padding-right: 5px;
+}
+
+/* Sepet Alt Kısmı */
+.cart-footer {
+    border-top: 1px solid var(--text-color); /* Üstündeki çizgi */
+    padding-top: 20px;
+    margin-top: auto;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 20px;
+    text-transform: lowercase;
+}
+
+.checkout-btn {
+    width: 100%;
+    background: var(--text-color);
+    color: var(--bg-color);
+    border: none;
+    padding: 18px;
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    text-transform: lowercase;
+    font-weight: bold;
+    transition: opacity 0.2s;
+}
+
+.checkout-btn:hover {
+    opacity: 0.8;
+
 }
 .side-cart.active { right: 0; }
 
