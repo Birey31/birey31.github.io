@@ -321,7 +321,7 @@
         <div class="cart-footer" id="cartFooter" style="display:none;">
             <textarea id="cartNotePlaceholder" class="cart-note"></textarea>
             <div style="font-size:12px; margin-bottom:15px; display:flex; justify-content:space-between;"><span>total:</span><span id="cartTotal">0€</span></div>
-            <button class="checkout-btn" onclick="startCheckout()" id="checkoutBtnLabel" data-tr="ödeme" data-en="checkout">ödeme</button>
+            <button class="checkout-btn" onclick="startPayTR()" id="checkoutBtnLabel">Ödemeyi Tamamla</button>
         </div>
     </div>
 
@@ -1062,6 +1062,51 @@ The Buyer declares that they have read and accepted this agreement by placing an
         function handleOverlayClick() {
             closeAllPanels();
         }
+        async function startPayTR() {
+    const totalPrice = cart.reduce((a,c) => a + c.price * c.qty, 0);
+    const checkoutContent = document.getElementById('checkoutFormContent');
+    
+    // 1. Ekranı hazırla (Yükleniyor yazısı)
+    checkoutContent.innerHTML = `
+        <div style="text-align:center; padding:50px;">
+            <p>Güvenli ödeme sistemine bağlanılıyor...</p>
+        </div>`;
+
+    try {
+        // 2. Senin Vercel Backend'ine istek gönder
+        // BURADAKİ URL'Yİ KENDİ VERCEL LİNKİNLE DEĞİŞTİR:
+        const apiUrl = 'https://shopier-backend.vercel.app/'; 
+
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: document.getElementById('bill_email').value,
+                total: totalPrice,
+                name: document.getElementById('bill_name').value,
+                address: document.getElementById('bill_address').value,
+                // Sepet verisini de istersen ekleyebilirsin
+            })
+        });
+
+        const data = await response.json();
+
+        // 3. Eğer PayTR'den Token geldiyse iFrame'i aç
+        if (data.status === 'success' || data.token) {
+            checkoutContent.innerHTML = `
+                <iframe src="https://www.paytr.com/odeme/guvenli/${data.token}" 
+                        id="paytriframe" frameborder="0" scrolling="no" 
+                        style="width: 100%; height: 600px; border:none;"></iframe>
+            `;
+        } else {
+            checkoutContent.innerHTML = `<div style="color:red;">Hata: ${data.err_msg || "Bağlantı kurulamadı."}</div>`;
+        }
+
+    } catch (error) {
+        console.error("Ödeme hatası:", error);
+        checkoutContent.innerHTML = "Ödeme sistemi şu an başlatılamıyor.";
+    }
+}
 
         function toggleTheme() {
             const body = document.body;
