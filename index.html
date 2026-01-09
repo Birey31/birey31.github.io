@@ -1179,6 +1179,44 @@ async function startPayTRPayment(email, total) {
     alert("Sunucu hatası");
   }
 }
+    <form id="paytrForm" method="post" action="https://www.paytr.com/odeme/guvenli/">
+  <input type="hidden" name="token" id="paytr_token">
+</form>
+
+<script>
+async function payNow() {
+  const email = "test@test.com";   // şimdilik sabit
+  const total = 100;               // şimdilik sabit
+
+  console.log("FRONTEND SEND:", email, total);
+
+  const res = await fetch(
+    "https://shopier-backend.vercel.app/api/get-paytr-token",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        total,
+        name: "Test",
+        address: "Istanbul"
+      })
+    }
+  );
+
+  const data = await res.json();
+  console.log("BACKEND RESPONSE:", data);
+
+  if (data.status !== "success") {
+    alert("PayTR Hatası: " + (data.err_msg || data.reason));
+    return;
+  }
+
+  document.getElementById("paytr_token").value = data.token;
+  document.getElementById("paytrForm").submit();
+}
+</script>
+
 </script>
 
 </body>
