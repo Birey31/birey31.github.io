@@ -209,9 +209,7 @@
         .lang-wrapper { 
             cursor: pointer; 
             font-size: 12px; 
-            opacity: 0.7; 
             text-transform: lowercase; 
-            transition: 0.3s;
         }
         .lang-wrapper:hover { opacity: 1; }
 
@@ -347,7 +345,7 @@
                 <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
             </svg>
         </a>
-        <div class="lang-wrapper" onclick="toggleLanguage()" id="langTxt" style="font-size: 12px; opacity: 0.7; text-transform: lowercase; cursor: pointer;">tr</div>
+        <div class="lang-wrapper" onclick="toggleLanguage()" id="langTxt" style="font-size: 12px; opacity: 0.7; text-transform: lowercase; cursor: pointer; transition: 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">tr</div>
     </div>
     </div>
 
