@@ -1013,25 +1013,32 @@ The Buyer declares that they have read and accepted this agreement by placing an
             loadInfo(type);
         }
     function loadInfo(pageKey) {
-    // 1. Önce hepsinden active sınıfını (kırmızılığı) kaldır
+    // 1. ÖNCEKİ SEÇİMLERİ TEMİZLE
+    // Sayfadaki TÜM menü linklerinden 'active' (kırmızı) sınıfını kaldırır.
     document.querySelectorAll('.info-nav-link').forEach(el => {
         el.classList.remove('active');
     });
 
-    // 2. Doğru ID'yi yakala ve active sınıfını ekle
+    // 2. YENİ SEÇİLENİ İŞARETLE
     const activeLink = document.getElementById('link-' + pageKey);
     if (activeLink) {
-        activeLink.classList.add('active');
+        activeLink.classList.add('active'); // Sadece tıklananı kırmızı yap
+        
+        // Mobilde tıklanan menüyü ekranda ortala (Kullanıcı görsün)
+        if (window.innerWidth < 768) {
+             activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
     }
 
-    // 3. İçeriği yükle
+    // 3. İÇERİĞİ YÜKLE
     const contentDiv = document.getElementById('infoContent');
-    if (infoTexts[pageKey]) {
+    // Eğer içerik verisi varsa yükle, yoksa boş bırak
+    if (infoTexts && infoTexts[pageKey]) {
         contentDiv.innerHTML = currentLang === 'tr' ? infoTexts[pageKey].tr : infoTexts[pageKey].en;
-        contentDiv.scrollTop = 0; // Sayfayı yukarı kaydır
+        // İçerik yüklendiğinde en üste kaydır (mobilde aşağıda kalmasın)
+        contentDiv.scrollTop = 0;
     }
 }
-
     // 3. İÇERİĞİ YÜKLE
     const contentDiv = document.getElementById('infoContent');
     // Eğer içerik verisi varsa yükle, yoksa boş bırak
