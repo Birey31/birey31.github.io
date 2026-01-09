@@ -757,7 +757,9 @@ The Buyer declares that they have read and accepted this agreement by placing an
 
         function showLandingImage() {
             const pool = document.getElementById('mainPool');
-            pool.innerHTML = `<img src="media/sanat.webp" id="sanat-img-landing" alt="Reeha Art">`;
+            pool.innerHTML = `<img src="media/sanat.webp" id="sanat-img-landing" alt="Reeha Art"
+            style="width: 100%; height: 100%; object-fit: contain; cursor: pointer;" 
+                     onclick="loadProducts('news', null)">`;
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
         }
 
