@@ -79,16 +79,22 @@
     </div>
 
     <div class="side-cart" id="sideCart">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-            <span style="font-size: 14px; font-weight: bold;">your cart</span>
-            <button class="nav-link" onclick="toggleCart()">close</button>
+    <div class="cart-header">
+        <span>CART</span>
+        <button onclick="toggleCart()" style="background:none; border:none; color:var(--text-color); cursor:pointer; font-size:10px;">[X]</button>
+    </div>
+
+    <div class="cart-items-container" id="cartItems">
         </div>
-        <div class="cart-items-container" id="cartItems">
-            </div>
-        <div class="cart-footer">
-            <textarea class="cart-note" placeholder="order note..."></textarea>
-            <button class="checkout-btn" onclick="openModal('checkoutPool')">checkout</button>
+
+    <div class="cart-footer">
+        <div class="total-row">
+            <span>toplam:</span>
+            <span id="cartTotalText">0.00 TL</span>
         </div>
+        <button class="checkout-btn" onclick="openModal('checkoutPool')">ödeme yap</button>
+    </div>
+</div>
     </div>
 
     <footer class="legal-footer">
