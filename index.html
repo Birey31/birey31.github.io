@@ -148,8 +148,9 @@
             padding: 40px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
             flex-shrink: 0;
+            overflow-y: auto;
         }
 
         .info-nav-link {
@@ -171,6 +172,7 @@
             overflow-y: auto;
             font-size: 12px;
             line-height: 1.8;
+            white-space: pre-line; /* Satır boşluklarını korur */
         }
 
         /* Ürün Detay İçeriği */
@@ -522,7 +524,8 @@
             .prod-desc-formal { text-align: left; font-size: 10px; opacity: 0.7; margin-top: 20px; }
             
             .info-container { flex-direction: column; }
-            .info-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--text-color); padding: 20px; height: auto; }
+            .info-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--text-color); padding: 20px; height: auto; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 15px; }
+            .info-nav-link { font-size: 12px; }
             
             .side-cart { width: 90%; right: -100%; z-index: 4000; }
             .side-cart.active { right: 0; }
@@ -565,14 +568,15 @@
     <div id="infoPool">
         <div class="info-container">
             <div class="info-sidebar">
-                <div class="info-nav-link active" onclick="showInfo('shipping')">shipping</div>
-                <div class="info-nav-link" onclick="showInfo('returns')">returns</div>
-                <div class="info-nav-link" onclick="showInfo('contact')">contact</div>
+                <div class="info-nav-link" data-type="shipping" onclick="showInfo('shipping')">shipping</div>
+                <div class="info-nav-link" data-type="returns" onclick="showInfo('returns')">returns</div>
+                <div class="info-nav-link" data-type="terms" onclick="showInfo('terms')">terms</div>
+                <div class="info-nav-link" data-type="privacy" onclick="showInfo('privacy')">privacy</div>
+                <div class="info-nav-link" data-type="contact" onclick="showInfo('contact')">contact</div>
                 <button class="nav-link" style="margin-top:auto" onclick="closeAllPanels()">close</button>
             </div>
             <div class="info-content" id="infoContent">
-                <p>Worldwide shipping available. Orders are processed within 2-4 business days.</p>
-            </div>
+                </div>
         </div>
     </div>
 
@@ -595,9 +599,10 @@
     </div>
 
     <footer class="legal-footer">
-        <button class="nav-link legal-link" onclick="openInfoModal()">terms</button>
-        <button class="nav-link legal-link" onclick="openInfoModal()">privacy</button>
-        <button class="nav-link legal-link" onclick="openInfoModal()">shipping</button>
+        <button class="nav-link legal-link" onclick="openInfoModal('terms')">terms</button>
+        <button class="nav-link legal-link" onclick="openInfoModal('privacy')">privacy</button>
+        <button class="nav-link legal-link" onclick="openInfoModal('shipping')">shipping</button>
+        <button class="nav-link legal-link" onclick="openInfoModal('returns')">returns</button>
     </footer>
 
     <div class="copyright-text">© 2026 REEHA STUDIO. ISTANBUL</div>
@@ -615,16 +620,41 @@
         // REEHA - Global Değişkenler
         let currentLang = 'tr';
         let cart = [];
+        let activeInfoType = 'shipping'; // Varsayılan açık olan bilgi sayfası
+
+        // Yasal Metinler ve İçerikler
+        const legalContent = {
+            shipping: {
+                tr: "TESLİMAT POLİTİKASI\n\n1. Sipariş İşleme: Siparişleriniz 2-4 iş günü içinde hazırlanır ve kargoya verilir.\n\n2. Kargo Ücretleri: Tüm Türkiye içi siparişlerde kargo ücretsizdir. Yurt dışı gönderimlerde ücret sepette hesaplanır.\n\n3. Takip: Siparişiniz kargoya verildiğinde size e-posta veya SMS yoluyla bir takip numarası iletilecektir.\n\n4. Teslimat Süresi: Yurt içi teslimatlar genellikle kargoya verildikten sonra 1-3 iş günü sürer.",
+                en: "SHIPPING POLICY\n\n1. Order Processing: Orders are processed and shipped within 2-4 business days.\n\n2. Shipping Costs: Free shipping on all orders within Turkey. International shipping costs are calculated at checkout.\n\n3. Tracking: Once your order is shipped, you will receive a tracking number via email or SMS.\n\n4. Delivery Time: Domestic deliveries usually take 1-3 business days after shipment."
+            },
+            returns: {
+                tr: "İADE POLİTİKASI\n\n1. Süre: Ürünü teslim aldığınız tarihten itibaren 14 gün içinde iade talebinde bulunabilirsiniz.\n\n2. Koşullar: İade edilecek ürünler giyilmemiş, yıkanmamış ve etiketi üzerinde olmalıdır. Orijinal ambalajı bozulmamış olmalıdır.\n\n3. Süreç: İade işlemi için info@reeha.com.tr adresine sipariş numaranızla birlikte e-posta gönderin.\n\n4. Geri Ödeme: İadeniz onaylandıktan sonra ödemeniz 7-10 iş günü içinde kartınıza iade edilir.",
+                en: "RETURN POLICY\n\n1. Timeframe: You can request a return within 14 days from the date of delivery.\n\n2. Conditions: Items must be unworn, unwashed, and have original tags attached. Original packaging must be intact.\n\n3. Process: To initiate a return, please email info@reeha.com.tr with your order number.\n\n4. Refund: Once your return is approved, your refund will be processed to your original payment method within 7-10 business days."
+            },
+            terms: {
+                tr: "HİZMET ŞARTLARI\n\n1. Genel: Bu web sitesini kullanarak REEHA tarafından belirlenen tüm şartları kabul etmiş sayılırsınız.\n\n2. Ürünler: Ürün görselleri ve renkleri ekran ayarlarına göre farklılık gösterebilir. Stok durumları anlık değişebilir.\n\n3. Fiyatlandırma: Fiyatlar önceden haber verilmeksizin değiştirilebilir.\n\n4. Fikri Mülkiyet: Sitedeki tüm tasarımlar, logolar ve görseller REEHA STUDIO'ya aittir. İzinsiz kullanılamaz.",
+                en: "TERMS OF SERVICE\n\n1. General: By using this website, you agree to all terms and conditions set by REEHA.\n\n2. Products: Product images and colors may vary depending on screen settings. Stock availability is subject to change.\n\n3. Pricing: Prices are subject to change without prior notice.\n\n4. Intellectual Property: All designs, logos, and images on this site belong to REEHA STUDIO. Unauthorized use is prohibited."
+            },
+            privacy: {
+                tr: "GİZLİLİK POLİTİKASI\n\n1. Veri Toplama: Siparişinizi işlemek için adınız, adresiniz ve e-posta bilgileriniz toplanır.\n\n2. Güvenlik: Ödeme bilgileriniz sunucularımızda saklanmaz, doğrudan güvenli ödeme altyapısı (PayTR/Iyzico vb.) üzerinden işlenir.\n\n3. Çerezler: Site deneyimini iyileştirmek için çerezler (cookies) kullanılmaktadır.\n\n4. Paylaşım: Kişisel verileriniz, kargo firmaları gibi hizmet sağlayıcılar dışında üçüncü şahıslarla paylaşılmaz.",
+                en: "PRIVACY POLICY\n\n1. Data Collection: We collect your name, address, and email strictly to process your order.\n\n2. Security: Your payment information is not stored on our servers; it is processed directly through secure payment gateways.\n\n3. Cookies: We use cookies to improve your browsing experience.\n\n4. Sharing: Your personal data is not shared with third parties except for service providers like shipping companies."
+            },
+            contact: {
+                tr: "İLETİŞİM\n\nE-posta: info@reeha.com.tr\nAdres: İstanbul, Türkiye\n\nInstagram: @reehastudio\n\nHer türlü soru ve iş birliği için bize ulaşabilirsiniz.",
+                en: "CONTACT\n\nEmail: info@reeha.com.tr\nAddress: Istanbul, Turkey\n\nInstagram: @reehastudio\n\nFeel free to contact us for any questions or collaborations."
+            }
+        };
 
         // Ürün Verileri
         const productsData = {
             tops: [
-                { id: 1, name: "t-shirt 01", price: "1200", desc: "100% Cotton, Heavyweight fabric.", img: "elbise/tshirt1.webp" },
-                { id: 2, name: "t-shirt 02", price: "1200", desc: "Oversized fit, screen printed.", img: "elbise/tshirt2.webp" },
-                { id: 3, name: "yakında", price: "", desc: "", img: "media/yakinda.webp", isComingSoon: true }
+                { id: 1, name: "t-shirt 01", price: "1200", desc: "100% Cotton, Heavyweight fabric.", img: "media/tshirt1.webp" },
+                { id: 2, name: "t-shirt 02", price: "1200", desc: "Oversized fit, screen printed.", img: "media/tshirt2.webp" },
+                { id: 3, name: "yakında", price: "", desc: "", img: "media/elbise/yakinda.webp", isComingSoon: true }
             ],
             bottoms: [
-                { id: 4, name: "yakında", price: "", desc: "", img: "media/yakinda.webp", isComingSoon: true }
+                { id: 4, name: "yakında", price: "", desc: "", img: "media/elbise/yakinda.webp", isComingSoon: true }
             ]
         };
 
@@ -825,11 +855,19 @@
 
         window.handleOverlayClick = function() { closeAllPanels(); };
 
-        // Bilgi Modalını Aç (Shipping vb.)
-        window.openInfoModal = function() {
+        // Bilgi Modalını Aç
+        window.openInfoModal = function(type) {
             const pool = document.getElementById('infoPool');
             const overlay = document.getElementById('globalOverlay');
             if(pool) {
+                // Eğer type belirtilmişse (footer linkleri gibi), direkt o içeriği aç
+                if (type) {
+                    showInfo(type);
+                } else {
+                    // Varsayılan shipping
+                    showInfo('shipping');
+                }
+
                 pool.style.display = 'flex';
                 overlay.style.display = 'block';
                 setTimeout(() => {
@@ -839,15 +877,22 @@
             }
         };
 
+        // İçeriği Göster (GÜNCELLENDİ)
         window.showInfo = function(type) {
-             document.querySelectorAll('.info-nav-link').forEach(l => l.classList.remove('active'));
-             // Tıklanan elemanı bulma (basit mantık)
-             event.target.classList.add('active');
+            activeInfoType = type; // Aktif tipi kaydet
 
-             const content = document.getElementById('infoContent');
-             if(type === 'shipping') content.innerHTML = "<p>Worldwide shipping available. Orders are processed within 2-4 business days.</p>";
-             if(type === 'returns') content.innerHTML = "<p>Returns accepted within 14 days of delivery. Item must be unworn.</p>";
-             if(type === 'contact') content.innerHTML = "<p>Contact us at: info@reeha.com.tr</p>";
+            // Tüm linklerden aktif sınıfını kaldır
+            document.querySelectorAll('.info-nav-link').forEach(l => l.classList.remove('active'));
+
+            // Tıklanan veya belirtilen tipe ait linki aktif yap
+            const activeLink = document.querySelector(`.info-nav-link[data-type="${type}"]`);
+            if (activeLink) activeLink.classList.add('active');
+
+            // İçeriği mevcut dile göre getir
+            const content = document.getElementById('infoContent');
+            const text = legalContent[type] ? legalContent[type][currentLang] : "Content not found.";
+            
+            content.innerHTML = `<p>${text}</p>`;
         };
 
         // Tema Değiştir
@@ -857,7 +902,7 @@
             body.setAttribute('data-theme', isDark ? 'light' : 'dark');
         };
 
-        // Dil Değiştir
+        // Dil Değiştir (GÜNCELLENDİ)
         window.toggleLanguage = function() {
             currentLang = currentLang === 'tr' ? 'en' : 'tr';
             const langBtn = document.querySelector('.lang-wrapper');
@@ -874,6 +919,12 @@
                     navLinks[1].innerText = 'alt';
                 }
             }
+
+            // Eğer bilgi modalı açıksa, metni yeni dile çevir
+            if(document.getElementById('infoPool').classList.contains('active')) {
+                showInfo(activeInfoType);
+            }
+
             updateCartUI(); // Sepet başlığını güncellemek için
         };
 
@@ -895,6 +946,8 @@
         window.addEventListener('load', () => {
             window.updateTime();
             setInterval(window.updateTime, 1000);
+            // Başlangıçta shipping bilgisini yükle
+            showInfo('shipping');
         });
     </script>
 </body>
