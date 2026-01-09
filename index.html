@@ -1,142 +1,107 @@
-:root {
-    --bg-color: #ffffff;
-    --text-color: #000000;
-}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REEHA | Official Store</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="light">
 
-body[data-theme="dark"] {
-    --bg-color: #000000;
-    --text-color: #ffffff;
-}
+    <div id="globalOverlay"></div>
 
-* {
-    margin: 0; padding: 0; box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-}
+    <header class="header-left">
+        <div class="brand-logo">REEHA</div>
+        <div id="current-time"></div>
+    </header>
 
-body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    font-family: "Courier New", Courier, monospace;
-    transition: background-color 0.4s ease, color 0.4s ease;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
+    <div class="top-right-nav">
+        <button class="theme-toggle" onclick="toggleTheme()" title="Temayı Değiştir"></button>
+        <button class="cart-toggle" onclick="toggleCart()">cart [0]</button>
+    </div>
 
-/* --- TIKLAMA HATASINI ÇÖZEN KISIM --- */
-#hero-section {
-    display: none !important;
-    pointer-events: none !important;
-    z-index: -1 !important;
-    visibility: hidden;
-}
+    <nav id="main-nav">
+        <a class="nav-link active" onclick="filterCategory('all')">all</a>
+        <a class="nav-link" onclick="filterCategory('tops')">tops</a>
+        <a class="nav-link" onclick="filterCategory('bottoms')">bottoms</a>
+        <a class="nav-link" onclick="filterCategory('accessories')">accessories</a>
+        <a class="nav-link" onclick="openModal('soundsPool')">sounds</a>
+        <a class="nav-link" onclick="openModal('infoPool')">info</a>
+    </nav>
 
-#globalOverlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.4);
-    z-index: 1500;
-    display: none;
-    pointer-events: none; /* Pasifken tıklama geçirmeli */
-}
+    <main class="products-pool" id="mainPool">
+        <img src="img/main-cover.jpg" id="pool-initial-img" onclick="expandPool()" alt="REEHA Cover">
+        
+        <div class="products-grid" id="productsGrid">
+            </div>
+    </main>
 
-#globalOverlay.active {
-    display: block !important;
-    pointer-events: auto !important; /* Sadece aktifken tıklama tutmalı */
-}
+    <div id="productDetailPool">
+        <div class="detail-container">
+            <div class="detail-img-box">
+                <img id="modalImg" src="" alt="">
+            </div>
+            <div class="detail-info-box">
+                <h2 id="modalTitle" class="desktop-prod-title"></h2>
+                <p id="modalPrice" class="prod-price"></p>
+                <div class="size-selector">
+                    <button class="size-btn">S</button>
+                    <button class="size-btn">M</button>
+                    <button class="size-btn">L</button>
+                    <button class="size-btn">XL</button>
+                </div>
+                <button class="add-to-cart-btn" onclick="addToCartFromModal()">add to cart</button>
+                <p id="modalDesc" class="prod-desc-formal"></p>
+                <button class="nav-link" style="margin-top:20px" onclick="closeAllModals()">back</button>
+            </div>
+        </div>
+    </div>
 
-/* --- NAVİGASYON --- */
-.header-left { position: fixed; top: 30px; left: 40px; z-index: 2000; }
-.brand-logo { font-family: 'Averta', sans-serif; font-weight: 900; font-size: 24px; text-transform: uppercase; color: var(--text-color); }
-#current-time { font-size: 11px; opacity: 0.8; color: var(--text-color); }
+    <div id="infoPool">
+        <div class="info-container">
+            <div class="info-sidebar">
+                <div class="info-nav-link active" onclick="showInfo('shipping')">shipping</div>
+                <div class="info-nav-link" onclick="showInfo('returns')">returns</div>
+                <div class="info-nav-link" onclick="showInfo('contact')">contact</div>
+                <button class="nav-link" style="margin-top:auto" onclick="closeAllModals()">close</button>
+            </div>
+            <div class="info-content" id="infoContent">
+                <p>Worldwide shipping available. Orders are processed within 2-4 business days.</p>
+            </div>
+        </div>
+    </div>
 
-.top-right-nav { position: fixed; top: 30px; right: 30px; display: flex; align-items: center; gap: 20px; z-index: 2000; }
-.theme-toggle { background: none; border: 1px solid var(--text-color); width: 14px; height: 14px; border-radius: 50%; cursor: pointer; }
-body[data-theme="light"] .theme-toggle { background: var(--text-color); }
-.cart-toggle { background: none; border: none; color: var(--text-color); font-size: 13px; cursor: pointer; text-transform: lowercase; }
+    <div id="soundsPool">
+        <h3 style="margin-bottom: 20px; font-size: 14px;">REEHA RADIO</h3>
+        <iframe src="https://open.spotify.com/embed/playlist/YOUR_PLAYLIST_ID" width="100%" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+        <button class="nav-link" style="margin-top:20px" onclick="closeAllModals()">close</button>
+    </div>
 
-nav#main-nav {
-    position: fixed;
-    left: 40px; top: 180px;
-    display: flex; flex-direction: column; gap: 12px;
-    z-index: 2000;
-}
-.nav-link { text-decoration: none; color: var(--text-color); font-size: 14px; text-transform: lowercase; cursor: pointer; opacity: 0.5; }
-.nav-link.active { opacity: 1; font-weight: bold; text-decoration: underline; }
+    <div class="side-cart" id="sideCart">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <span style="font-size: 14px; font-weight: bold;">your cart</span>
+            <button class="nav-link" onclick="toggleCart()">close</button>
+        </div>
+        <div class="cart-items-container" id="cartItems">
+            </div>
+        <div class="cart-footer">
+            <textarea class="cart-note" placeholder="order note..."></textarea>
+            <button class="checkout-btn" onclick="openModal('checkoutPool')">checkout</button>
+        </div>
+    </div>
 
-/* --- ÜRÜN HAVUZU (ÇERÇEVESİZ & RENK DEĞİŞTİREN) --- */
-.products-pool {
-    position: fixed;
-    top: 52%; left: 55%;
-    transform: translate(-50%, -50%);
-    width: 65%; height: 65%;
-    border: none !important; /* Çerçeve silindi */
-    background-color: var(--bg-color) !important; /* Renk otomatiğe bağlandı */
-    z-index: 500;
-    display: flex; align-items: center; justify-content: center;
-}
+    <footer class="legal-footer">
+        <a class="legal-link">terms</a>
+        <a class="legal-link">privacy</a>
+    </footer>
 
-#pool-initial-img { height: 100%; width: 100%; object-fit: contain; display: block; cursor: pointer; padding: 20px; }
+    <div class="copyright-text">© 2026 REEHA STUDIO. ISTANBUL</div>
 
-.products-grid {
-    display: none;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px; width: 100%; height: 100%; padding: 30px;
-    overflow-y: auto;
-}
+    <div class="bottom-right-container">
+        <div class="lang-wrapper">tr/en</div>
+        <a href="#" class="social-link">ig</a>
+    </div>
 
-.product-box {
-    width: 100%; aspect-ratio: 1/1;
-    border: none !important;
-    background-color: var(--bg-color) !important;
-    display: flex; align-items: center; justify-content: center;
-}
-.product-box img { width: 90%; height: 90%; object-fit: contain; }
-.product-info { font-size: 9px; color: var(--text-color); text-align: center; }
-
-/* --- MODALLAR VE SEPET --- */
-#infoPool, #productDetailPool, #checkoutPool, #soundsPool {
-    position: fixed; top: 50%; left: 50%;
-    transform: translate(-50%, -50%) scale(0.95);
-    width: 80%; height: 75%;
-    background-color: var(--bg-color);
-    border: 1px solid var(--text-color);
-    color: var(--text-color);
-    z-index: 2500;
-    display: none;
-}
-#infoPool.active, #productDetailPool.active, #checkoutPool.active, #soundsPool.active { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-
-.side-cart {
-    position: fixed; top: 0; right: -400px; width: 350px; height: 100vh;
-    background-color: var(--bg-color);
-    border-left: 1px solid var(--text-color);
-    color: var(--text-color);
-    z-index: 3000;
-    transition: right 0.4s ease;
-}
-.side-cart.active { right: 0; }
-
-/* --- FOOTER --- */
-.legal-footer { position: fixed; bottom: 40px; left: 40px; display: flex; gap: 20px; z-index: 1000; }
-.copyright-text { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); font-size: 10px; opacity: 0.4; z-index: 1000; }
-.bottom-right-container { position: fixed; right: 40px; bottom: 30px; display: flex; align-items: center; gap: 12px; z-index: 1000; }
-
-/* --- MOBİL DÜZELTME --- */
-@media (max-width: 768px) {
-    body { height: auto !important; overflow-y: auto !important; position: relative; }
-    nav#main-nav {
-        position: fixed; top: 0; left: 0; width: 100%; height: 120px;
-        display: flex; flex-direction: row; justify-content: center; align-items: flex-end;
-        background-color: var(--bg-color); z-index: 2100; border-bottom: 1px solid var(--text-color); padding-bottom: 15px;
-    }
-    .products-pool {
-        position: relative !important; top: auto !important; left: auto !important; transform: none !important;
-        width: 95% !important; margin: 160px auto 30px auto !important; z-index: 500;
-    }
-    .legal-footer, .bottom-right-container, .copyright-text {
-        position: relative !important; bottom: auto !important; left: auto !important; right: auto !important;
-        transform: none !important; display: flex; justify-content: center; margin: 20px 0; width: 100%;
-    }
-}
+    <script src="script.js"></script>
+</body>
+</html>
