@@ -262,9 +262,9 @@
         <div style="position:absolute; top:15px; right:15px; cursor:pointer; font-size:10px; opacity:0.5; z-index:100;" onclick="closeAllPanels()">[kapat]</div>
         <div class="info-container">
             <div class="info-sidebar">
-                <div class="info-nav-link" onclick="loadInfo('sales')" id="link-sales" data-tr="adem" data-en="distance sales">adem</div>
-                <div class="info-nav-link" onclick="loadInfo('shipping')" id="link-shipping" data-tr="adem" data-en="shipping & returns">adem</div>
-                <div class="info-nav-link" onclick="loadInfo('privacy')" id="link-privacy" data-tr="adem" data-en="adem">adem</div>
+                <div class="info-nav-link" onclick="loadInfo('sales')" id="link-sales" data-tr="mesafeli satis" data-en="distance sales">mesafeli satis</div>
+                <div class="info-nav-link" onclick="loadInfo('shipping')" id="link-shipping" data-tr="teslimat ve iade " data-en="shipping & returns">teslimat ve iade</div>
+                <div class="info-nav-link" onclick="loadInfo('privacy')" id="link-privacy" data-tr="kvkk" data-en="privacy & cookies">kvkk</div>
                 <div class="info-nav-link" onclick="loadInfo('contact')" id="link-contact" data-tr="iletişim" data-en="contact">iletişim</div>
             </div>
             <div class="info-content" id="infoContent"></div>
@@ -1009,22 +1009,24 @@ The Buyer declares that they have read and accepted this agreement by placing an
             document.getElementById('globalOverlay').classList.add('active');
             loadInfo(type);
         }
+function loadInfo(pageKey) {
+    // 1. Önce TÜM linklerden 'active' (kırmızı) özelliğini kaldır
+    document.querySelectorAll('.info-nav-link').forEach(el => {
+        el.classList.remove('active');
+    });
 
-        function loadInfo(type) {
-           
-            document.querySelectorAll('.info-nav-link').forEach(function(link) {
-                link.classList.remove('active');
-            });
-          
-            const link = document.getElementById('link-' + type);
-            if(link) {
-                link.classList.add('active');
-            }
-            const content = infoTexts[type];
-            if(content) {
-                document.getElementById('infoContent').innerText = currentLang === 'tr' ? content.tr : content.en;
-            }
-        }
+    // 2. Tıklanan linke 'active' ekle (Kırmızı yap)
+    const activeLink = document.getElementById('link-' + pageKey);
+    if (activeLink) {
+        activeLink.classList.add('active');
+    }
+
+    // 3. İçeriği Yükle
+    const contentDiv = document.getElementById('infoContent');
+    if (infoTexts[pageKey]) {
+        contentDiv.innerHTML = currentLang === 'tr' ? infoTexts[pageKey].tr : infoTexts[pageKey].en;
+    }
+}
 
         function closeAllPanels() {
             document.getElementById('infoPool').classList.remove('active');
