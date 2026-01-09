@@ -313,7 +313,7 @@
     <nav id="main-nav">
     
         <a onclick="loadProducts('tops', event)" class="nav-link" data-tr="üst giyim" data-en="tops">üst giyim</a>
-        <a onclick="loadProducts('bottoms', event)" class="nav-link" data-tr="alt giyim" data-en="bottoms">alt giyim</a>
+        
         
     </nav>
 
@@ -812,14 +812,24 @@ The Buyer declares that they have read and accepted this agreement by placing an
             const pool = document.getElementById('mainPool');
             pool.innerHTML = `<div class="products-grid" id="productGrid"></div>`;
             const grid = document.getElementById('productGrid');
-            grid.innerHTML = productsData[cat].map(p => `
-                <div class="product-card" onclick="openProductDetail('${cat}', ${p.id})">
-                    <div class="product-box"><img src="${p.img}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300?text=reeha';"></div>
-                    <div class="product-info">${p.name}<br><span style="opacity:0.5">${p.price}€</span></div>
-                </div>`).join('');
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            if(e) e.target.classList.add('active');
-        }
+            // loadProducts içindeki grid.innerHTML kısmını bu mantıkla değiştir:
+grid.innerHTML = data.map(p => {
+    if (p.isEmpty) {
+        // Boş kutu için resim basma, sadece boş slot bas:
+        return `<div class="product-card"><div class="empty-slot"></div></div>`;
+    }
+    // Normal ürünler için resmi basmaya devam et:
+    return `
+        <div class="product-card" onclick="openProductDetail(${p.id}, '${category}')">
+            <div class="product-box">
+                <img src="${p.img}" alt="${p.name}" onerror="this.src='media/mobillogo.webp';">
+            </div>
+            <div class="product-info">
+                <div>${p.name}</div>
+                <div>${p.price}€</div>
+            </div>
+        </div>`;
+}).join('');
 
         function openProductDetail(cat, id) {
             const product = productsData[cat].find(p => p.id === id);
