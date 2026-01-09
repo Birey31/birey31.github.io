@@ -1153,6 +1153,14 @@ async function startPayTR() {
   }
 
   document.getElementById("paytr_token").value = data.token;
+    
+ // 🔥 TOKEN GELDİ → PAYTR SAYFASINA GİT
+    document.getElementById("paytrForm").submit();
+
+  } catch (e) {
+    alert("Sunucu hatası");
+    console.error(e);
+  }
 }
     </script>
 </body>
