@@ -259,17 +259,20 @@
     </div>
 
     <div id="infoPool">
-        <div style="position:absolute; top:15px; right:15px; cursor:pointer; font-size:10px; opacity:0.5; z-index:100;" onclick="closeAllPanels()">[kapat]</div>
-        <div class="info-container">
-            <div class="info-sidebar">
-                <div class="info-nav-link" onclick="loadInfo('sales')" id="link-sales" data-tr="mesafeli satis" data-en="distance sales">mesafeli satis</div>
-                <div class="info-nav-link" onclick="loadInfo('shipping')" id="link-shipping" data-tr="teslimat ve iade " data-en="shipping & returns">teslimat ve iade</div>
-                <div class="info-nav-link" onclick="loadInfo('privacy')" id="link-privacy" data-tr="kvkk" data-en="privacy & cookies">kvkk</div>
-                <div class="info-nav-link" onclick="loadInfo('contact')" id="link-contact" data-tr="iletişim" data-en="contact">iletişim</div>
-            </div>
-            <div class="info-content" id="infoContent"></div>
+    <div style="position:absolute; top:15px; right:15px; cursor:pointer; font-size:10px; opacity:0.5; z-index:100;" onclick="closeAllPanels()">[kapat]</div>
+    
+    <div class="info-container">
+        <div class="info-sidebar">
+            <div class="info-nav-link" onclick="loadInfo('sales')" id="link-sales" data-tr="mesafeli satış" data-en="distance sales">mesafeli satış</div>
+            <div class="info-nav-link" onclick="loadInfo('shipping')" id="link-shipping" data-tr="teslimat & iade" data-en="shipping & returns">teslimat & iade</div>
+            <div class="info-nav-link" onclick="loadInfo('privacy')" id="link-privacy" data-tr="kvkk & gizlilik" data-en="privacy">kvkk & gizlilik</div>
+            <div class="info-nav-link" onclick="loadInfo('contact')" id="link-contact" data-tr="iletişim" data-en="contact">iletişim</div>
         </div>
+
+        <div class="info-content" id="infoContent">
+            </div>
     </div>
+</div>
 
     <div id="checkoutPool">
         <div style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:10px; opacity:0.5; z-index:3000;" onclick="closeAllPanels()">[iptal]</div>
@@ -1010,26 +1013,30 @@ The Buyer declares that they have read and accepted this agreement by placing an
             loadInfo(type);
         }
 function loadInfo(pageKey) {
-    // 1. Önce tüm menülerin kırmızılığını (active sınıfını) kaldır
+    // 1. ÖNCEKİ SEÇİMLERİ TEMİZLE
+    // Sayfadaki TÜM menü linklerinden 'active' (kırmızı) sınıfını kaldırır.
     document.querySelectorAll('.info-nav-link').forEach(el => {
         el.classList.remove('active');
     });
 
-    // 2. Tıklanan menüyü kırmızı yap
+    // 2. YENİ SEÇİLENİ İŞARETLE
     const activeLink = document.getElementById('link-' + pageKey);
     if (activeLink) {
-        activeLink.classList.add('active');
+        activeLink.classList.add('active'); // Sadece tıklananı kırmızı yap
+        
+        // Mobilde tıklanan menüyü ekranda ortala (Kullanıcı görsün)
+        if (window.innerWidth < 768) {
+             activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
     }
 
-    // 3. İçeriği Yükle (Eğer infoTexts içinde veri varsa)
+    // 3. İÇERİĞİ YÜKLE
     const contentDiv = document.getElementById('infoContent');
-    if (infoTexts[pageKey]) {
+    // Eğer içerik verisi varsa yükle, yoksa boş bırak
+    if (infoTexts && infoTexts[pageKey]) {
         contentDiv.innerHTML = currentLang === 'tr' ? infoTexts[pageKey].tr : infoTexts[pageKey].en;
-    }
-    
-    // 4. (Opsiyonel) Mobilde menüyü otomatik kaydır ki görünsün
-    if(window.innerWidth < 768 && activeLink) {
-        activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        // İçerik yüklendiğinde en üste kaydır (mobilde aşağıda kalmasın)
+        contentDiv.scrollTop = 0;
     }
 }
         function closeAllPanels() {
