@@ -320,7 +320,7 @@
         <div class="cart-footer" id="cartFooter" style="display:none;">
             <textarea id="cartNotePlaceholder" class="cart-note"></textarea>
             <div style="font-size:12px; margin-bottom:15px; display:flex; justify-content:space-between;"><span>total:</span><span id="cartTotal">0€</span></div>
-           <button class="checkout-btn" onclick="startCheckout()" id="checkoutBtnLabel">Ödemeye Geç</button>
+           <button class="checkout-btn" onclick="payNow()" id="checkoutBtnLabel">Ödemeye Geç</button>
         </div>
     </div>
 
@@ -1133,6 +1133,14 @@ The Buyer declares that they have read and accepted this agreement by placing an
 <form id="paytrForm" method="post" action="https://www.paytr.com/odeme/guvenli/">
   <input type="hidden" name="token" id="paytr_token">
 </form>
+<script>
+function payNow() {
+  const email = "test@test.com"; // sonra formdan alırsın
+  const total = cartTotalAmount || 100; // sepet toplamın
+
+  startPayTRPayment(email, total);
+}
+</script>
 
 <script>
 async function startPayTRPayment(email, total) {
