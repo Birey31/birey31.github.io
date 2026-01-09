@@ -7,15 +7,16 @@
     <title>Reeha | Store</title>
     <style>
         :root {
-            --bg-color: #000000;
-            --text-color: #ffffff;
-            --accent-opacity: 0.1;
-        }
-
-        [data-theme="light"] {
+            /* Varsayılan: Beyaz Tema */
             --bg-color: #ffffff;
             --text-color: #000000;
             --accent-opacity: 0.05;
+        }
+
+       body[data-theme="dark"] {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --accent-opacity: 0.1;
         }
 
         * {
@@ -919,9 +920,14 @@ The Buyer declares that they have read and accepted this agreement by placing an
             if(sideCart.classList.contains('active')) overlay.classList.add('active'); else overlay.classList.remove('active');
         }
 
-        function toggleTheme() {
-            const isLight = document.documentElement.hasAttribute('data-theme');
-            if (isLight) document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', 'light');
+       function toggleTheme() {
+            const body = document.body;
+            // Eğer şu an dark tema değilse, dark yap; varsa kaldır (beyaza dön)
+            if (body.getAttribute('data-theme') !== 'dark') {
+                body.setAttribute('data-theme', 'dark');
+            } else {
+                body.removeAttribute('data-theme');
+            }
         }
 
         function toggleLanguage() {
