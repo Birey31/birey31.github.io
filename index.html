@@ -1012,23 +1012,25 @@ The Buyer declares that they have read and accepted this agreement by placing an
             document.getElementById('globalOverlay').classList.add('active');
             loadInfo(type);
         }
-function loadInfo(pageKey) {
-    // 1. ÖNCEKİ SEÇİMLERİ TEMİZLE
-    // Sayfadaki TÜM menü linklerinden 'active' (kırmızı) sınıfını kaldırır.
+    function loadInfo(pageKey) {
+    // 1. Önce hepsinden active sınıfını (kırmızılığı) kaldır
     document.querySelectorAll('.info-nav-link').forEach(el => {
         el.classList.remove('active');
     });
 
-    // 2. YENİ SEÇİLENİ İŞARETLE
+    // 2. Doğru ID'yi yakala ve active sınıfını ekle
     const activeLink = document.getElementById('link-' + pageKey);
     if (activeLink) {
-        activeLink.classList.add('active'); // Sadece tıklananı kırmızı yap
-        
-        // Mobilde tıklanan menüyü ekranda ortala (Kullanıcı görsün)
-        if (window.innerWidth < 768) {
-             activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        }
+        activeLink.classList.add('active');
     }
+
+    // 3. İçeriği yükle
+    const contentDiv = document.getElementById('infoContent');
+    if (infoTexts[pageKey]) {
+        contentDiv.innerHTML = currentLang === 'tr' ? infoTexts[pageKey].tr : infoTexts[pageKey].en;
+        contentDiv.scrollTop = 0; // Sayfayı yukarı kaydır
+    }
+}
 
     // 3. İÇERİĞİ YÜKLE
     const contentDiv = document.getElementById('infoContent');
