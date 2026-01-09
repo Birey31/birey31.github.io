@@ -11,6 +11,40 @@ window.updateTime = function() {
     const timeEl = document.getElementById('current-time');
     if(timeEl) timeEl.innerText = timeStr;
 };
+window.expandPool = function() {
+    const pool = document.getElementById('mainPool');
+    const grid = document.getElementById('productsGrid');
+    const initialImg = document.getElementById('pool-initial-img');
+
+    if(pool) pool.classList.add('expanded');
+    if(initialImg) initialImg.style.display = 'none';
+    if(grid) grid.style.display = 'grid';
+};
+window.toggleLanguage = function() {
+    currentLang = currentLang === 'tr' ? 'en' : 'tr';
+    const langBtn = document.querySelector('.lang-wrapper');
+    if(langBtn) langBtn.innerText = currentLang === 'tr' ? 'tr/en' : 'en/tr';
+    
+    // Menü yazılarını da değiştirebilirsin
+    const navLinks = document.querySelectorAll('.nav-link');
+    if(currentLang === 'en') {
+        navLinks[0].innerText = 'tops';
+        navLinks[1].innerText = 'bottoms';
+    } else {
+        navLinks[0].innerText = 'üst';
+        navLinks[1].innerText = 'alt';
+    }
+};
+window.filterCategory = function(cat) {
+    // Havuz kapalıysa önce aç
+    window.expandPool();
+    
+    console.log(cat + " kategorisi seçildi");
+    const grid = document.getElementById('productsGrid');
+    if(grid) {
+        grid.innerHTML = `<div style="padding:20px; grid-column: 1/-1; text-align:center;">${cat} kategorisi yüklendi...</div>`;
+    }
+};
 // Ürünleri Listele
 window.loadProducts = function(cat, e) {
     const pool = document.getElementById('productsPool');
