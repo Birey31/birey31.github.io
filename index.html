@@ -128,14 +128,20 @@
 
         /* --- PRODUCTS GRID --- */
         .products-pool {
-            position: fixed; top: 52%; left: 55%;
+            position: fixed; 
+            top: 50%; /* Biraz daha yukarı çektik */
+            left: 55%;
             transform: translate(-50%, -50%);
-            width: 65%; height: 65%;
+            width: 75%; /* %65'ten %75'e çıkardık, daha geniş duracak */
+            height: 70%; /* %65'ten %70'e çıkardık */
             border: none;
             padding: 0;
             overflow: hidden;
-            background-color: var(--bg-color); z-index: 5;
-            display: flex; align-items: center; justify-content: center;
+            background-color: var(--bg-color); 
+            z-index: 5;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
         }
 
         .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 30px; width: 100%; height: 100%; overflow-y: auto; }
@@ -762,7 +768,7 @@ The Buyer declares that they have read and accepted this agreement by placing an
         function showLandingImage() {
             const pool = document.getElementById('mainPool');
             pool.innerHTML = `<img src="media/sanat.webp" id="sanat-img-landing" alt="Reeha Art"
-            style="width: 100%; height: 100%; object-fit: contain; cursor: pointer;" 
+            style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;transition: transform 0.5s ease;" 
                      onclick="loadProducts('tops', null)">`;
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
         }
