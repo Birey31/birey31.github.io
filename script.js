@@ -10,7 +10,7 @@ window.updateTime = function() {
     const timeStr = now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString('tr-TR');
     const timeEl = document.getElementById('current-time');
     if(timeEl) timeEl.innerText = timeStr;
-
+};
 // Ürünleri Listele
 window.loadProducts = function(cat, e) {
     const pool = document.getElementById('productsPool');
