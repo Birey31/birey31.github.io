@@ -220,7 +220,7 @@
             .legal-footer {  position: fixed; bottom: 30px;  left: 40px; display: flex; flex-direction: column;   gap: 5px;  z-index: 10;}
             #infoPool, #productDetailPool, #checkoutPool { width: 95%; height: 90%; }
             .info-container, .detail-container, .checkout-container { flex-direction: column; overflow-y: auto; }
-            .info-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--text-color); flex-direction: row; overflow-x: auto; padding: 15px; }
+            .info-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--text-color); flex-direction: row; overflow-x: auto; padding: 15px;padding-top: 45px; }
             .detail-img-box { height: 300px; border-right: none; border-bottom: 1px solid var(--text-color); }
             .detail-info-box { width: 100%; }
             .side-cart { width: 90%; }
@@ -1010,24 +1010,28 @@ The Buyer declares that they have read and accepted this agreement by placing an
             loadInfo(type);
         }
 function loadInfo(pageKey) {
-    // 1. Önce TÜM linklerden 'active' (kırmızı) özelliğini kaldır
+    // 1. Önce tüm menülerin kırmızılığını (active sınıfını) kaldır
     document.querySelectorAll('.info-nav-link').forEach(el => {
         el.classList.remove('active');
     });
 
-    // 2. Tıklanan linke 'active' ekle (Kırmızı yap)
+    // 2. Tıklanan menüyü kırmızı yap
     const activeLink = document.getElementById('link-' + pageKey);
     if (activeLink) {
         activeLink.classList.add('active');
     }
 
-    // 3. İçeriği Yükle
+    // 3. İçeriği Yükle (Eğer infoTexts içinde veri varsa)
     const contentDiv = document.getElementById('infoContent');
     if (infoTexts[pageKey]) {
         contentDiv.innerHTML = currentLang === 'tr' ? infoTexts[pageKey].tr : infoTexts[pageKey].en;
     }
+    
+    // 4. (Opsiyonel) Mobilde menüyü otomatik kaydır ki görünsün
+    if(window.innerWidth < 768 && activeLink) {
+        activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
 }
-
         function closeAllPanels() {
             document.getElementById('infoPool').classList.remove('active');
             document.getElementById('productDetailPool').classList.remove('active');
