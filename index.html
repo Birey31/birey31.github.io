@@ -844,7 +844,7 @@ The Buyer declares that they have read and accepted this agreement by placing an
         }
 
         return `
-    <div class="product-card" onclick="openProductDetail(${p.id}, '${cat}')">
+    <div class="product-card" onclick="openProductDetail'${cat}', ${p.id})">
         <div class="product-box">
             <img src="${p.img}" alt="${p.name}" onerror="this.src='media/mobillogo.webp';">
         </div>
@@ -879,7 +879,7 @@ The Buyer declares that they have read and accepted this agreement by placing an
                         <button class="size-btn" onclick="selectSize(this, 'L')">L</button>
                     </div>
 
-                    <button class="add-to-cart-btn" onclick="addToCart(${product.id}, '${category}')">
+                    <button class="add-to-cart-btn" onclick="addToCart(${product.id}, '${cat}')">
                         ${currentLang === 'tr' ? 'sepete ekle' : 'add to cart'}
                     </button>
                 </div>
