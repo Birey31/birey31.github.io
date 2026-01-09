@@ -21,15 +21,48 @@ window.expandPool = function() {
     if(grid) grid.style.display = 'grid';
 };
 
+// Ürün Verileri
+const productsData = {
+    tops: [
+        { id: 1, name: "t-shirt 01", price: "1200 TL", img: "media/tshirt1.webp" },
+        { id: 2, name: "t-shirt 02", price: "1200 TL", img: "media/tshirt2.webp" },
+        { id: 3, name: "yakında", price: "", img: "media/elbise/yakinda.webp", isComingSoon: true }
+    ],
+    bottoms: [
+        { id: 4, name: "yakında", price: "", img: "media/elbise/yakinda.webp", isComingSoon: true }
+    ]
+};
+
+// Kategoriye Göre Ürünleri Yükle
 window.filterCategory = function(cat) {
-    // Havuz kapalıysa önce aç
+    // Önce havuzu aç
     window.expandPool();
-    
-    console.log(cat + " kategorisi seçildi");
+
     const grid = document.getElementById('productsGrid');
-    if(grid) {
-        grid.innerHTML = `<div style="padding:20px; grid-column: 1/-1; text-align:center;">${cat} kategorisi yüklendi...</div>`;
-    }
+    if (!grid) return;
+
+    // Aktif menü stilini güncelle
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('onclick')?.includes(cat)) {
+            link.classList.add('active');
+        }
+    });
+
+    const products = productsData[cat] || [];
+
+    grid.innerHTML = products.map(p => `
+        <div class="product-card" TL{p.isComingSoon ? '' : `onclick="openProductDetail('${cat}', TL{p.id})"`}>
+            <div class="product-box">
+                <img src="TL{p.img}" alt="${p.name}" style="TL{p.isComingSoon ? 'opacity: 0.5; filter: grayscale(1);' : ''}">
+                ${p.isComingSoon ? '<div class="coming-soon-badge">YAKINDA</div>' : ''}
+            </div>
+            <div class="product-info">
+                <p class="prod-name">TL{p.name}</p>
+                <p class="prod-price">TL{p.price}</p>
+            </div>
+        </div>
+    `).join('');
 };
 // Ürünleri Listele
 window.loadProducts = function(cat, e) {
