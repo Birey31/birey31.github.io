@@ -1127,11 +1127,13 @@ The Buyer declares that they have read and accepted this agreement by placing an
             updateTime(); 
             setInterval(updateTime, 1000); 
         };
-        <form method="post" action="https://www.paytr.com/odeme/guvenli/">
+        
+ <form method="post" action="https://www.paytr.com/odeme/guvenli/">
   <input type="hidden" name="token" id="paytr_token">
   <button type="submit">Ödeme Yap</button>
 </form>
-
+</script>
+    
 async function startPayTR() {
   const res = await fetch(
     "https://shopier-backend.vercel.app/api/get-paytr-token",
@@ -1162,6 +1164,7 @@ async function startPayTR() {
     console.error(e);
   }
 }
+        </script>
     </script>
 </body>
 </html>
