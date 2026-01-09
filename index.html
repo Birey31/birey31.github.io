@@ -835,7 +835,6 @@ grid.innerHTML = data.map(p => {
                 <div>${p.price}€</div>
             </div>
         </div>`;
-}).join('');
 
         function openProductDetail(cat, id) {
             const product = productsData[cat].find(p => p.id === id);
