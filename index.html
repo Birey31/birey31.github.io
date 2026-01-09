@@ -1044,15 +1044,6 @@ The Buyer declares that they have read and accepted this agreement by placing an
         // İçerik yüklendiğinde en üste kaydır (mobilde aşağıda kalmasın)
         contentDiv.scrollTop = 0;
     }
-
-    // 3. İÇERİĞİ YÜKLE
-    const contentDiv = document.getElementById('infoContent');
-    // Eğer içerik verisi varsa yükle, yoksa boş bırak
-    if (infoTexts && infoTexts[pageKey]) {
-        contentDiv.innerHTML = currentLang === 'tr' ? infoTexts[pageKey].tr : infoTexts[pageKey].en;
-        // İçerik yüklendiğinde en üste kaydır (mobilde aşağıda kalmasın)
-        contentDiv.scrollTop = 0;
-    }
 }
         function closeAllPanels() {
             document.getElementById('infoPool').classList.remove('active');
