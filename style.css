@@ -1,13 +1,11 @@
 :root {
     --bg-color: #ffffff;
     --text-color: #000000;
-    --accent-opacity: 0.05;
 }
 
 body[data-theme="dark"] {
     --bg-color: #000000;
     --text-color: #ffffff;
-    --accent-opacity: 0.1;
 }
 
 * {
@@ -19,103 +17,88 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     font-family: "Courier New", Courier, monospace;
-    transition: background-color 0.4s ease, color 0.4s ease;
+    transition: background-color 0.4s ease, color-color 0.4s ease;
     height: 100vh;
-    overflow: hidden; /* Masaüstü için sabit tutuyoruz */
+    overflow: hidden;
     display: flex;
     flex-direction: column;
 }
 
-/* --- HATA BURADAYDI: HERO SECTION TAMAMEN İMHA EDİLDİ --- */
+/* --- TIKLAMA HATASINI ÇÖZEN KRİTİK KISIM --- */
 #hero-section {
     display: none !important;
-    visibility: hidden !important;
     pointer-events: none !important;
-    z-index: -9999 !important; /* Ekranın en arkasına, ulaşılamaz yere attık */
+    z-index: -1000 !important;
+    visibility: hidden;
 }
 
-/* --- NAVİGASYON --- */
-.header-left { position: fixed; top: 30px; left: 40px; z-index: 1000; }
-.brand-logo { font-family: 'Averta', sans-serif; font-weight: 900; font-size: 24px; letter-spacing: 1px; line-height: 1; margin-bottom: 8px; text-transform: uppercase; color: var(--text-color); }
-#current-time { font-size: 11px; opacity: 0.8; letter-spacing: 0.5px; min-height: 15px; display: block !important; color: var(--text-color); }
-
-.top-right-nav { position: fixed; top: 30px; right: 30px; display: flex; align-items: center; gap: 20px; z-index: 1000; }
-.theme-toggle { background: none; border: 1px solid var(--text-color); width: 14px; height: 14px; border-radius: 50%; cursor: pointer; }
-body[data-theme="light"] .theme-toggle { background: var(--text-color); }
-.cart-toggle { background: none; border: none; color: var(--text-color); font-size: 13px; cursor: pointer; text-transform: lowercase; }
-
-/* --- OVERLAY (TIKLAMA ENGELLEYİCİ OLMAMASI İÇİN DÜZENLENDİ) --- */
 #globalOverlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.4);
     z-index: 1500;
-    display: none;
-    cursor: pointer;
-    backdrop-filter: blur(4px);
-    pointer-events: none; /* Pasifken tıklama geçirmeli */
+    display: none; 
+    pointer-events: none; /* Pasifken tıklamayı asla engellemez */
 }
 
 #globalOverlay.active {
     display: block !important;
-    pointer-events: auto !important; /* Sadece aktifken tıklama yakalamalı */
+    pointer-events: auto !important; /* Sadece panel açıkken tıklama tutar */
 }
 
-/* --- ANA ÜRÜN HAVUZU --- */
+/* --- ÜST NAVİGASYON --- */
+.header-left { position: fixed; top: 30px; left: 40px; z-index: 2000; }
+.brand-logo { font-family: 'Averta', sans-serif; font-weight: 900; font-size: 24px; text-transform: uppercase; color: var(--text-color); }
+#current-time { font-size: 11px; opacity: 0.8; color: var(--text-color); }
+
+.top-right-nav { position: fixed; top: 30px; right: 30px; display: flex; align-items: center; gap: 20px; z-index: 2000; }
+.theme-toggle { background: none; border: 1px solid var(--text-color); width: 14px; height: 14px; border-radius: 50%; cursor: pointer; }
+body[data-theme="light"] .theme-toggle { background: var(--text-color); }
+.cart-toggle { background: none; border: none; color: var(--text-color); font-size: 13px; cursor: pointer; text-transform: lowercase; }
+
+nav#main-nav {
+    position: fixed;
+    left: 40px; top: 180px;
+    display: flex; flex-direction: column; gap: 12px;
+    z-index: 2000;
+}
+.nav-link { text-decoration: none; color: var(--text-color); font-size: 14px; text-transform: lowercase; cursor: pointer; opacity: 0.5; }
+.nav-link.active { opacity: 1; font-weight: bold; text-decoration: underline; }
+
+/* --- ÜRÜN HAVUZU (ÇERÇEVESİZ VE RENK DEĞİŞTİREN) --- */
 .products-pool {
     position: fixed;
-    top: 52%;
-    left: 55%;
+    top: 52%; left: 55%;
     transform: translate(-50%, -50%);
-    width: 65%;
-    height: 65%;
-    border: none; /* Çerçeveyi sildik */
-    background-color: var(--bg-color);
-    z-index: 5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: visible;
-    pointer-events: auto !important; /* Tıklanabilir olduğundan emin olduk */
+    width: 65%; height: 65%;
+    border: none !important; /* İSTEK: ÇERÇEVE SİLİNDİ */
+    background-color: var(--bg-color) !important; /* İSTEK: RENK OTOMATİK */
+    z-index: 500;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: auto !important;
 }
 
-#pool-initial-img {
-    height: 100%;
-    width: 100%;
-    object-fit: contain;
-    display: block;
-    cursor: pointer;
-    padding: 20px;
-}
+#pool-initial-img { height: 100%; width: 100%; object-fit: contain; display: block; cursor: pointer; padding: 20px; }
 
 .products-grid {
     display: none;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    width: 100%;
-    height: 100%;
-    padding: 30px;
+    gap: 20px; width: 100%; height: 100%; padding: 30px;
     overflow-y: auto;
 }
 
 .product-box {
-    width: 100%;
-    aspect-ratio: 1/1;
-    border: none;
-    background-color: var(--bg-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    margin-bottom: 8px;
+    width: 100%; aspect-ratio: 1/1;
+    border: none !important;
+    background-color: var(--bg-color) !important;
+    display: flex; align-items: center; justify-content: center;
 }
-
 .product-box img { width: 90%; height: 90%; object-fit: contain; }
+.product-info { font-size: 9px; color: var(--text-color); text-align: center; }
 
-/* --- MODAL PENCERELER --- */
+/* --- MODALLAR VE SEPET --- */
 #infoPool, #productDetailPool, #checkoutPool, #soundsPool {
-    position: fixed;
-    top: 50%; left: 50%;
+    position: fixed; top: 50%; left: 50%;
     transform: translate(-50%, -50%) scale(0.95);
     width: 80%; height: 75%;
     background-color: var(--bg-color);
@@ -123,79 +106,38 @@ body[data-theme="light"] .theme-toggle { background: var(--text-color); }
     color: var(--text-color);
     z-index: 2500;
     display: none;
-    opacity: 0;
-    transition: all 0.3s ease;
-    overflow: hidden;
 }
+#infoPool.active, #productDetailPool.active, #checkoutPool.active, #soundsPool.active { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
-#infoPool.active, #productDetailPool.active, #checkoutPool.active, #soundsPool.active {
-    display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1);
-}
-
-/* --- SOL MENÜ --- */
-nav#main-nav {
-    position: fixed;
-    left: 40px; top: 180px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    z-index: 10;
-}
-
-.nav-link {
-    text-decoration: none;
+.side-cart {
+    position: fixed; top: 0; right: -400px; width: 350px; height: 100vh;
+    background-color: var(--bg-color);
+    border-left: 1px solid var(--text-color);
     color: var(--text-color);
-    font-size: 14px;
-    text-transform: lowercase;
-    cursor: pointer;
-    opacity: 0.5;
+    z-index: 3000;
+    transition: right 0.4s ease;
 }
-
-.nav-link.active { opacity: 1; font-weight: bold; text-decoration: underline; }
+.side-cart.active { right: 0; }
 
 /* --- FOOTER --- */
-.legal-footer { position: fixed; bottom: 40px; left: 40px; display: flex; gap: 20px; }
-.copyright-text { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); font-size: 10px; opacity: 0.4; text-transform: lowercase; z-index: 100; }
-.bottom-right-container { position: fixed; right: 40px; bottom: 30px; display: flex; align-items: center; gap: 12px; z-index: 100; }
+.legal-footer { position: fixed; bottom: 40px; left: 40px; display: flex; gap: 20px; z-index: 1000; }
+.copyright-text { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); font-size: 10px; opacity: 0.4; z-index: 1000; }
+.bottom-right-container { position: fixed; right: 40px; bottom: 30px; display: flex; align-items: center; gap: 12px; z-index: 1000; }
 
-/* =========================================================================
-   MOBİL DÜZENLEMELER
-   ========================================================================= */
+/* --- MOBİL DÜZELTME (İSTEK ÜZERİNE BİLGİLER AŞAĞI ALINDI) --- */
 @media (max-width: 768px) {
-    body {
-        height: auto !important;
-        min-height: 100vh;
-        overflow-y: auto !important; /* Mobilde kaydırma hatası düzeltildi */
-        position: relative;
-    }
-
+    body { height: auto !important; overflow-y: auto !important; position: relative; }
     nav#main-nav {
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 130px;
-        display: flex; flex-direction: row;
-        justify-content: center; align-items: flex-end;
-        padding-bottom: 15px;
-        background-color: var(--bg-color);
-        z-index: 400;
-        border-bottom: 1px solid var(--text-color);
+        position: fixed; top: 0; left: 0; width: 100%; height: 120px;
+        display: flex; flex-direction: row; justify-content: center; align-items: flex-end;
+        background-color: var(--bg-color); z-index: 2100; border-bottom: 1px solid var(--text-color); padding-bottom: 15px;
     }
-
     .products-pool {
-        position: relative !important;
-        top: auto !important; left: auto !important;
-        transform: none !important;
-        width: 90% !important;
-        margin: 160px auto 40px auto !important; /* Üstten ve alttan boşluk verildi */
-        background-color: var(--bg-color);
+        position: relative !important; top: auto !important; left: auto !important; transform: none !important;
+        width: 95% !important; margin: 160px auto 30px auto !important; z-index: 500;
     }
-
     .legal-footer, .bottom-right-container, .copyright-text {
-        position: relative !important;
-        bottom: auto !important; left: auto !important; right: auto !important;
-        transform: none !important;
-        width: 100%;
-        display: flex; justify-content: center;
-        padding: 10px 0;
-        margin: 10px 0;
+        position: relative !important; bottom: auto !important; left: auto !important; right: auto !important;
+        transform: none !important; display: flex; justify-content: center; margin: 20px 0; width: 100%;
     }
 }
