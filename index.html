@@ -1011,10 +1011,15 @@ The Buyer declares that they have read and accepted this agreement by placing an
         }
 
         function loadInfo(type) {
-            document.querySelectorAll('.info-nav-link').forEach(l => l.classList.remove('active'));
+           
+            document.querySelectorAll('.info-nav-link').forEach(function(link) {
+                link.classList.remove('active');
+            });
+          
             const link = document.getElementById('link-' + type);
-            if(link) link.classList.add('active');
-            
+            if(link) {
+                link.classList.add('active');
+            }
             const content = infoTexts[type];
             if(content) {
                 document.getElementById('infoContent').innerText = currentLang === 'tr' ? content.tr : content.en;
