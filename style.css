@@ -29,6 +29,9 @@ body {
 /* --- HERO SECTION (GİRİŞ EKRANI - KAPALI) --- */
 #hero-section {
     display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important; /* Tıklamaların alt katmana geçmesini sağlar */
+    z-index: -9999 !important;
 }
 
 /* --- NAVİGASYON (ÜST MENÜ) --- */
