@@ -202,8 +202,8 @@
 
         /* --- MAIN NAV & FOOTER --- */
         nav#main-nav { position: fixed; left: 40px; top: 180px; display: flex; flex-direction: column; gap: 12px; z-index: 10; }
-        .nav-link { text-decoration: none; color: var(--text-color); font-size: 14px; text-transform: lowercase; cursor: pointer; opacity: 0.5; }
-        .nav-link.active { opacity: 1; font-weight: bold; text-decoration: underline; }
+        .nav-link { text-decoration: none; color: var(--text-color); font-size: 14px; text-transform: lowercase; cursor: pointer; opacity: 0.5; padding: 5px 10px; border-radius: 0px; transition: all 0.3s ease; }
+        .nav-link.active { opacity: 1; font-weight: bold; text-decoration: none; background-color: #d10000; color: #ffffff; }
         .legal-footer { position: fixed; bottom: 40px; left: 40px; display: flex; gap: 20px; }
         .legal-link { font-size: 11px; opacity: 0.5; cursor: pointer; color: var(--text-color); text-transform: lowercase; }
         .lang-wrapper { 
