@@ -1113,11 +1113,30 @@ The Buyer declares that they have read and accepted this agreement by placing an
             updateTime(); 
             setInterval(updateTime, 1000); 
         };
-    </script>
-
-    <form id="paytrForm" method="post" action="https://www.paytr.com/odeme/guvenli/">
+    </script> <form id="paytrForm" method="post" action="https://www.paytr.com/odeme/guvenli/">
         <input type="hidden" name="token" id="paytr_token_input">
     </form>
 
+    <script> // İKİNCİ BLOK BURADA BAŞLAMALI
+        async function runPayment(email, total, name, address) {
+            try {
+                const response = await fetch("https://shopier-backend.vercel.app/api/get-paytr-token", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, total, name, address })
+                });
+                const data = await response.json();
+                if (data.status === "success" && data.token) {
+                    document.getElementById("paytr_token_input").value = data.token;
+                    document.getElementById("paytrForm").submit();
+                } else {
+                    alert("Ödeme Hatası: " + (data.err_msg || "Sistem meşgul."));
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Bağlantı hatası.");
+            }
+        }
+    </script>
 </body>
 </html>
