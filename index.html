@@ -258,17 +258,12 @@
                 white-space: nowrap;
             }
         }
-    </style>
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   OneSignalDeferred.push(async function(OneSignal) {
     await OneSignal.init({
-      appId: "49e1ce06-9c77-44a4-8d13-8fa44bea9297", // Burayı kendi ID'n ile değiştir
-      safari_web_id: "WEB_PUSH_ID_VARSA_BURAYA", // Safari ID'n varsa buraya, yoksa bu satırı silebilirsin
-      notifyButton: {
-        enable: true, // Sağ altta küçük bir zil butonu çıkarır
-      },
+      appId: "49e1ce06-9c77-44a4-8d13-8fa44bea9297",
     });
   });
 </script>
