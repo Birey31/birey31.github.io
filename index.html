@@ -2,11 +2,19 @@
 <html lang="tr">
 <head>
     <link rel="manifest" href="/manifest.json">
-
     <link rel="icon" type="image/png" href="media/mobillogo.webp">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>Reeha | Store</title>
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "49e1ce06-9c77-44a4-8d13-8fa44bea9297",
+    });
+  });
+</script>
     <style>
         :root {
             /* Varsayılan: Beyaz Tema */
@@ -258,21 +266,9 @@
                 white-space: nowrap;
             }
         }
-   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "49e1ce06-9c77-44a4-8d13-8fa44bea9297",
-    });
-  });
-</script>
 
 </head>
 <body>
-
-   
-
     <div id="globalOverlay" onclick="handleOverlayClick()"></div>
 
     <div id="productDetailPool">
@@ -1138,97 +1134,36 @@ The Buyer declares that they have read and accepted this agreement by placing an
             updateTime(); 
             setInterval(updateTime, 1000); 
         };
-    
-    </script>
-<!-- PAYTR FORM (GİZLİ) -->
-<form id="paytrForm" method="post" action="https://www.paytr.com/odeme/guvenli/">
-  <input type="hidden" name="token" id="paytr_token">
-</form>
-<script>
-function payNow() {
-  const email = "test@test.com"; // sonra formdan alırsın
-  const total = cartTotalAmount || 100; // sepet toplamın
-
-  startPayTRPayment(email, total);
-}
-</script>
-
-<script>
-async function startPayTRPayment(email, total) {
-  try {
-    const res = await fetch(
-      "https://shopier-backend.vercel.app/api/get-paytr-token",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email,
-          total: total
-        })
-      }
-    );
-
-    const data = await res.json();
-
-    if (data.status !== "success") {
-      alert("PayTR token alınamadı");
-      console.log(data);
-      return;
-    }
-      if (data.status !== "success") {
-  console.error("PAYTR ERROR:", data);
-  alert("PayTR Hatası: " + (data.err_msg || "bilinmeyen hata"));
-  return;
-}
-
-
-    document.getElementById("paytr_token").value = data.token;
-    document.getElementById("paytrForm").submit();
-
-  } catch (err) {
-    console.error(err);
-    alert("Sunucu hatası");
-  }
-}
     <form id="paytrForm" method="post" action="https://www.paytr.com/odeme/guvenli/">
-  <input type="hidden" name="token" id="paytr_token">
-</form>
+        <input type="hidden" name="token" id="paytr_token_input">
+    </form>
 
-<script>
-async function payNow() {
-  const email = "test@test.com";   // şimdilik sabit
-  const total = 100;               // şimdilik sabit
+    <script>
+        // Ödemeyi başlatan ana fonksiyon
+        async function runPayment(email, total, name, address) {
+            try {
+                const response = await fetch("https://shopier-backend.vercel.app/api/get-paytr-token", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, total, name, address })
+                });
 
-  console.log("FRONTEND SEND:", email, total);
+                const data = await response.json();
 
-  const res = await fetch(
-    "https://shopier-backend.vercel.app/api/get-paytr-token",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        total,
-        name: "Test",
-        address: "Istanbul"
-      })
-    }
-  );
-
-  const data = await res.json();
-  console.log("BACKEND RESPONSE:", data);
-
-  if (data.status !== "success") {
-    alert("PayTR Hatası: " + (data.err_msg || data.reason));
-    return;
-  }
-
-  document.getElementById("paytr_token").value = data.token;
-  document.getElementById("paytrForm").submit();
-}
-</script>
-
-</script>
-
+                if (data.status === "success" && data.token) {
+                    // Gizli forma tokenı yaz ve PayTR'ye gönder
+                    document.getElementById("paytr_token_input").value = data.token;
+                    document.getElementById("paytrForm").submit();
+                } else {
+                    alert("Ödeme Hatası: " + (data.err_msg || "Sistem şu an meşgul."));
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Bağlantı hatası oluştu.");
+            }
+        }
+    </script>
 </body>
 </html>
+    
+
