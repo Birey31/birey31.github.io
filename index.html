@@ -1156,15 +1156,15 @@ The Buyer declares that they have read and accepted this agreement by placing an
                 return;
             }
 
+            // Sepet Toplamını Hesapla
             const totalPrice = cart.reduce((a, c) => a + (c.price * c.qty), 0);
             
-            // Kullanıcıya bilgi ver
             const checkoutContent = document.getElementById('checkoutFormContent');
             const originalContent = checkoutContent.innerHTML;
-            checkoutContent.innerHTML = `<div style="text-align:center; padding:50px;"><p>Güvenli ödeme sayfasına yönlendiriliyorsunuz...</p></div>`;
+            checkoutContent.innerHTML = `<div style="text-align:center; padding:50px;"><p>Güvenli ödeme sayfasına bağlanılıyor...</p></div>`;
 
             try {
-                // 1. Backend'den İmzayı ve Parametreleri İste
+                // Backend'den Parametreleri İste
                 const response = await fetch("https://shopier-backend.vercel.app/api/get-paytr-token", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -1178,16 +1178,18 @@ The Buyer declares that they have read and accepted this agreement by placing an
 
                 const data = await response.json();
 
+                // DİKKAT: Backend "status: success" ve "params" döndürmeli
                 if (data.status === "success" && data.params) {
-                    // 2. Gelen parametrelerle sanal bir form oluştur ve POST et
+                    
                     const formContainer = document.getElementById('paytr_form_container');
                     formContainer.innerHTML = ''; // Temizle
 
+                    // 2. Sanal Form Oluştur
                     const form = document.createElement('form');
                     form.method = 'POST';
-                    form.action = 'https://www.paytr.com/odeme/guvenli';
+                    form.action = 'https://www.paytr.com/odeme/guvenli'; // Slash YOK!
 
-                    // Backend'den gelen her veriyi forma input olarak ekle
+                    // 3. Backend'den gelen TÜM bilgileri (imza, sepet, tutar vb.) forma ekle
                     for (const key in data.params) {
                         const input = document.createElement('input');
                         input.type = 'hidden';
@@ -1199,12 +1201,14 @@ The Buyer declares that they have read and accepted this agreement by placing an
                     formContainer.appendChild(form);
                     form.submit(); // PayTR'ye git!
                 } else {
-                    alert("Hata: " + (data.err_msg || "Ödeme başlatılamadı."));
+                    console.error("Backend Hatası:", data);
+                    alert("Ödeme Hatası: " + (data.err_msg || "Sunucudan eksik bilgi geldi."));
                     checkoutContent.innerHTML = originalContent;
                 }
+
             } catch (err) {
                 console.error("Bağlantı Hatası:", err);
-                alert("Bağlantı hatası oluştu.");
+                alert("Sunucuya bağlanılamadı.");
                 checkoutContent.innerHTML = originalContent;
             }
         }
