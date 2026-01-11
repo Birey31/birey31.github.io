@@ -263,11 +263,13 @@ body[data-theme="dark"] .theme-toggle {
         }
         /* Mobilde linklerin altında durur */
         #copyright-text {
-            font-size: 9px;
-            opacity: 0.4;
-            margin-top: 5px;
-            text-transform: lowercase;
-        }
+    font-size: 9px !important; /* Boyutu 9px'e zorla */
+    opacity: 0.3;              /* Biraz daha silik yaparak kalabalığı azaltır */
+    margin-top: 2px !important;/* Üstteki boşluğu daraltır */
+    text-transform: lowercase;
+    display: block;            /* Kendi satırını korur */
+    line-height: 1;            /* Satır yüksekliğini sıfırlar */
+}
        @media (max-width: 768px) {
     /* KAPALI */
     .side-cart {
