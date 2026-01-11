@@ -1190,14 +1190,23 @@ async function startPayTR() {
 
         if (data.status === "success" && data.token) {
             
-            // --- İŞTE ÇÖZÜM BURADA: PENCEREYİ ZORLA BÜYÜTÜYORUZ ---
-            if (anaPencere) {
-                // O pencerenin sabit yükseklik ayarlarını eziyoruz.
-                anaPencere.style.setProperty('height', 'auto', 'important');
-                anaPencere.style.setProperty('max-height', 'none', 'important');
-                anaPencere.style.setProperty('overflow', 'visible', 'important');
-                // Gerekirse biraz da genişletelim ki rahat sığsın
-                anaPencere.style.setProperty('max-width', '1000px', 'important'); 
+            // 1. SADECE ÖZET KUTUSUNU GİZLE (Pasif yap)
+            const summaryBox = document.querySelector('.checkout-right');
+            if (summaryBox) summaryBox.style.display = 'none';
+
+            // 2. FORM KUTUSUNU TAM GENİŞLİK YAP
+            const formBox = document.querySelector('.checkout-left');
+            if (formBox) formBox.style.width = '100%';
+
+            // 3. PAYTR EKRANINI BAS
+            checkoutContent.innerHTML = `
+                <iframe src="https://www.paytr.com/odeme/guvenli/${data.token}" 
+                        id="paytrIframe" 
+                        frameborder="0" 
+                        scrolling="yes" 
+                        style="width: 100%; height: 650px; border: none; display:block;"></iframe>`;
+
+        }
             }
             // -------------------------------------------------------
 
