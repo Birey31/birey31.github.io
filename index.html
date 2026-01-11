@@ -1064,71 +1064,52 @@ The Buyer declares that they have read and accepted this agreement by placing an
             closeAllPanels();
         }
         async function startPayTR() {
-    const totalPrice = cart.reduce((a,c) => a + c.price * c.qty, 0);
+    const email = document.getElementById('bill_email')?.value;
+    const name = document.getElementById('bill_name')?.value;
+    const address = document.getElementById('bill_address')?.value;
+
+    if (!email || !name || !address) {
+        alert(currentLang === 'tr' ? "Lütfen tüm teslimat bilgilerini doldurun." : "Please fill in all delivery information.");
+        return;
+    }
+
+    const total = cart.reduce((a, c) => a + (c.price * c.qty), 0);
     const checkoutContent = document.getElementById('checkoutFormContent');
     
-    // 1. Ekranı hazırla (Yükleniyor yazısı)
-    checkoutContent.innerHTML = `
-        <div style="text-align:center; padding:50px;">
-            <p>Güvenli ödeme sistemine bağlanılıyor...</p>
-        </div>`;
+    checkoutContent.innerHTML = `<div style="text-align:center; padding:50px;"><p>${currentLang === 'tr' ? "Ödeme sayfasına bağlanılıyor..." : "Connecting to payment page..."}</p></div>`;
 
     try {
-        // 2. Senin Vercel Backend'ine istek gönder
-        // BURADAKİ URL'Yİ KENDİ VERCEL LİNKİNLE DEĞİŞTİR:
-        const apiUrl = 'https://shopier-backend.vercel.app/'; 
-
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                email: document.getElementById('bill_email') ? document.getElementById('bill_email').value : 'test@test.com',
-                total: totalPrice,
-                name: document.getElementById('bill_name') ? document.getElementById('bill_name').value : 'Test User',
-                address: document.getElementById('bill_address') ? document.getElementById('bill_address').value : 'Test Address',
-                // Sepet verisini de istersen ekleyebilirsin
-            })
+        const response = await fetch("https://shopier-backend.vercel.app/api/get-paytr-token", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, total, name, address })
         });
 
         const data = await response.json();
 
-        // 3. Eğer PayTR'den Token geldiyse iFrame'i aç
-        if (data.status === 'success' || data.token) {
+        if (data.status === "success" && data.token) {
+            // Ödeme sayfasını iFrame olarak yüklüyoruz
             checkoutContent.innerHTML = `
-                <iframe src="https://www.paytr.com/odeme/guvenli${data.token}" 
-                        id="paytriframe" frameborder="0" scrolling="no" 
-                        style="width: 100%; height: 600px; border:none;"></iframe>
-            `;
-        } else {
-            checkoutContent.innerHTML = `<div style="color:red;">Hata: ${data.err_msg || "Bağlantı kurulamadı."}</div>`;
-        }
+                <iframe src="https://www.paytr.com/odeme/guvenli/${data.token}" 
+                        id="paytrIframe" 
+                        frameborder="0" 
+                        scrolling="no" 
+                        style="width: 100%; min-height: 600px;"></iframe>`;
 
-    } catch (error) {
-        console.error("Ödeme hatası:", error);
-        checkoutContent.innerHTML = "Ödeme sistemi şu an başlatılamıyor.";
+            window.addEventListener('message', function(e) {
+                if (e.data.type === 'paytrHeight') {
+                    const frame = document.getElementById('paytrIframe');
+                    if(frame) frame.style.height = e.data.height + 'px';
+                }
+            });
+        } else {
+            alert("PayTR: " + (data.err_msg || "Token Error"));
+            startCheckout(); // Hata olursa formu geri getir
+        }
+    } catch (err) {
+        alert("Bağlantı hatası!");
     }
 }
-
-        function toggleTheme() {
-            const body = document.body;
-            if (body.getAttribute('data-theme') !== 'dark') {
-                body.setAttribute('data-theme', 'dark');
-            } else {
-                body.removeAttribute('data-theme');
-            }
-        }
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'tr' ? 'en' : 'tr';
-            document.getElementById('langTxt').innerText = currentLang;
-            document.querySelectorAll('[data-tr]').forEach(el => { el.textContent = currentLang === 'tr' ? el.getAttribute('data-tr') : el.getAttribute('data-en'); });
-            updateCartUI();
-            if(document.getElementById('checkoutPool').classList.contains('active')) { startCheckout(); }
-            const activeInfoLink = document.querySelector('.info-nav-link.active');
-            if(activeInfoLink) { loadInfo(activeInfoLink.id.split('-')[1]);}        
-            const cpText = document.getElementById('copyright-text');
-            cpText.innerText = currentLang === 'tr' ? '© 2026 reeha. tüm hakları saklıdır.' : '© 2026 reeha. all rights reserved.';
-        }
 
        window.onload = () => {
             if (window.location.href.includes("index.html")) {
