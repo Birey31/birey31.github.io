@@ -109,6 +109,24 @@
             display: flex;
             justify-content: center;
         }
+        /* Beden butonlarının stili */
+.size-btn {
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    padding: 8px 12px;
+    font-family: inherit;
+    cursor: pointer;
+    font-size: 12px;
+    transition: 0.2s;
+}
+
+/* Seçilen bedenin stili */
+.size-btn.selected {
+    background: white;
+    color: #86baea; /* Sayfa mavisi */
+    font-weight: bold;
+}
 
         /* --- SIDEBAR --- */
         .sidebar {
@@ -228,6 +246,13 @@
             ],
             bottoms: []
         };
+        const productsData = {
+    tops: [
+        { id: 1, name: "basic t-shirt white", price: 400, img: "elbise/tshirt1.webp", sizes: ["S", "M", "L"] },
+        { id: 2, name: "heavy cotton hoodie", price: 1100, img: "elbise/tshirt2.webp", sizes: ["S", "M", "L"] }
+    ],
+    bottoms: []
+};
 
         const infoTexts = {
             contact: { tr: `İLETİŞİM BİLGİLERİ\n\nSorumlu:
@@ -441,6 +466,15 @@ Politika, site üzerinde yayınlandığı tarihten itibaren yürürlüğe girer.
             document.getElementById('sideNav').classList.toggle('active');
             document.getElementById('sidebarOverlay').classList.toggle('active');
         }
+        let selectedSize = null;
+
+function selectSize(btn) {
+    // Diğer butonlardaki seçimi kaldır
+    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+    // Tıklananı seç
+    btn.classList.add('selected');
+    selectedSize = btn.innerText;
+}
 
         function loadProducts(cat, e) {
             const listElement = document.getElementById('products-list');
@@ -457,16 +491,25 @@ Politika, site üzerinde yayınlandığı tarihten itibaren yürürlüğe girer.
         }
 
         function openProductDetail(cat, id) {
-            const p = productsData[cat].find(x => x.id === id);
-            document.getElementById('productDetailContent').innerHTML = `
-                <img src="${p.img}" style="width:100%; margin-bottom:20px; border:1px solid rgba(255,255,255,0.1);">
-                <h3>${p.name}</h3>
-                <p style="margin:10px 0;">${p.price}TL</p>
-                <p style="font-size:10px; opacity:0.7; margin-bottom:20px;">${p.desc}</p>
-                <button class="btn-white" onclick="addToCart(${p.id}, '${cat}')">Sepete Ekle</button>
-            `;
-            document.getElementById('productDetailPool').classList.add('active');
-        }
+    const p = productsData[cat].find(x => x.id === id);
+    let sizeButtons = p.sizes ? p.sizes.map(size => 
+        `<button class="size-btn" onclick="selectSize(this)">${size}</button>`
+    ).join('') : '';
+
+    document.getElementById('productDetailContent').innerHTML = `
+        <img src="${p.img}" style="width:100%; margin-bottom:20px;">
+        <h3 style="color:white;">${p.name}</h3>
+        <p style="color:white; margin:10px 0;">${p.price}TL</p>
+        
+        <div class="size-selector" style="margin: 20px 0;">
+            <p style="font-size: 10px; margin-bottom: 10px; opacity: 0.7;">beden seçin:</p>
+            <div style="display: flex; gap: 10px;">${sizeButtons}</div>
+        </div>
+
+        <button class="btn-white" onclick="addToCart(${p.id}, '${cat}')">Sepete Ekle</button>
+    `;
+    document.getElementById('productDetailPool').classList.add('active');
+}
 
         function addToCart(id, cat) {
             const p = productsData[cat].find(x => x.id === id);
@@ -474,6 +517,7 @@ Politika, site üzerinde yayınlandığı tarihten itibaren yürürlüğe girer.
             updateCart();
             closeAllPanels();
             toggleCart();
+            if(!selectedSize) { alert("Lütfen beden seçin"); return; }
         }
 
         function updateCart() {
