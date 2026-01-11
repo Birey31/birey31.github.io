@@ -140,8 +140,8 @@ body[data-theme="dark"] .theme-toggle {
         
         .detail-container { display: flex; width: 100%; height: 100%; }
         .detail-img-box { flex: 1; display: flex; align-items: center; justify-content: center; border-right: 1px solid var(--text-color); padding: 40px; }
-        .detail-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .detail-info-box { width: 400px; padding: 40px; display: flex; flex-direction: column; justify-content: center; gap: 25px; }
+        .detail-img-box img { max-width: auto; max-height: 100%; object-fit: contain; }
+        .detail-info-box { width: 400px; padding: 25px 20px !important; display: flex; flex-direction: column; justify-content: flex-start; gap: 15px !important; }
         
         .size-selector { display: flex; gap: 10px; margin-top: 10px; }
         .size-btn { 
@@ -252,9 +252,14 @@ body[data-theme="dark"] .theme-toggle {
             #infoPool, #productDetailPool, #checkoutPool { width: 95%; height: 90%; }
             .info-container, .detail-container, .checkout-container { flex-direction: column; overflow-y: auto; }
             .info-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--text-color); flex-direction: row; overflow-x: auto; padding: 15px;padding-top: 45px; }
-            .detail-img-box { height: 300px; border-right: none; border-bottom: 1px solid var(--text-color); }
-            .detail-info-box { width: 100%; }
+            .detail-img-box { height: 50vh !important; border-right: none; border-bottom: none !important; padding: 20px; solid var(--text-color); }
+            .detail-info-box { max-height: 100%; width: auto; object-fit: contain; }
             .side-cart { width: 90%; }
+            .detail-info-box div:nth-child(3) {
+        font-size: 20px !important;
+        font-weight: bold;
+                .detail-info-box div:first-child {
+        font-size: 22px !important;
         }
         /* Mobilde linklerin altında durur */
         #copyright-text {
