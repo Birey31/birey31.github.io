@@ -144,12 +144,11 @@
         .close-btn { position: absolute; top: 20px; right: 20px; font-size: 11px; cursor: pointer; color: white; z-index: 2600; }
          .spotify-container {
     width: 100%;
-    padding: 10px 15px;
-    position: fixed; /* Ekranın altında sabit durması için */
-    bottom: 40px;    /* Footer'ın hemen üzerinde durur */
-    left: 0;
-    z-index: 5;      /* Ürün detayları açıldığında altında kalsın diye düşük tuttuk */
-    background-color: var(--bg-color); /* Arkasındaki ürünler gözükmesin diye */
+    padding: 20px 0 100px 0; /* Alttan 100px boşluk verdik ki en son ürün rahat gözüksün */
+    display: flex;
+    justify-content: center;
+    background: transparent;
+    /* Sabitleyici kodları sildik, artık akışa dahil */
 }
 
     </style>
@@ -253,16 +252,37 @@
         }
 
         function loadProducts(cat, e) {
-            const pool = document.getElementById('mainPool');
-            const data = productsData[cat] || [];
-            pool.innerHTML = `<div class="products-grid">` + data.map(p => `
-                <div class="product-box" onclick="openProductDetail('${cat}', ${p.id})">
-                    <img src="${p.img}">
-                </div>
-            `).join('') + `</div>`;
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            if(e) e.target.classList.add('active');
-        }
+    const pool = document.getElementById('mainPool');
+    const data = productsData[cat] || [];
+    
+    // 1. Elbiselerin ızgarasını oluşturuyoruz
+    let productsHtml = `<div class="products-grid">` + data.map(p => `
+        <div class="product-box" onclick="openProductDetail('${cat}', ${p.id})">
+            <img src="${p.img}">
+        </div>
+    `).join('') + `</div>`;
+
+    // 2. Spotify kodunu bir değişken içine alıyoruz
+    let spotifyHtml = `
+        <div class="spotify-container">
+            <iframe style="border-radius:12px" 
+                src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGW2MvMA?utm_source=generator&theme=0" 
+                width="90%" 
+                height="152" 
+                frameBorder="0" 
+                allowfullscreen="" 
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                loading="lazy">
+            </iframe>
+        </div>`;
+
+    // 3. Hepsini mainPool içine sırayla basıyoruz (Ürünler + Spotify)
+    pool.innerHTML = productsHtml + spotifyHtml;
+
+    // Aktif menü görselini güncelle
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    if(e) e.target.classList.add('active');
+}
 
         function openProductDetail(cat, id) {
             const p = productsData[cat].find(x => x.id === id);
