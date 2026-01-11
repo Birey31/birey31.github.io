@@ -269,6 +269,37 @@ body[data-theme="dark"] .theme-toggle {
     text-transform: lowercase;
     display: block;            /* Kendi satırını korur */
     line-height: 1;            /* Satır yüksekliğini sıfırlar */
+            :root, body, body[data-theme="dark"] {
+        --bg-color: #86baea !important;
+        --text-color: #000000 !important;
+        background-color: #86baea !important;
+        color: #000000 !important;
+    }
+
+    .theme-toggle {
+        display: none !important;
+    }
+
+    #infoPool, #productDetailPool, #checkoutPool, .side-cart, 
+    .info-sidebar, .info-content, .detail-container, .checkout-container {
+        background-color: #86baea !important;
+        color: #000000 !important;
+    }
+
+    * {
+        border-color: rgba(0, 0, 0, 0.3) !important;
+    }
+
+    nav#main-nav { 
+        top: 140px; left: 0; width: 100%; flex-direction: row; 
+        justify-content: flex-start; padding: 0 40px; gap: 20px; 
+        overflow-x: auto; white-space: nowrap; 
+    }
+    .legal-footer { 
+        position: fixed; bottom: 30px; left: 40px; 
+        display: flex; flex-direction: column; gap: 5px; z-index: 10; 
+    }
+
 }
     
     /* --- BİLGİSAYAR AYARLARI (769px ve Üstü) --- */
