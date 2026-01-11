@@ -309,6 +309,21 @@ body[data-theme="dark"] .theme-toggle {
 }
 
         @media (min-width: 769px) {
+            body {
+        /* Mobil cihazlarda arka planı senin maviye zorla */
+        background-color: #86baea !important; 
+    }
+
+    :root {
+        /* Mobil değişkenlerini güncelle */
+        --bg-color: #86baea;
+    }
+    
+    /* Eğer modal ve sepetlerin de mavi olmasını istiyorsan ekle */
+    #infoPool, #productDetailPool, #checkoutPool, .side-cart {
+        background-color: #86baea !important;
+    }
+}
     #copyright-text {
         position: fixed;
         bottom: 30px;
@@ -324,6 +339,10 @@ body[data-theme="dark"] .theme-toggle {
         .checkout-form-box {
     flex: 1 1 100%;
     width: 100%;
+}
+        .theme-toggle {
+        display: none; /* Mobilde tema değiştiriciyi gizle */
+    }
 }
 
     </style>
