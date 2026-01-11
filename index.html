@@ -245,6 +245,23 @@
             margin-top: 5px;
             text-transform: lowercase;
         }
+        @media (max-width: 768px) {
+    .side-cart {
+        top: 50%;
+        right: 50%;
+        transform: translate(50%, -50%);
+        
+        width: 90%;
+        height: 85vh;
+        
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+
+    .side-cart.active {
+        right: 50%;
+    }
+}
 
         /* Bilgisayar ekranı (Masaüstü) için tam ortalama */
         @media (min-width: 769px) {
