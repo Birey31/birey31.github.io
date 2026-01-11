@@ -270,96 +270,59 @@ body[data-theme="dark"] .theme-toggle {
     display: block;            /* Kendi satırını korur */
     line-height: 1;            /* Satır yüksekliğini sıfırlar */
 }
-       @media (max-width: 768px) {
-    /* KAPALI */
-    .side-cart {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        
-        width: 90%;
-        height: 85vh;
-
-        border-radius: 12px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-
-        /* gizleme */
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    /* AÇIK */
-    .side-cart.active {
-        opacity: 1;
-        pointer-events: auto;
-    }
-}
-
-
-    /* AÇIK HAL */
-    .side-cart.active {
-        right: 5%;
-    }
-}
-
-
-    .side-cart.active {
-        right: 50%;
-    }
-}
-            body {
-        /* Mobil cihazlarda arka planı senin maviye zorla */
-        background-color: #86baea !important; 
-    }
-
+    
+    /* --- SADECE BİLGİSAYAR İÇİN AYARLAR (Buton burada görünür) --- */
+@media (min-width: 769px) {
     :root {
-        --bg-color: #86baea !important; /* Senin özel mavi tonun */
-        --text-color: #000000 !important; /* Yazılar siyah kalsın */
-    }
-
-    /* Hem normal hem karanlık moddayken arka planı maviye zorla */
-    body, body[data-theme="dark"] {
-        background-color: #86baea !important;
-        color: #000000 !important;
-    }
-
-    /* Mobilde tema değiştirme butonunu gizle (zaten renk sabit) */
-    .theme-toggle {
-        display: none !important;
-    }
-
-    /* Modalları, sepeti ve içerikleri de mavi yap */
-    #infoPool, #productDetailPool, #checkoutPool, .side-cart, .info-sidebar, .info-content {
-        background-color: #86baea !important;
-        color: #000000 !important;
+        --bg-color: #ffffff; /* Bilgisayarda varsayılan beyaz */
+        --text-color: #000000;
     }
     
-    /* Alt çizgilerin ve sınırların rengini siyaha çek */
-    * {
-        border-color: rgba(0, 0, 0, 0.2) !important;
+    body[data-theme="dark"] {
+        --bg-color: #000000;
+        --text-color: #ffffff;
     }
-}
+
+    .theme-toggle {
+        display: block !important; /* Butonu bilgisayarda göster */
+    }
+
     #copyright-text {
         position: fixed;
         bottom: 30px;
         left: 50%;
         transform: translateX(-50%);
         white-space: nowrap;
-        font-size: 9px !important; /* Burada da sağlama alıyoruz */
     }
-}
-        .checkout-summary-box {
-    display: none !important;
-}
-        .checkout-form-box {
-    flex: 1 1 100%;
-    width: 100%;
-}
-        .theme-toggle {
-        display: none; /* Mobilde tema değiştiriciyi gizle */
+
+
+/* --- SADECE MOBİL İÇİN AYARLAR (Mavi Sabit, Buton Gizli) --- */
+@media (max-width: 768px) {
+    :root {
+        --bg-color: #86baea !important;
+        --text-color: #000000 !important;
+    }
+
+    body, body[data-theme="dark"] {
+        background-color: #86baea !important;
+        color: #000000 !important;
+    }
+
+    .theme-toggle {
+        display: none !important; /* Butonu mobilde gizle */
+    }
+
+    #infoPool, #productDetailPool, #checkoutPool, .side-cart, .info-sidebar, .info-content {
+        background-color: #86baea !important;
+        color: #000000 !important;
+    }
+
+    * {
+        border-color: rgba(0, 0, 0, 0.2) !important;
     }
 }
 
+ 
     </style>
 </head>
 <body>
