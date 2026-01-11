@@ -1,2 +1,5 @@
 User-agent: *
 Allow: /
+
+# Site haritasının yerini Google'a bildir
+Sitemap: https://reehastudio.com/sitemap.xml
