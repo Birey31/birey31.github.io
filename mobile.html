@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <link rel="icon" type="image/png" href="media/mobillogo.webp">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Reeha | Store Mobile</title>
+    
+    <script>
+        if (window.innerWidth > 768) {
+            window.location.href = "index.html";
+        }
+    </script>
+
+    <style>
+        :root {
+            /* Mobil için her zaman senin mavi tonun */
+            --bg-color: #86baea;
+            --text-color: #000000;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: "Courier New", Courier, monospace;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- MOBİL HEADER --- */
+        .header-left { position: fixed; top: 20px; left: 20px; z-index: 1000; }
+        .brand-logo { font-weight: 900; font-size: 20px; text-transform: uppercase; }
+        
+        .top-right-nav { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+        .cart-toggle { background:none; border:none; font-size: 12px; cursor: pointer; }
+
+        /* --- MOBİL NAV (YATAY KAYDIRMA) --- */
+        nav#main-nav { 
+            position: fixed; top: 80px; left: 0; width: 100%; 
+            display: flex; flex-direction: row; gap: 20px; 
+            padding: 0 20px; overflow-x: auto; white-space: nowrap; z-index: 10;
+        }
+        .nav-link { text-decoration: none; color: var(--text-color); font-size: 13px; opacity: 0.5; padding: 5px 0; }
+        .nav-link.active { opacity: 1; font-weight: bold; border-bottom: 2px solid #d10000; }
+
+        /* --- ÜRÜN HAVUZU --- */
+        .products-pool { 
+            position: absolute; top: 130px; bottom: 100px; width: 100%; 
+            overflow-y: auto; padding: 20px; 
+        }
+        .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .product-card { cursor: pointer; text-align: center; }
+        .product-box { border: 1px solid rgba(0,0,0,0.1); aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; margin-bottom: 5px; }
+        .product-box img { width: 85%; height: 85%; object-fit: contain; }
+        .product-info { font-size: 10px; }
+
+        /* --- MODAL VE SEPET (MOBİL UYUMLU) --- */
+        #infoPool, #productDetailPool, #checkoutPool {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-color); z-index: 2500; display: none; overflow-y: auto;
+        }
+        #infoPool.active, #productDetailPool.active, #checkoutPool.active { display: block; }
+
+        .side-cart {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; height: 80vh; background-color: var(--bg-color);
+            border: 1px solid var(--text-color); border-radius: 15px;
+            z-index: 3000; display: none; padding: 20px; flex-direction: column;
+        }
+        .side-cart.active { display: flex; }
+
+        /* --- FOOTER --- */
+        .legal-footer { position: fixed; bottom: 20px; left: 20px; display: flex; flex-direction: column; gap: 5px; font-size: 10px; }
+        #copyright-text { opacity: 0.3; margin-top: 5px; }
+
+        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 12px; opacity: 0.5; z-index: 10; }
+    </style>
+</head>
+<body>
+
+    <div class="header-left">
+        <div class="brand-logo" onclick="location.reload()">REEHA</div>
+    </div>
+
+    <div class="top-right-nav">
+        <button class="cart-toggle" onclick="toggleCart()" id="cartCount">sepet (0)</button>
+    </div>
+
+    <nav id="main-nav">
+        <a onclick="loadProducts('tops', event)" class="nav-link">üst giyim</a>
+        <a onclick="loadProducts('bottoms', event)" class="nav-link">alt giyim</a>
+    </nav>
+
+    <main class="products-pool" id="mainPool"></main>
+
+    <div class="side-cart" id="sideCart">
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+            <span>sepet</span>
+            <span onclick="toggleCart()">[kapat]</span>
+        </div>
+        <div id="cartItems" style="flex:1; overflow-y:auto;"></div>
+        <button onclick="startCheckout()" style="width:100%; padding:15px; background:black; color:white; border:none; margin-top:10px;">Öde</button>
+    </div>
+
+    <div id="productDetailPool">
+        <span class="close-btn" onclick="closeAllPanels()">[kapat]</span>
+        <div id="productDetailContent" style="padding:40px; margin-top:40px;"></div>
+    </div>
+
+    <div id="checkoutPool">
+        <span class="close-btn" onclick="closeAllPanels()">[iptal]</span>
+        <div id="checkoutFormContent" style="padding:20px; margin-top:40px;"></div>
+    </div>
+
+    <footer class="legal-footer">
+        <div onclick="openInfo('sales')">mesafeli satış</div>
+        <div onclick="openInfo('shipping')">iade politikası</div>
+        <div id="copyright-text">© 2026 reeha.</div>
+    </footer>
+
+    <script>
+        // Veriler (index.html ile aynı olmalı)
+        const productsData = {
+            tops: [
+                { id: 1, name: "basic t-shirt white", price: 400, img: "elbise/tshirt1.webp" },
+                { id: 2, name: "heavy cotton hoodie", price: 1100, img: "elbise/tshirt2.webp" }
+            ],
+            bottoms: []
+        };
+
+        let cart = [];
+
+        function loadProducts(cat, e) {
+            const pool = document.getElementById('mainPool');
+            const data = productsData[cat] || [];
+            pool.innerHTML = `<div class="products-grid">` + data.map(p => `
+                <div class="product-card" onclick="openProductDetail('${cat}', ${p.id})">
+                    <div class="product-box"><img src="${p.img}"></div>
+                    <div class="product-info">${p.name}<br>${p.price}TL</div>
+                </div>
+            `).join('') + `</div>`;
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            if(e) e.target.classList.add('active');
+        }
+
+        function openProductDetail(cat, id) {
+            const p = productsData[cat].find(x => x.id === id);
+            document.getElementById('productDetailContent').innerHTML = `
+                <img src="${p.img}" style="width:100%; margin-bottom:20px;">
+                <h3>${p.name}</h3>
+                <p>${p.price}TL</p>
+                <button onclick="addToCart(${p.id}, '${cat}')" style="width:100%; padding:15px; background:black; color:white; border:none; margin-top:20px;">Sepete Ekle</button>
+            `;
+            document.getElementById('productDetailPool').classList.add('active');
+        }
+
+        function addToCart(id, cat) {
+            const p = productsData[cat].find(x => x.id === id);
+            cart.push(p);
+            updateCart();
+            closeAllPanels();
+            toggleCart();
+        }
+
+        function updateCart() {
+            document.getElementById('cartCount').innerText = `sepet (${cart.length})`;
+            document.getElementById('cartItems').innerHTML = cart.map(i => `<div>${i.name} - ${i.price}TL</div>`).join('');
+        }
+
+        function toggleCart() { document.getElementById('sideCart').classList.toggle('active'); }
+        function closeAllPanels() { 
+            document.querySelectorAll('#productDetailPool, #checkoutPool, #sideCart').forEach(x => x.classList.remove('active')); 
+        }
+
+        async function startCheckout() {
+            // PayTR kodları buraya gelecek (index.html ile aynı mantık)
+            document.getElementById('checkoutFormContent').innerHTML = `
+                <input id="bill_email" placeholder="E-posta" style="width:100%; padding:10px; margin-bottom:10px;">
+                <input id="bill_name" placeholder="Ad Soyad" style="width:100%; padding:10px; margin-bottom:10px;">
+                <textarea id="bill_address" placeholder="Adres" style="width:100%; padding:10px; margin-bottom:10px;"></textarea>
+                <button onclick="pay()" style="width:100%; padding:15px; background:black; color:white; border:none;">Ödemeyi Tamamla</button>
+            `;
+            document.getElementById('checkoutPool').classList.add('active');
+        }
+
+        window.onload = () => { loadProducts('tops'); };
+    </script>
+</body>
+</html>
