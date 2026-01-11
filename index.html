@@ -1150,6 +1150,19 @@ async function startPayTR() {
     if (rightPanel) {
         rightPanel.remove();
     }
+    const container = document.querySelector('.checkout-container');
+    if (container && container.children.length > 1) {
+        // İkinci çocuğu (sağdaki sipariş özeti panelini) kökten siliyoruz
+        container.children[1].remove();
+        
+        // Soldaki paneli (formun olduğu yer) tam genişlik yapıyoruz
+        container.children[0].style.width = '100%';
+        container.children[0].style.flex = '0 0 100%';
+        container.children[0].style.maxWidth = '100%';
+        
+        // Konteynırı dikey yapıya çekiyoruz ki PayTR rahat yayılsın
+        container.style.display = 'block';
+    }
     const formSection = document.getElementById('checkoutFormSection');
     if (formSection) {
         formSection.style.width = '100%';
