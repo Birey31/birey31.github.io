@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+f<!DOCTYPE html>
 <html lang="tr">
 <head>
     <link rel="icon" type="image/png" href="media/mobillogo.webp">
@@ -32,7 +32,51 @@
             display: flex;
             flex-direction: column;
         }
+<header>
+    <div class="menu-toggle" onclick="toggleSidebar()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </div>
+    
+    <img src="media/mobillogo.webp" alt="Logo" class="brand-logo-img" onclick="location.reload()">
+    
+    <div class="top-right-nav">
+        <button class="cart-toggle" onclick="toggleCart()" id="cartCount">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            <span id="cartBadge">0</span>
+        </button>
+    </div>
+</header>
 
+<div id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div id="sideNav" class="sidebar">
+    <div class="sidebar-header">
+        <span onclick="toggleSidebar()">[kapat]</span>
+    </div>
+    <div class="sidebar-links">
+        <a onclick="openInfo('contact')">iletişim</a>
+        <a onclick="openInfo('privacy')">kvkk</a>
+        <a onclick="openInfo('sales')">mesafeli satış</a>
+        <a onclick="openInfo('shipping')">teslimat ve iade</a>
+        <a onclick="openInfo('cookies')">çerez politikası</a>
+    </div>
+    
+    <div class="sidebar-social">
+        <a href="https://www.instagram.com/reehastudio/" target="_blank">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+        </a>
+        <a href="https://www.tiktok.com/@reehastudio" target="_blank">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
+        </a>
+    </div>
+</div>
         /* --- MOBİL HEADER (YENİ TASARIM) --- */
         header {
             width: 100%;
@@ -92,6 +136,75 @@
             opacity: 0.5; 
             text-transform: lowercase;
         }
+        /* Menü Butonu Konumu */
+.menu-toggle {
+    position: absolute;
+    left: 20px;
+    top: 28px;
+    cursor: pointer;
+}
+
+/* Sidebar Genel Stil */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px; /* Başlangıçta gizli */
+    width: 280px;
+    height: 100%;
+    background-color: var(--bg-color); /* Mavi arka plan */
+    z-index: 9999;
+    transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    padding: 40px 30px;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar.active {
+    left: 0; /* Açılınca görünür */
+}
+
+/* Sidebar Karartma Arka Planı */
+#sidebarOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3);
+    display: none;
+    z-index: 9998;
+    backdrop-filter: blur(2px);
+}
+#sidebarOverlay.active { display: block; }
+
+/* Linkler */
+.sidebar-links {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sidebar-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    text-transform: lowercase;
+    opacity: 0.8;
+}
+
+/* Sosyal Medya Bölümü */
+.sidebar-social {
+    margin-top: auto; /* En alta iter */
+    display: flex;
+    gap: 20px;
+    padding-bottom: 20px;
+}
+
+.sidebar-social svg {
+    stroke: white; /* Logolar beyaz */
+}
         .nav-link.active { 
             opacity: 1; 
             font-weight: bold; 
@@ -264,6 +377,17 @@
             document.getElementById('cartCount').innerText = `sepet (${cart.length})`;
             document.getElementById('cartItems').innerHTML = cart.length === 0 ? "boş." : cart.map(i => `<div style="margin-bottom:10px; display:flex; justify-content:space-between;"><span>${i.name}</span><span>${i.price}TL</span></div>`).join('');
         }
+        function toggleSidebar() {
+    document.getElementById('sideNav').classList.toggle('active');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+
+// Menüdeki linklere tıklandığında menüyü kapatması için:
+function openInfo(type) {
+    toggleSidebar(); // Önce menüyü kapat
+    // Mevcut openInfoPool veya modal açma fonksiyonunu buraya bağla
+    openInfoPool(type); 
+}
 
         function toggleCart() { document.getElementById('sideCart').classList.toggle('active'); }
         function closeAllPanels() { document.querySelectorAll('#productDetailPool, #checkoutPool, #sideCart').forEach(x => x.classList.remove('active')); }
