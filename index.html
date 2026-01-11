@@ -102,6 +102,16 @@
     cursor: pointer;
     transition: all 0.3s ease;
 }
+        .cart-toggle {
+    background: none;        /* Arka plan rengini siler */
+    border: none;            /* O siyah çerçeveyi kaldırır */
+    color: var(--text-color); /* Yazı rengini temaya göre ayarlar */
+    cursor: pointer;         /* Üstüne gelince el işareti çıkar */
+    font-family: inherit;    /* Sayfa fontunu (Courier New) kullanır */
+    font-size: 12px;
+    text-transform: lowercase;
+    padding: 0;
+}
 
 /* Gece modunda butonun içini text rengiyle doldur */
 body[data-theme="dark"] .theme-toggle {
