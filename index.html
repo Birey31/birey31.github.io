@@ -308,18 +308,16 @@ body[data-theme="dark"] .theme-toggle {
     }
 }
 
-        /* Bilgisayar ekranı (Masaüstü) için tam ortalama */
         @media (min-width: 769px) {
-            #copyright-text {
-                position: fixed;
-                bottom: 30px;
-                left: 50%;
-                transform: translateX(-50%);
-                margin-top: 0;
-                width: auto;
-                white-space: nowrap;
-            }
-        }
+    #copyright-text {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        font-size: 9px !important; /* Burada da sağlama alıyoruz */
+    }
+}
         .checkout-summary-box {
     display: none !important;
 }
