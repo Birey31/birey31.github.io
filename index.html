@@ -1181,13 +1181,11 @@ The Buyer declares that they have read and accepted this agreement by placing an
                     // PayTR iFrame yöntemini kullanarak ekranı yüklüyoruz
                  /
                     checkoutContent.innerHTML = `
-                <div style="margin-top: -300px;"> <iframe src="https://www.paytr.com/odeme/guvenli/${data.token}" 
-                            id="paytrIframe" 
-                            frameborder="0" 
-                            scrolling="no" 
-                            style="width: 100%; height: 1200px; border: none;"></iframe>
-                </div>`;
-
+    <iframe src="https://www.paytr.com/odeme/guvenli/${data.token}" 
+            id="paytrIframe" 
+            frameborder="0" 
+            scrolling="yes" 
+            style="width: 100%; height: 700px; border: none; overflow-y: scroll !important; display:block;"></iframe>`;
         } else {
                       // iFrame yüksekliğini PayTR'den gelen bilgiye göre ayarla
                     window.addEventListener('message', function(e) {
