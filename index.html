@@ -859,6 +859,31 @@ The Buyer declares that they have read and accepted this agreement by placing an
             const now = new Date();
             document.getElementById('current-time').innerText = now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString('tr-TR');
         }
+        // Temayı değiştiren fonksiyon
+function toggleTheme() {
+    const body = document.body;
+    // Mevcut temayı kontrol et
+    const currentTheme = body.getAttribute('data-theme');
+    
+    if (currentTheme === 'dark') {
+        body.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light'); // Seçimi hafızaya al
+    } else {
+        body.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark'); // Seçimi hafızaya al
+    }
+}
+
+// Sayfa ilk açıldığında hafızadaki temayı yükle
+(function() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        document.body.setAttribute('data-theme', savedTheme);
+    } else {
+        // Eğer daha önce seçilmemişse varsayılan olarak dark başlasın diyorsan:
+        document.body.setAttribute('data-theme', 'dark');
+    }
+})();
 
         function showLandingImage() {
     const pool = document.getElementById('mainPool');
