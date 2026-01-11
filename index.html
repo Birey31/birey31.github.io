@@ -1146,6 +1146,14 @@ The Buyer declares that they have read and accepted this agreement by placing an
        // index.html içindeki startPayTR fonksiyonunun TAMAMI:
 
 async function startPayTR() {
+    const summarySection = document.getElementById('checkoutSummarySection');
+    if (summarySection) summarySection.remove();
+    const formSection = document.getElementById('checkoutFormSection');
+    if (formSection) {
+        formSection.style.width = '100%';
+        formSection.style.flex = 'none';
+        formSection.style.maxWidth = 'none';
+    }
     const emailField = document.getElementById('bill_email');
     const nameField = document.getElementById('bill_name');
     const addressField = document.getElementById('bill_address');
