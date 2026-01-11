@@ -246,18 +246,30 @@
             text-transform: lowercase;
         }
        @media (max-width: 768px) {
-    /* KAPALI HAL */
+    /* KAPALI */
     .side-cart {
         top: 50%;
-        right: -100%;
-        transform: translateY(-50%);
+        left: 50%;
+        transform: translate(-50%, -50%);
         
         width: 90%;
         height: 85vh;
 
         border-radius: 12px;
         box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+
+        /* gizleme */
+        opacity: 0;
+        pointer-events: none;
     }
+
+    /* AÇIK */
+    .side-cart.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
 
     /* AÇIK HAL */
     .side-cart.active {
