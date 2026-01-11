@@ -1151,17 +1151,18 @@ async function startPayTR() {
         rightPanel.remove();
     }
     const container = document.querySelector('.checkout-container');
-    if (container && container.children.length > 1) {
-        // İkinci çocuğu (sağdaki sipariş özeti panelini) kökten siliyoruz
-        container.children[1].remove();
-        
-        // Soldaki paneli (formun olduğu yer) tam genişlik yapıyoruz
-        container.children[0].style.width = '100%';
-        container.children[0].style.flex = '0 0 100%';
-        container.children[0].style.maxWidth = '100%';
-        
-        // Konteynırı dikey yapıya çekiyoruz ki PayTR rahat yayılsın
+    if (container) {
+        // Sağ paneli bul ve sil (Sipariş özeti)
+        if (container.children.length > 1) {
+            container.children[1].remove();
+    }
         container.style.display = 'block';
+        container.style.width = '100%';
+        if (container.children[0]) {
+            container.children[0].style.width = '100%';
+            container.children[0].style.maxWidth = '100%';
+            container.children[0].style.flex = 'none';
+        }
     }
     const formSection = document.getElementById('checkoutFormSection');
     if (formSection) {
@@ -1181,13 +1182,19 @@ async function startPayTR() {
     const totalPrice = cart.reduce((a, c) => a + (c.price * c.qty), 0);
     
     const checkoutContent = document.getElementById('checkoutFormContent');
-    const originalContent = checkoutContent.innerHTML;
+    const anaPencere = checkoutContent.parentElement;
+    if (anaPencere) {
+        anaPencere.style.setProperty('height', 'auto', 'important');
+        anaPencere.style.setProperty('max-height', '90vh', 'important'); // Ekranın %90'ını geçmesin
+        anaPencere.style.setProperty('overflow-y', 'auto', 'important'); // Pencerenin kendisi kayabilsin
+        anaPencere.style.setProperty('max-width', '600px', 'important'); // Çok yayılmasın, derli toplu dursun
+    }
 
-    // --- HEDEFİ BELİRLİYORUZ: O DEĞİŞMEYEN PENCERE ---
-    // checkoutFormContent'in içinde durduğu ana kutuyu (modal penceresini) buluyoruz.
-    const anaPencere = checkoutContent.parentElement; 
-
-    checkoutContent.innerHTML = `<div style="text-align:center; padding:50px;"><p>Güvenli ödeme sayfasına bağlanılıyor...</p></div>`;
+    // 3. İÇERİĞİ YÜKLE (Gereksiz 1500px yerine 650px yapıyoruz)
+    const emailField = document.getElementById('bill_email');
+    const nameField = document.getElementById('bill_name');
+    const addressField = document.getElementById('bill_address');
+    const totalPrice = cart.reduce((a, c) => a + (c.price * c.qty), 0);
 
     try {
         const response = await fetch("https://shopier-backend.vercel.app/api/get-paytr-token", {
@@ -1204,38 +1211,18 @@ async function startPayTR() {
         const data = await response.json();
 
         if (data.status === "success" && data.token) {
-            
-            // --- İŞTE ÇÖZÜM BURADA: PENCEREYİ ZORLA BÜYÜTÜYORUZ ---
-            if (anaPencere) {
-                // O pencerenin sabit yükseklik ayarlarını eziyoruz.
-                anaPencere.style.setProperty('height', 'auto', 'important');
-                anaPencere.style.setProperty('max-height', 'none', 'important');
-                anaPencere.style.setProperty('overflow', 'visible', 'important');
-                // Gerekirse biraz da genişletelim ki rahat sığsın
-                anaPencere.style.setProperty('max-width', '900px', 'important'); 
-            }
-            // -------------------------------------------------------
-
-            // İframe'i bolca yükseklikle yerleştiriyoruz
-          checkoutContent.innerHTML = `
+            // Yüksekliği 1500'den 650'ye çektik, kaydırmayı (scrolling) açtık
+            checkoutContent.innerHTML = `
                 <iframe src="https://www.paytr.com/odeme/guvenli/${data.token}" 
                         id="paytrIframe" 
                         frameborder="0" 
                         scrolling="yes" 
-                        style="width: 100%; height: 1000px; border: none; display:block;"></iframe>`;
-
+                        style="width: 100%; height: 650px; border: none; display:block;"></iframe>`;
         } else {
-            console.error("Backend Hatası:", data);
-            alert("Ödeme Hatası: " + (data.err_msg || "Sunucudan bilet (token) alınamadı."));
-            checkoutContent.innerHTML = originalContent;
-             // Hata olursa pencere ayarlarını eski haline döndürmeyi deneyebiliriz (isteğe bağlı)
-             if(anaPencere) { anaPencere.style.height = ''; anaPencere.style.overflow = ''; }
+            alert("Hata: " + data.err_msg);
         }
-
     } catch (err) {
-        console.error("Bağlantı Hatası:", err);
-        alert("Sunucuya bağlanılamadı.");
-        checkoutContent.innerHTML = originalContent;
+        alert("Bağlantı hatası!");
     }
 }
         window.addEventListener('message', function(e) {
