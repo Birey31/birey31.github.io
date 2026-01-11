@@ -116,7 +116,31 @@
 .accordion-item.active span.arrow {
     transform: rotate(180deg); /* Açılınca ok döner */
 }
+/* Miktar Seçici Tasarımı */
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border: 1px solid white;
+    padding: 5px 15px;
+    height: 35px;
+}
 
+.qty-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+#qty-display {
+    font-size: 14px;
+    min-width: 20px;
+    text-align: center;
+}
         /* --- NAVIGATION --- */
         nav#main-nav { 
             position: fixed; top: 90px; left: 0; width: 100%; 
@@ -494,9 +518,17 @@ Politika, site üzerinde yayınlandığı tarihten itibaren yürürlüğe girer.
     const item = btn.parentElement;
     item.classList.toggle('active');
 }
+        let currentQty = 1;
+
+function updateQty(amount) {
+    currentQty += amount;
+    if (currentQty < 1) currentQty = 1; // 1'den az olamaz
+    document.getElementById('qty-display').innerText = currentQty;
+}
 
         function openProductDetail(cat, id) {
     selectedSize = null;
+    currentQty = 1; // Her açılışta adeti 1'e sıfırla
     const p = productsData[cat].find(x => x.id === id);
     let sizeButtons = p.sizes ? p.sizes.map(size => `<button class="size-btn" onclick="selectSize(this)">${size}</button>`).join('') : '';
 
@@ -505,30 +537,29 @@ Politika, site üzerinde yayınlandığı tarihten itibaren yürürlüğe girer.
         <h3 style="color:white;">${p.name}</h3>
         <p style="color:white; margin:10px 0;">${p.price}TL</p>
         
-        <div class="size-selector" style="margin: 20px 0;">
-            <p style="font-size: 10px; margin-bottom: 10px; opacity: 0.7;">beden seçin:</p>
-            <div style="display: flex; gap: 10px;">${sizeButtons}</div>
+        <div style="display: flex; align-items: flex-end; justify-content: space-between; margin: 20px 0;">
+            <div class="size-selector">
+                <p style="font-size: 10px; margin-bottom: 10px; opacity: 0.7;">beden seçin:</p>
+                <div style="display: flex; gap: 10px;">${sizeButtons}</div>
+            </div>
+
+            <div class="quantity-selector">
+                <button class="qty-btn" onclick="updateQty(-1)">-</button>
+                <span id="qty-display">1</span>
+                <button class="qty-btn" onclick="updateQty(1)">+</button>
+            </div>
         </div>
 
         <button class="btn-white" onclick="addToCart(${p.id}, '${cat}')">Sepete Ekle</button>
 
         <div style="margin-top: 30px;">
             <div class="accordion-item">
-                <button class="accordion-header" onclick="toggleAccordion(this)">
-                    ürün açıklaması <span class="arrow">▼</span>
-                </button>
-                <div class="accordion-content">
-                    %100 sürdürülebilir pamuk. Makinede yıkanabilir, müze kalitesinde özel pigment mürekkepler. Kumaşın tamamını kapsayan, sınır tanımayan imza serigrafi baskı tekniği. Fabrika üretimiyle taklit edilemeyecek, özgün ve yüksek standartlı bir tasarım deneyimi.
-                </div>
+                <button class="accordion-header" onclick="toggleAccordion(this)">ürün açıklaması <span class="arrow">▼</span></button>
+                <div class="accordion-content">%100 sürdürülebilir pamuk. Makinede yıkanabilir, müze kalitesinde özel pigment mürekkepler. Kumaşın tamamını kapsayan, sınır tanımayan imza serigrafi baskı tekniği. Fabrika üretimiyle taklit edilemeyecek, özgün ve yüksek standartlı bir tasarım deneyimi.</div>
             </div>
-
             <div class="accordion-item" style="border-bottom: 1px solid rgba(255,255,255,0.3);">
-                <button class="accordion-header" onclick="toggleAccordion(this)">
-                    teslimat süresi <span class="arrow">▼</span>
-                </button>
-                <div class="accordion-content">
-                    Yurtiçi teslimat süresi: 2-3 gün.
-                </div>
+                <button class="accordion-header" onclick="toggleAccordion(this)">teslimat süresi <span class="arrow">▼</span></button>
+                <div class="accordion-content">Yurtiçi teslimat süresi: 2-3 gün.</div>
             </div>
         </div>
     `;
@@ -536,13 +567,18 @@ Politika, site üzerinde yayınlandığı tarihten itibaren yürürlüğe girer.
 }
 
         function addToCart(id, cat) {
-            if(!selectedSize) { alert("Lütfen beden seçin"); return; }
-            const p = productsData[cat].find(x => x.id === id);
-            cart.push({...p, selectedSize: selectedSize});
-            updateCart();
-            closeAllPanels();
-            toggleCart();
-        }
+    if(!selectedSize) { alert("Lütfen beden seçin"); return; }
+    const p = productsData[cat].find(x => x.id === id);
+    
+    // Seçilen adete göre döngüyle sepete ekle
+    for(let i = 0; i < currentQty; i++) {
+        cart.push({...p, selectedSize: selectedSize});
+    }
+    
+    updateCart();
+    closeAllPanels();
+    toggleCart();
+}
 
         function updateCart() {
             const badge = document.getElementById('cartBadge');
