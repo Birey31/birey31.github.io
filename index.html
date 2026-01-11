@@ -907,15 +907,19 @@ function toggleTheme() {
         document.body.setAttribute('data-theme', 'dark');
     }
 })();
-
-        function showLandingImage() {
+function showLandingImage() {
     const pool = document.getElementById('mainPool');
     pool.innerHTML = `
-        <img src="media/sanat.webp" 
-             id="sanat-img-landing" 
-             alt="Reeha Art" 
-             style="width: 100%; height: 100%; object-fit: cover; cursor: pointer; display: block;" 
-             onclick="loadProducts('tops', event)">`; // 'null' yerine 'event' gönder
+        <div style="position: relative; width: 100%; height: 100%; overflow: hidden;">
+            <img src="media/sanat.webp" 
+                 id="sanat-img-landing" 
+                 alt="Reeha Art" 
+                 style="width: 100%; height: 100%; object-fit: cover; cursor: pointer; display: block;" 
+                 onclick="loadProducts('tops', event)">
+            <div style="position: absolute; bottom: 15px; right: 20px; font-size: 9px; opacity: 0.4; letter-spacing: 0.5px; pointer-events: none; text-transform: lowercase;">
+                edward hopper, 1939
+            </div>
+        </div>`;
     
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
 }
