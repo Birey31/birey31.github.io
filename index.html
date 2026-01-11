@@ -313,13 +313,30 @@ body[data-theme="dark"] .theme-toggle {
     }
 
     :root {
-        /* Mobil değişkenlerini güncelle */
-        --bg-color: #86baea;
+        --bg-color: #86baea !important; /* Senin özel mavi tonun */
+        --text-color: #000000 !important; /* Yazılar siyah kalsın */
+    }
+
+    /* Hem normal hem karanlık moddayken arka planı maviye zorla */
+    body, body[data-theme="dark"] {
+        background-color: #86baea !important;
+        color: #000000 !important;
+    }
+
+    /* Mobilde tema değiştirme butonunu gizle (zaten renk sabit) */
+    .theme-toggle {
+        display: none !important;
+    }
+
+    /* Modalları, sepeti ve içerikleri de mavi yap */
+    #infoPool, #productDetailPool, #checkoutPool, .side-cart, .info-sidebar, .info-content {
+        background-color: #86baea !important;
+        color: #000000 !important;
     }
     
-    /* Eğer modal ve sepetlerin de mavi olmasını istiyorsan ekle */
-    #infoPool, #productDetailPool, #checkoutPool, .side-cart {
-        background-color: #86baea !important;
+    /* Alt çizgilerin ve sınırların rengini siyaha çek */
+    * {
+        border-color: rgba(0, 0, 0, 0.2) !important;
     }
 }
     #copyright-text {
