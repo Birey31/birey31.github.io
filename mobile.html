@@ -27,7 +27,6 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: "Courier New", Courier, monospace;
-            /* Havuz mantığı kalktığı için overflow'u serbest bıraktık */
             overflow-x: hidden;
             overflow-y: auto;
             -webkit-font-smoothing: antialiased;
@@ -87,9 +86,8 @@
 
         /* --- MAIN CONTENT AREA --- */
         #content-area {
-            margin-top: 150px; /* Header ve Nav'ın altında kalmaması için */
+            margin-top: 150px;
             width: 100%;
-            padding-bottom: 50px;
         }
 
         .products-grid { 
@@ -102,6 +100,23 @@
         .product-box { border: none; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; background: transparent; cursor: pointer; }
         .product-box img { width: 100%; height: 100%; object-fit: contain; }
 
+        .size-btn {
+            background: transparent;
+            border: 1px solid white;
+            color: white;
+            padding: 8px 12px;
+            font-family: inherit;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+
+        .size-btn.selected {
+            background: white;
+            color: #86baea;
+            font-weight: bold;
+        }
+
         /* --- SPOTIFY SECTION --- */
         .spotify-section {
             width: 100%;
@@ -109,24 +124,6 @@
             display: flex;
             justify-content: center;
         }
-        /* Beden butonlarının stili */
-.size-btn {
-    background: transparent;
-    border: 1px solid white;
-    color: white;
-    padding: 8px 12px;
-    font-family: inherit;
-    cursor: pointer;
-    font-size: 12px;
-    transition: 0.2s;
-}
-
-/* Seçilen bedenin stili */
-.size-btn.selected {
-    background: white;
-    color: #86baea; /* Sayfa mavisi */
-    font-weight: bold;
-}
 
         /* --- SIDEBAR --- */
         .sidebar {
@@ -150,7 +147,7 @@
         .sidebar-links a { color: white; text-decoration: none; font-size: 14px; text-transform: lowercase; font-weight: bold; cursor: pointer; }
         .sidebar-social { margin-top: auto; display: flex; gap: 20px; padding-bottom: 20px; }
 
-        /* --- MODALS & SEPET --- */
+        /* --- MODALS --- */
         #infoPool, #productDetailPool, #checkoutPool {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: var(--bg-color); z-index: 10000; display: none; overflow-y: auto;
@@ -209,27 +206,15 @@
 
     <div id="content-area">
         <div id="products-list" class="products-grid"></div>
-        
         <div class="spotify-section">
-<iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/playlist/1TBTCXT9375pAntfD2YzUY?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>        </div>
-
-        <footer class="legal-footer">© 2026 reeha.tüm haklari saklidir SEX.</footer>
+            <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/playlist/38BAtG8N7M6Y0p6UvXoU8Y" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+        <footer class="legal-footer">© 2026 reeha. tüm hakları saklıdır.</footer>
     </div>
 
-    <div id="infoPool">
-        <span class="close-btn" onclick="closeAllPanels()">[kapat]</span>
-        <div id="infoContent" class="info-content"></div>
-    </div>
-
-    <div id="productDetailPool">
-        <span class="close-btn" onclick="closeAllPanels()">[kapat]</span>
-        <div id="productDetailContent" style="padding:40px; margin-top:40px;"></div>
-    </div>
-
-    <div id="checkoutPool">
-        <span class="close-btn" onclick="closeAllPanels()">[iptal]</span>
-        <div id="checkoutFormContent" style="padding:20px; margin-top:60px;"></div>
-    </div>
+    <div id="infoPool"><span class="close-btn" onclick="closeAllPanels()">[kapat]</span><div id="infoContent" class="info-content"></div></div>
+    <div id="productDetailPool"><span class="close-btn" onclick="closeAllPanels()">[kapat]</span><div id="productDetailContent" style="padding:40px; margin-top:40px;"></div></div>
+    <div id="checkoutPool"><span class="close-btn" onclick="closeAllPanels()">[iptal]</span><div id="checkoutFormContent" style="padding:20px; margin-top:60px;"></div></div>
 
     <div class="side-cart" id="sideCart">
         <div style="display:flex; justify-content:space-between; margin-bottom:20px; border-bottom:1px solid white; padding-bottom:10px;"><span>sepet</span><span onclick="toggleCart()" style="cursor:pointer;">[x]</span></div>
@@ -241,240 +226,32 @@
     <script>
         const productsData = {
             tops: [
-                { id: 1, name: "basic t-shirt white", price: 400, img: "elbise/tshirt1.webp", desc: "100% heavy cotton." },
-                { id: 2, name: "heavy cotton hoodie", price: 1100, img: "elbise/tshirt2.webp", desc: "Oversized fit." }
+                { id: 1, name: "basic t-shirt white", price: 400, img: "elbise/tshirt1.webp", desc: "100% heavy cotton.", sizes: ["S", "M", "L"] },
+                { id: 2, name: "heavy cotton hoodie", price: 1100, img: "elbise/tshirt2.webp", desc: "Oversized fit.", sizes: ["S", "M", "L"] }
             ],
             bottoms: []
         };
-        const productsData = {
-    tops: [
-        { id: 1, name: "basic t-shirt white", price: 400, img: "elbise/tshirt1.webp", sizes: ["S", "M", "L"] },
-        { id: 2, name: "heavy cotton hoodie", price: 1100, img: "elbise/tshirt2.webp", sizes: ["S", "M", "L"] }
-    ],
-    bottoms: []
-};
 
         const infoTexts = {
-            contact: { tr: `İLETİŞİM BİLGİLERİ\n\nSorumlu:
-Reeha (Adem Koymak)
-
-Adres:
-Mehmet Akif Ersoy Mah. Egemen Cad. No: 34
-Arnavutköy / İSTANBUL
-
-Telefon:
-+90 534 875 57 60
-
-E-posta:
-admkymk25@gmail.com
-
-KVKK Kapsamında Başvuru E-Postası:
-admkymk25@gmail.com`,
-                en: `CONTACT INFORMATION
-
-Data Controller:
-Reeha (Adem Koymak)
-
-Address:
-Mehmet Akif Ersoy Mah. Egemen Cad. No: 34
-Arnavutköy / ISTANBUL
-
-Phone:
-+90 534 875 57 60
-
-Email:
-admkymk25@gmail.com
-
-Application Email under KVKK:
-admkymk25@gmail.com` },
-            privacy: { tr: `KVKK & GİZLİLİK POLİTİKASI\n\nKİŞİSEL VERİLERİN KORUNMASINA İLİŞKİN AYDINLATMA METNİ
-Reeha (“Şirket”) olarak, 6698 sayılı Kişisel Verilerin Korunması Kanunu (“KVKK”) uyarınca, veri sorumlusu sıfatıyla kişisel verilerinizin hukuka uygun olarak işlenmesine, muhafaza edilmesine ve korunmasına azami hassasiyet göstermekteyiz.
-İşbu Aydınlatma Metni, Reeha tarafından işletilen internet sitesi üzerinden sunulan ürün ve hizmetlerden faydalanan gerçek kişilerin kişisel verilerinin hangi kapsamda, hangi amaçlarla işlendiğine ilişkin bilgilendirme amacıyla hazırlanmıştır.
-
-1. VERİ SORUMLUSU
-KVKK uyarınca kişisel verileriniz;
-Veri Sorumlusu: Reeha (Adem Koymak)
-tarafından, aşağıda açıklanan kapsamda işlenmektedir.
-
-2. KİŞİSEL VERİLERİN TOPLANMA YÖNTEMLERİ
-Kişisel verileriniz;
-Reeha’ya ait internet sitesi, Online satış ve ödeme formları, Üyelik ve iletişim formları, E-posta, telefon ve sosyal medya kanalları, Çerezler ve benzeri teknolojiler aracılığıyla; otomatik veya kısmen otomatik yöntemlerle, sözlü, yazılı veya elektronik ortamda toplanabilmektedir.
-
-3. İŞLENEN KİŞİSEL VERİLER
-İşlenen kişisel veriler, hizmetin niteliğine göre değişiklik göstermekle birlikte aşağıdakileri içerebilir:
-Kimlik bilgileri (ad, soyad), İletişim bilgileri (telefon numarası, e-posta adresi, adres), Sipariş ve işlem bilgileri, Ödeme ve fatura bilgileri, IP adresi, cihaz ve kullanım bilgileri, Talep, şikayet ve öneri kayıtları.
-
-4. KİŞİSEL VERİLERİN İŞLENME AMAÇLARI
-Toplanan kişisel verileriniz;
-Online satış işlemlerinin gerçekleştirilmesi, Sipariş, ödeme, teslimat ve iade süreçlerinin yürütülmesi, Müşteri hizmetleri ve satış sonrası destek sağlanması, Talep, öneri ve şikayetlerin değerlendirilmesi, Hukuki yükümlülüklerin yerine getirilmesi, Finans ve muhasebe süreçlerinin yürütülmesi, Hizmet kalitesinin artırılması, Reeha’nın ticari ve iş stratejilerinin planlanması amaçlarıyla KVKK’nın 5. ve 6. maddelerine uygun olarak işlenmektedir.
-
-5. KİŞİSEL VERİLERİN SAKLAMA SÜRESİ
-Kişisel verileriniz; İlgili mevzuatta öngörülen süreler ve İşleme amacının gerektirdiği süre kadar muhafaza edilmekte olup, bu sürelerin sona ermesi halinde silinmekte, yok edilmekte veya anonim hale getirilmektedir.
-
-6. KİŞİSEL VERİLERİN AKTARILMASI
-Kişisel verileriniz; Ödeme hizmeti sağlayıcıları (ör. iyzico), Kargo ve lojistik firmaları, Muhasebe ve finans hizmet sağlayıcıları, Yetkili kamu kurum ve kuruluşları ile, KVKK’nın 8. ve 9. maddeleri uyarınca, gerekli teknik ve idari tedbirler alınmak suretiyle paylaşılabilmektedir. Reeha, kişisel verilerinizi açık rızanız olmaksızın üçüncü kişilere ticari amaçla satmaz veya pazarlama faaliyetine konu etmez.
-
-7. KİŞİSEL VERİLERİN KORUNMASINA YÖNELİK TEDBİRLER
-Reeha; Yetkisiz erişimi önlemek, Veri güvenliğini sağlamak, Hukuka aykırı işlemeyi engellemek amacıyla gerekli teknik ve idari güvenlik önlemlerini almaktadır. Ödeme işlemlerine ilişkin kredi kartı bilgileri, Reeha’nın sistemlerinde saklanmamakta, tüm ödeme işlemleri iyzico altyapısı üzerinden güvenli şekilde gerçekleştirilmektedir.
-
-8. KİŞİSEL VERİ SAHİBİNİN HAKLARI
-KVKK’nın 11. maddesi uyarınca kişisel veri sahipleri; Kişisel verilerinin işlenip işlenmediğini öğrenme, İşlenmişse buna ilişkin bilgi talep etme, Eksik veya yanlış işlenmiş verilerin düzeltilmesini isteme, Kişisel verilerin silinmesini veya yok edilmesini talep etme, İşlemenin kanuna aykırı olması halinde zararın giderilmesini talep etme haklarına sahiptir.
-
-9. BAŞVURU YOLLARI
-Yukarıda belirtilen haklarınızı kullanmak için taleplerinizi yazılı olarak veya aşağıda belirtilen iletişim kanalları aracılığıyla Reeha’ya iletebilirsiniz. Başvurular, KVKK kapsamında en geç 30 gün içerisinde sonuçlandırılacaktır.
-
-10. İLETİŞİM BİLGİLERİ
-Ünvan: Reeha (Adem Koymak)
-Adres: Mehmet Akif Ersoy Mah. Egemen Cad. No: 34 Arnavutköy / İSTANBUL
-Vergi No: 13895433242
-Telefon: 0534 875 57 60
-E-posta: admkymk25@gmail.com
-
-11. YÜRÜRLÜK
-İşbu Kişisel Verilerin Korunmasına İlişkin Aydınlatma Metni, Reeha internet sitesinde yayınlandığı tarihten itibaren yürürlüğe girer. Kullanıcılar, siteyi kullanmaya devam ederek işbu metni okuduklarını ve bilgilendirildiklerini kabul ederler.
-
-------------------------------------------------
-ÇEREZ POLİTİKASI
-İşbu Çerez Politikası, Reeha tarafından işletilen internet sitesini ziyaret eden kullanıcıların gizliliğini korumak ve çerezlerin kullanımı hakkında bilgilendirme yapmak amacıyla hazırlanmıştır.
-Web sitemizi ziyaret eden kullanıcılar, işbu Çerez Politikası’nda belirtilen koşulları kabul etmiş sayılır.
-
-1. ÇEREZ (COOKIE) NEDİR?
-Çerezler; ziyaret ettiğiniz internet siteleri tarafından tarayıcınız aracılığıyla cihazınıza kaydedilen, genellikle küçük boyutlu metin dosyalarıdır. Bu dosyalar, web sitesinin daha verimli çalışmasını sağlamak, kullanıcı tercihlerini hatırlamak ve site performansını analiz etmek amacıyla kullanılır. Çerezler, cihazınıza zarar vermez ve virüs içermez.
-
-2. ÇEREZLERİN KULLANIM AMAÇLARI
-Web sitemizde çerezler aşağıdaki amaçlarla kullanılmaktadır:
-Web sitesinin teknik olarak düzgün çalışmasını sağlamak, Kullanıcı tercihlerini hatırlamak, Site performansını ve kullanım alışkanlıklarını analiz etmek, Hizmet kalitesini geliştirmek, Güvenliği sağlamak ve kötüye kullanımı önlemek.
-
-3. KULLANILAN ÇEREZ TÜRLERİ
-3.1 Zorunlu (Teknik) Çerezler: Bu çerezler, web sitesinin temel işlevlerini yerine getirebilmesi için gereklidir. Oturum yönetimi, güvenlik ve sipariş süreçlerinin çalışması bu çerezler sayesinde sağlanır.
-3.2 Fonksiyonel Çerezler: Fonksiyonel çerezler, kullanıcı deneyimini iyileştirmek amacıyla tercihlerinizi hatırlamak için kullanılır.
-3.3 Analitik (Performans) Çerezler: Web sitemizin performansını ölçmek ve kullanıcıların siteyi nasıl kullandığını analiz etmek amacıyla Google Analytics hizmeti kullanılmaktadır.
-3.4 Reklam ve Pazarlama Çerezleri: Web sitemizde reklam veya pazarlama amaçlı çerezler kullanılmamaktadır.
-
-4. ÜÇÜNCÜ TARAF ÇEREZLERİ
-Web sitemizde yalnızca site performansını ölçmek amacıyla üçüncü taraf hizmet sağlayıcılar (örneğin Google Analytics) tarafından yerleştirilen çerezler kullanılabilir.
-
-5. ÇEREZLERİN SAKLAMA SÜRESİ
-Kullanılan çerezler: Oturum süresince geçerli olan çerezler ve Belirli bir süre sonunda otomatik olarak silinen kalıcı çerezler olmak üzere ikiye ayrılır.
-
-6. ÇEREZLERİN KONTROLÜ VE SİLİNMESİ
-Kullanıcılar, tarayıcı ayarlarını değiştirerek çerezleri kontrol edebilir, silebilir veya tamamen engelleyebilir.
-
-7. KİŞİSEL VERİLERİN KORUNMASI
-Çerezler aracılığıyla elde edilen veriler, 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında işlenmektedir.
-
-8. HUKUKİ DAYANAK
-Çerezler; KVKK, Mesafeli Sözleşmeler Yönetmeliği, Elektronik Ticaretin Düzenlenmesi Hakkında Kanun ve ilgili mevzuat hükümlerine uygun olarak kullanılmaktadır.
-
-9. POLİTİKA DEĞİŞİKLİKLERİ
-Satıcı, işbu Çerez Politikası’nı dilediği zaman güncelleme hakkını saklı tutar.
-
-10. YÜRÜRLÜK
-Kullanıcı, web sitesini kullanmaya devam ederek işbu Çerez Politikası’nı okuduğunu, anladığını ve kabul ettiğini beyan eder.` },
-            sales: { tr: `MESAFELI SATIŞ SÖZLEŞMESİ\n\nMESAFELİ SATIŞ SÖZLEŞMESİ
-İşbu Mesafeli Satış Sözleşmesi (“Sözleşme”), aşağıda bilgileri yer alan Satıcı ile, Satıcı’ya ait internet sitesi üzerinden elektronik ortamda sipariş veren Alıcı arasında; 6502 sayılı Tüketicinin Korunması Hakkında Kanun, Mesafeli Sözleşmeler Yönetmeliği ve ilgili sair mevzuat hükümleri uyarınca akdedilmiştir.
-
-1. TARAFLAR
-1.1 Satıcı Bilgileri
-Ticari Ünvan: Reeha
-Adres: Mehmet Akif Ersoy Mah. Egemen Cad. No: 34 Arnavutköy / İSTANBUL
-Telefon: +90 534 875 57 60
-E-posta: admkymk25@gmail.com
-1.2 Alıcı Bilgileri
-Alıcı; Satıcı’ya ait internet sitesi üzerinden ürün veya hizmet satın alan, sipariş formunda bilgilerini dolduran gerçek kişidir.
-
-2. SÖZLEŞMENİN KONUSU
-İşbu sözleşmenin konusu; Alıcı’nın, Satıcı’ya ait internet sitesi üzerinden elektronik ortamda sipariş verdiği ürünlerin satışı, bedeli, ödeme şekli, teslimatı, cayma hakkı, iade koşulları ve tarafların karşılıklı hak ve yükümlülüklerinin belirlenmesidir.
-
-3. SÖZLEŞME KONUSU ÜRÜNLER
-3.1 Ürünlerin türü, cinsi, adedi, modeli, rengi, bedeni, satış bedeli, ödeme şekli ve teslimat bilgileri; siparişin oluşturulması aşamasında Alıcı tarafından onaylanan bilgiler ile sipariş onay e-postasında yer aldığı gibidir.
-
-4. FİYAT, VERGİLER VE ÖDEME
-4.1 Ürün fiyatları, Satıcı tarafından internet sitesinde ilan edilen fiyatlardır ve aksi belirtilmedikçe tüm vergiler dahildir.
-4.2 Ödeme; kredi kartı, banka kartı veya Satıcı tarafından sunulan diğer ödeme yöntemleri aracılığıyla yapılır.
-
-5. TESLİMAT VE KARGO
-5.1 Ürünler, sipariş onayını takiben 1-3 iş günü içerisinde kargoya verilir.
-5.2 Teslimat, Alıcı’nın sipariş sırasında bildirdiği adrese yapılır.
-5.3 Kargo firmasından kaynaklanan gecikmelerden Satıcı sorumlu tutulamaz.
-
-6. CAYMA HAKKI
-6.1 Alıcı, ürünü teslim aldığı tarihten itibaren 14 (on dört) gün içerisinde herhangi bir gerekçe göstermeksizin ve cezai şart ödemeksizin cayma hakkına sahiptir.
-6.2 Cayma hakkının kullanılabilmesi için bu süre içerisinde Satıcı’ya yazılı bildirim yapılması zorunludur.
-
-7. CAYMA HAKKININ KULLANILAMAYACAĞI HALLER
-Alıcı’nın isteği doğrultusunda özel olarak üretilen ürünler, Kullanılmış, yıkanmış ürünler, Hijyen nedeniyle iadesi uygun olmayan ürünler.
-
-8. İADE VE GERİ ÖDEME
-8.1 Cayma hakkının usulüne uygun kullanılması halinde ürün eksiksiz olarak iade edilmelidir.
-8.2 İade kargo bedeli Alıcı tarafından karşılanır.
-8.3 İade edilen ürün uygun bulunursa ürün bedeli 14 gün içinde Alıcı’ya iade edilir.
-
-9. KİŞİSEL VERİLERİN KORUNMASI
-Alıcı’ya ait kişisel veriler; siparişin alınması, ödeme işlemleri, teslimat ve satış sonrası hizmetlerin yürütülmesi amacıyla işlenmektedir.
-
-10. MÜCBİR SEBEPLER
-Doğal afetler, savaş, yangın, grev, salgın hastalıklar mücbir sebep sayılır.
-
-11. UYUŞMAZLIKLARIN ÇÖZÜMÜ
-İşbu sözleşmeden doğabilecek uyuşmazlıklarda, Ticaret Bakanlığı tarafından her yıl ilan edilen parasal sınırlar dahilinde Tüketici Hakem Heyetleri ve Tüketici Mahkemeleri yetkilidir.
-
-12. YÜRÜRLÜK
-Alıcı, site üzerinden sipariş vererek işbu sözleşmenin tüm maddelerini okuduğunu, anladığını ve kabul ettiğini beyan eder.` },
-            shipping: { tr: `TESLİMAT VE İADE\n\n\TESLİMAT VE İADE POLİTİKASI
-İşbu Teslimat ve İade Politikası, Reeha tarafından işletilen internet sitesi üzerinden gerçekleştirilen satışlara ilişkin teslimat, iade ve değişim süreçlerini düzenlemek amacıyla hazırlanmıştır.
-Alıcı, site üzerinden sipariş vererek işbu politikada yer alan tüm koşulları okuduğunu, anladığını ve kabul ettiğini beyan eder.
-
-1. TESLİMAT KOŞULLARI
-1.1 Teslimat Süresi: Siparişler, ödeme onayının alınmasını takiben 1-3 iş günü içerisinde hazırlanarak kargoya teslim edilir. Teslimat süresi; ürünün stok durumu, sipariş yoğunluğu, resmi tatiller ve mücbir sebepler nedeniyle değişiklik gösterebilir.
-1.2 Teslimat Adresi: Teslimat, Alıcı’nın sipariş sırasında beyan ettiği adrese yapılır. Adres bilgilerinin eksik veya hatalı girilmesinden kaynaklanan gecikmelerden Satıcı sorumlu tutulamaz.
-1.3 Kargo Firması: Teslimatlar, Satıcı’nın anlaşmalı olduğu kargo firması aracılığıyla yapılır.
-1.4 Teslimat Anında Kontrol: Alıcı, ürünü teslim alırken paketi kontrol etmekle yükümlüdür. Hasarlı paketlerin teslim alınmaması ve kargo görevlisine tutanak tutturulması gerekmektedir.
-
-2. İADE VE CAYMA HAKKI
-2.1 Cayma Hakkı Süresi: Alıcı, ürünü teslim aldığı tarihten itibaren 14 (on dört) gün içerisinde herhangi bir gerekçe göstermeksizin cayma hakkını kullanabilir.
-2.2 Cayma Bildirimi: Cayma hakkı, e-posta veya iletişim kanalları aracılığıyla Satıcı’ya bildirilmelidir.
-
-3. İADE ŞARTLARI
-İade edilecek ürünlerin; Kullanılmamış, yıkanmamış ve zarar görmemiş olması, Etiketlerinin çıkarılmamış olması, Tekrar satılabilir durumda olması, Orijinal ambalajı ve tüm aksesuarları ile birlikte gönderilmesi gerekmektedir.
-
-4. CAYMA HAKKININ KULLANILAMAYACAĞI DURUMLAR
-Alıcı’nın isteği doğrultusunda özel olarak üretilen ürünler, Kullanılmış veya yıkanmış ürünler, Hijyen nedeniyle iadesi uygun olmayan ürünler.
-
-5. İADE KARGO ÜCRETİ
-İade kargo bedeli Alıcı tarafından karşılanır. Kargo bedeli, iade tutarına dahil edilmez.
-
-6. GERİ ÖDEME
-İade edilen ürün Satıcı’ya ulaştıktan sonra kontroller yapılır. Onaylanan ürünlerin bedeli 14 gün içerisinde iade edilir.
-
-7. DEĞİŞİM
-Satıcı, değişim hizmeti sunup sunmama hakkını saklı tutar. Değişimlerde kargo ücretleri Alıcı tarafından karşılanır.
-
-8. TESLİM ALINMAYAN SİPARİŞLER
-Alıcı tarafından teslim alınmayan veya kargo firmasından geri dönen siparişlerde, kargo masrafları ürün bedelinden düşülerek iade yapılır.
-
-9. MÜCBİR SEBEPLER
-Doğal afetler, savaş, yangın, salgın hastalıklar, internet altyapı sorunları mücbir sebep sayılır.
-
-10. YÜRÜRLÜK
-Politika, site üzerinde yayınlandığı tarihten itibaren yürürlüğe girer.` }
+            contact: { tr: `İLETİŞİM BİLGİLERİ\n\nSorumlu: Reeha (Adem Koymak)\nAdres: Arnavutköy / İSTANBUL\nTelefon: +90 534 875 57 60\nE-posta: admkymk25@gmail.com` },
+            privacy: { tr: `KVKK & GİZLİLİK POLİTİKASI\n\nReeha olarak kişisel verilerinizi 6698 sayılı kanuna uygun işliyoruz...` },
+            sales: { tr: `MESAFELİ SATIŞ SÖZLEŞMESİ\n\nBu sözleşme alıcı ve satıcı arasındaki hakları düzenler...` },
+            shipping: { tr: `TESLİMAT VE İADE\n\nKargo süresi 1-3 iş günüdür. 14 gün iade hakkı mevcuttur.` }
         };
 
         let cart = [];
+        let selectedSize = null;
 
         function toggleSidebar() {
             document.getElementById('sideNav').classList.toggle('active');
             document.getElementById('sidebarOverlay').classList.toggle('active');
         }
-        let selectedSize = null;
 
-function selectSize(btn) {
-    // Diğer butonlardaki seçimi kaldır
-    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
-    // Tıklananı seç
-    btn.classList.add('selected');
-    selectedSize = btn.innerText;
-}
+        function selectSize(btn) {
+            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedSize = btn.innerText;
+        }
 
         function loadProducts(cat, e) {
             const listElement = document.getElementById('products-list');
@@ -484,40 +261,36 @@ function selectSize(btn) {
                     <img src="${p.img}">
                 </div>
             `).join('');
-
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             if(e) e.target.classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function openProductDetail(cat, id) {
-    const p = productsData[cat].find(x => x.id === id);
-    let sizeButtons = p.sizes ? p.sizes.map(size => 
-        `<button class="size-btn" onclick="selectSize(this)">${size}</button>`
-    ).join('') : '';
+            selectedSize = null;
+            const p = productsData[cat].find(x => x.id === id);
+            let sizeButtons = p.sizes ? p.sizes.map(size => `<button class="size-btn" onclick="selectSize(this)">${size}</button>`).join('') : '';
 
-    document.getElementById('productDetailContent').innerHTML = `
-        <img src="${p.img}" style="width:100%; margin-bottom:20px;">
-        <h3 style="color:white;">${p.name}</h3>
-        <p style="color:white; margin:10px 0;">${p.price}TL</p>
-        
-        <div class="size-selector" style="margin: 20px 0;">
-            <p style="font-size: 10px; margin-bottom: 10px; opacity: 0.7;">beden seçin:</p>
-            <div style="display: flex; gap: 10px;">${sizeButtons}</div>
-        </div>
-
-        <button class="btn-white" onclick="addToCart(${p.id}, '${cat}')">Sepete Ekle</button>
-    `;
-    document.getElementById('productDetailPool').classList.add('active');
-}
+            document.getElementById('productDetailContent').innerHTML = `
+                <img src="${p.img}" style="width:100%; margin-bottom:20px;">
+                <h3 style="color:white;">${p.name}</h3>
+                <p style="color:white; margin:10px 0;">${p.price}TL</p>
+                <div class="size-selector" style="margin: 20px 0;">
+                    <p style="font-size: 10px; margin-bottom: 10px; opacity: 0.7;">beden seçin:</p>
+                    <div style="display: flex; gap: 10px;">${sizeButtons}</div>
+                </div>
+                <button class="btn-white" onclick="addToCart(${p.id}, '${cat}')">Sepete Ekle</button>
+            `;
+            document.getElementById('productDetailPool').classList.add('active');
+        }
 
         function addToCart(id, cat) {
+            if(!selectedSize) { alert("Lütfen beden seçin"); return; }
             const p = productsData[cat].find(x => x.id === id);
-            cart.push({...p});
+            cart.push({...p, selectedSize: selectedSize});
             updateCart();
             closeAllPanels();
             toggleCart();
-            if(!selectedSize) { alert("Lütfen beden seçin"); return; }
         }
 
         function updateCart() {
@@ -527,7 +300,7 @@ function selectSize(btn) {
             let total = 0;
             document.getElementById('cartItems').innerHTML = cart.length === 0 ? "boş." : cart.map((i) => {
                 total += i.price;
-                return `<div style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.1); font-size:12px; display:flex; justify-content:space-between;"><span>${i.name}</span><span>${i.price}TL</span></div>`;
+                return `<div style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.1); font-size:12px; display:flex; justify-content:space-between;"><span>${i.name} (${i.selectedSize})</span><span>${i.price}TL</span></div>`;
             }).join('');
             document.getElementById('cartTotal').innerText = total + "TL";
         }
@@ -539,13 +312,10 @@ function selectSize(btn) {
         }
 
         function toggleCart() { document.getElementById('sideCart').classList.toggle('active'); }
-        
-        function closeAllPanels() { 
-            document.querySelectorAll('#infoPool, #productDetailPool, #checkoutPool, #sideCart, #sidebarOverlay').forEach(x => x.classList.remove('active')); 
-            document.getElementById('sideNav').classList.remove('active');
-        }
+        function closeAllPanels() { document.querySelectorAll('#infoPool, #productDetailPool, #checkoutPool, #sideCart, #sidebarOverlay').forEach(x => x.classList.remove('active')); }
 
         async function startCheckout() {
+            if(cart.length === 0) { alert("Sepetiniz boş"); return; }
             document.getElementById('sideCart').classList.remove('active');
             const total = cart.reduce((a, c) => a + c.price, 0);
             document.getElementById('checkoutFormContent').innerHTML = `
