@@ -1204,6 +1204,17 @@ The Buyer declares that they have read and accepted this agreement by placing an
                 checkoutContent.innerHTML = originalContent;
             }
         }
+        window.addEventListener('message', function(e) {
+    // Sadece PayTR'den gelen yükseklik mesajını dinler
+    if (e.data.type === 'paytrHeight') {
+        const frame = document.getElementById('paytrIframe');
+        if(frame) {
+            // Gelen yüksekliği iFrame'e uygular
+            frame.style.height = e.data.height + 'px';
+        }
+    }
+});
     </script>
+
 </body>
 </html>
