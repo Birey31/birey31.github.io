@@ -15,7 +15,7 @@
     <style>
         :root {
             --bg-color: #86baea;
-            --text-color: #000000;
+            --text-color: #ffffff;
         }
 
         * {
@@ -68,6 +68,7 @@
             cursor: pointer; 
             text-transform: lowercase;
             font-family: inherit;
+            stroke: #ffffff !important;
         }
 
         /* --- MOBİL NAV (LOGO ALTINDA) --- */
@@ -98,6 +99,30 @@
             color: #ffffff; 
             padding: 2px 8px;
         }
+        checkout-btn, .add-to-cart-btn, #checkoutPool button {
+    background: #ffffff !important;
+    color: #86baea !important;
+    font-weight: bold;
+    text-transform: lowercase;
+    border: none;
+}
+        #productDetailContent h3, 
+#productDetailContent p, 
+#cartItems span,
+.legal-footer div {
+    color: #ffffff !important;
+}
+
+/* Form inputlarının kenarlıklarını da beyaz yapalım */
+.form-input, input, textarea {
+    border: 1px solid #ffffff !important;
+    color: #ffffff !important;
+}
+
+/* Input yer tutucu (placeholder) renklerini de beyaza yakın yapalım */
+::placeholder {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
 
         /* --- ÜRÜN HAVUZU --- */
         .products-pool { 
@@ -154,7 +179,7 @@
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <path d="M16 10a4 4 0 0 1-8 0"></path>
         </svg>
-        <span id="cartBadge" style="position: absolute; top: -5px; right: -8px; font-size: 9px; background: #d10000; color: white; padding: 1px 5px; border-radius: 10px; display: none;">0</span>
+        <span id="cartBadge" style="position: absolute; top: -5px; right: -8px; font-size: 9px; background: #ffffff !important; color: #86baea !important;font-weight: bold; padding: 1px 5px; border-radius: 10px; display: none;">0</span>
     </button>
 </div>
     </header>
