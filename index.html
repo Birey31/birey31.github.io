@@ -1068,34 +1068,46 @@ The Buyer declares that they have read and accepted this agreement by placing an
     const name = document.getElementById('bill_name')?.value;
     const address = document.getElementById('bill_address')?.value;
 
+    // Formu kontrol et
     if (!email || !name || !address) {
-        alert(currentLang === 'tr' ? "Lütfen tüm teslimat bilgilerini doldurun." : "Please fill in all delivery information.");
+        const msg = currentLang === 'tr' ? "Lütfen iletişim ve adres bilgilerini doldurun." : "Please fill in contact and address information.";
+        alert(msg);
         return;
     }
 
-    const total = cart.reduce((a, c) => a + (c.price * c.qty), 0);
+    // Toplam tutarı hesapla
+    const totalPrice = cart.reduce((a, c) => a + (c.price * c.qty), 0);
     const checkoutContent = document.getElementById('checkoutFormContent');
     
-    checkoutContent.innerHTML = `<div style="text-align:center; padding:50px;"><p>${currentLang === 'tr' ? "Ödeme sayfasına bağlanılıyor..." : "Connecting to payment page..."}</p></div>`;
+    // Yükleniyor ekranı
+    checkoutContent.innerHTML = `<div style="text-align:center; padding:50px;"><p>${currentLang === 'tr' ? "Güvenli ödeme sayfasına bağlanılıyor..." : "Connecting to secure payment page..."}</p></div>`;
 
     try {
         const response = await fetch("https://shopier-backend.vercel.app/api/get-paytr-token", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, total, name, address })
+            body: JSON.stringify({ 
+                email: email, 
+                total: totalPrice,
+                name: name,
+                address: address
+            })
         });
 
         const data = await response.json();
 
+        // KRİTİK NOKTA: Sadece token'ı kontrol ediyoruz
         if (data.status === "success" && data.token) {
-            // Ödeme sayfasını iFrame olarak yüklüyoruz
+            
+            // iFrame ile ödeme sayfasını doğrudan gömüyoruz
             checkoutContent.innerHTML = `
                 <iframe src="https://www.paytr.com/odeme/guvenli/${data.token}" 
                         id="paytrIframe" 
                         frameborder="0" 
                         scrolling="no" 
-                        style="width: 100%; min-height: 600px;"></iframe>`;
+                        style="width: 100%; min-height: 600px; border:none;"></iframe>`;
 
+            // iFrame boyutu için PayTR mesajlarını dinle
             window.addEventListener('message', function(e) {
                 if (e.data.type === 'paytrHeight') {
                     const frame = document.getElementById('paytrIframe');
@@ -1103,11 +1115,15 @@ The Buyer declares that they have read and accepted this agreement by placing an
                 }
             });
         } else {
-            alert("PayTR: " + (data.err_msg || "Token Error"));
-            startCheckout(); // Hata olursa formu geri getir
+            // Sunucudan hata geldiyse göster
+            alert("Hata: " + (data.err_msg || "Token alınamadı."));
+            // Sayfayı veya formu yenileyebilirsin
+            location.reload(); 
         }
+
     } catch (err) {
-        alert("Bağlantı hatası!");
+        console.error("Bağlantı Hatası:", err);
+        alert("Sunucuya bağlanılamadı.");
     }
 }
 
