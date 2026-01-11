@@ -40,7 +40,15 @@
             display: flex;
             flex-direction: column;
         }
+#hero-section:not(.active) {
+    display: none !important;
+    pointer-events: none !important;
+}
 
+#globalOverlay:not(.active) {
+    display: none !important;
+    pointer-events: none !important;
+}
         /* --- HEADER & LOGO --- */
         .header-left { position: fixed; top: 30px; left: 40px; z-index: 1000; }
         .brand-logo {
@@ -62,7 +70,7 @@
         /* --- PRODUCTS --- */
         .products-pool { position: fixed; top: 50%; left: 55%; transform: translate(-50%, -50%); width: 75%; height: 70%; display: flex; align-items: center; justify-content: center; z-index: 5; }
         .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 30px; width: 100%; height: 100%; overflow-y: auto; }
-        .product-card { cursor: pointer; }
+        .product-card { cursor: pointer;z-index: 110; }
         .product-box { width: 100%; aspect-ratio: 1/1; border: 1px solid rgba(128,128,128,0.2); display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 8px; }
         .product-box img { width: 90%; height: 90%; object-fit: contain; transition: 0.5s; }
         .product-card:hover .product-box img { transform: scale(1.1); }
@@ -72,7 +80,7 @@
         #infoPool, #productDetailPool, #checkoutPool {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95);
             width: 80%; height: 75%; background-color: var(--bg-color); border: 1px solid var(--text-color);
-            z-index: 2500; display: none; opacity: 0; transition: 0.3s; overflow: hidden;
+            z-index: 100 !important; pointer-events: auto !important; display: none; opacity: 0; transition: 0.3s; overflow: hidden;
         }
         #infoPool.active, #productDetailPool.active, #checkoutPool.active { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
         
