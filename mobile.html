@@ -77,7 +77,18 @@
             font-size: 10px; background: white; color: #86baea;
             padding: 1px 5px; border-radius: 10px; font-weight: bold;
         }
+.spotify-container {
+    padding: 10px 20px;
+    margin-bottom: 90px; /* Footer'a çakışmaması için boşluk */
+    width: 100%;
+    z-index: 5;
+}
 
+/* Spotify iframe'inin arka planla uyumlu olması için hafif şeffaflık istersen: */
+.spotify-container iframe {
+    opacity: 0.9;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
         /* --- SIDEBAR --- */
         .sidebar {
             position: fixed; top: 0; left: -280px; 
@@ -112,7 +123,7 @@
 
         /* --- PRODUCTS --- */
         .products-pool { 
-            position: absolute; top: 150px; bottom: 80px; 
+            position: absolute; top: 150px; bottom: 260px; 
             width: 100%; overflow-y: auto; padding: 15px; 
         }
         .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
@@ -203,8 +214,19 @@
         <div id="cartTotalArea" style="margin: 15px 0; font-size: 14px; display: flex; justify-content: space-between;"><span>toplam:</span><span id="cartTotal">0TL</span></div>
         <button class="btn-white" onclick="startCheckout()">Ödemeye Geç</button>
     </div>
+    <div class="spotify-container">
+    <iframe style="border-radius:12px" 
+        src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGW2MvMA?utm_source=generator&theme=0" 
+        width="100%" 
+        height="152" 
+        frameBorder="0" 
+        allowfullscreen="" 
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+        loading="lazy">
+    </iframe>
+</div>
 
-    <footer class="legal-footer">© 2026 reeha.</footer>
+    <footer class="legal-footer">© 2026 reeha.tüm hakları saklıdır.SEX</footer>
 
     <script>
         // ÜRÜN VERİLERİ
