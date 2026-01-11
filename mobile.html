@@ -1,4 +1,4 @@
-f<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <link rel="icon" type="image/png" href="media/mobillogo.webp">
@@ -7,6 +7,7 @@ f<!DOCTYPE html>
     <title>Reeha | Store Mobile</title>
     
     <script>
+        // Bilgisayardan girilirse ana sayfaya yönlendir
         if (window.innerWidth > 768) {
             window.location.href = "index.html";
         }
@@ -31,286 +32,159 @@ f<!DOCTYPE html>
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            -webkit-font-smoothing: antialiased;
         }
-<header>
-    <div class="menu-toggle" onclick="toggleSidebar()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-    </div>
-    
-    <img src="media/mobillogo.webp" alt="Logo" class="brand-logo-img" onclick="location.reload()">
-    
-    <div class="top-right-nav">
-        <button class="cart-toggle" onclick="toggleCart()" id="cartCount">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <path d="M16 10a4 4 0 0 1-8 0"></path>
-            </svg>
-            <span id="cartBadge">0</span>
-        </button>
-    </div>
-</header>
 
-<div id="sidebarOverlay" onclick="toggleSidebar()"></div>
-<div id="sideNav" class="sidebar">
-    <div class="sidebar-header">
-        <span onclick="toggleSidebar()">[kapat]</span>
-    </div>
-    <div class="sidebar-links">
-        <a onclick="openInfo('contact')">iletişim</a>
-        <a onclick="openInfo('privacy')">kvkk</a>
-        <a onclick="openInfo('sales')">mesafeli satış</a>
-        <a onclick="openInfo('shipping')">teslimat ve iade</a>
-        <a onclick="openInfo('cookies')">çerez politikası</a>
-    </div>
-    
-    <div class="sidebar-social">
-        <a href="https://www.instagram.com/reehastudio/" target="_blank">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-        </a>
-        <a href="https://www.tiktok.com/@reehastudio" target="_blank">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
-        </a>
-    </div>
-</div>
-        /* --- MOBİL HEADER (YENİ TASARIM) --- */
+        /* --- HEADER --- */
         header {
             width: 100%;
             padding: 20px 0;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
+            top: 0; left: 0; z-index: 1000;
             background-color: var(--bg-color);
         }
 
-        /* Logo Ortada */
+        .menu-toggle {
+            position: absolute;
+            left: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
         .brand-logo-img {
-            height: 40px; /* Logonun yüksekliğini buradan ayarlayabilirsin */
+            height: 45px;
             width: auto;
             object-fit: contain;
         }
 
-        /* Sepet Sağ Üstte Sabit */
         .top-right-nav { 
             position: absolute; 
-            top: 30px; 
             right: 20px; 
         }
+
         .cart-toggle { 
-            background: none; 
-            border: none; 
-            font-size: 11px; 
-            cursor: pointer; 
-            text-transform: lowercase;
-            font-family: inherit;
-            stroke: #ffffff !important;
+            background: none; border: none; 
+            color: white; cursor: pointer;
+            position: relative;
         }
 
-        /* --- MOBİL NAV (LOGO ALTINDA) --- */
+        #cartBadge {
+            position: absolute; top: -5px; right: -8px; 
+            font-size: 10px; background: white; color: #86baea;
+            padding: 1px 5px; border-radius: 10px; font-weight: bold;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            position: fixed; top: 0; left: -280px; 
+            width: 280px; height: 100%;
+            background-color: var(--bg-color); 
+            z-index: 9999; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex; flex-direction: column;
+            padding: 40px 30px; border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .sidebar.active { left: 0; }
+
+        #sidebarOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3); display: none; z-index: 9998;
+            backdrop-filter: blur(2px);
+        }
+        #sidebarOverlay.active { display: block; }
+
+        .sidebar-links { margin-top: 50px; display: flex; flex-direction: column; gap: 20px; }
+        .sidebar-links a { color: white; text-decoration: none; font-size: 14px; text-transform: lowercase; font-weight: bold; cursor: pointer; }
+        
+        .sidebar-social { margin-top: auto; display: flex; gap: 20px; padding-bottom: 20px; }
+
+        /* --- NAVIGATION --- */
         nav#main-nav { 
-            position: fixed; 
-            top: 85px; /* Logonun altına gelmesi için mesafe */
-            left: 0; 
-            width: 100%; 
-            display: flex; 
-            flex-direction: row; 
-            justify-content: center; /* Linkleri de ortaladık */
-            gap: 25px; 
-            padding: 10px 0; 
-            z-index: 10;
-            background-color: var(--bg-color);
+            position: fixed; top: 90px; left: 0; width: 100%; 
+            display: flex; justify-content: center; gap: 25px; 
+            padding: 10px 0; z-index: 10; background-color: var(--bg-color);
         }
-        .nav-link { 
-            text-decoration: none; 
-            color: var(--text-color); 
-            font-size: 12px; 
-            opacity: 0.5; 
-            text-transform: lowercase;
-        }
-        /* Menü Butonu Konumu */
-.menu-toggle {
-    position: absolute;
-    left: 20px;
-    top: 28px;
-    cursor: pointer;
-}
+        .nav-link { color: white; text-decoration: none; font-size: 12px; opacity: 0.6; text-transform: lowercase; cursor: pointer; }
+        .nav-link.active { opacity: 1; font-weight: bold; border-bottom: 2px solid white; }
 
-/* Sidebar Genel Stil */
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: -280px; /* Başlangıçta gizli */
-    width: 280px;
-    height: 100%;
-    background-color: var(--bg-color); /* Mavi arka plan */
-    z-index: 9999;
-    transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    display: flex;
-    flex-direction: column;
-    padding: 40px 30px;
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.sidebar.active {
-    left: 0; /* Açılınca görünür */
-}
-
-/* Sidebar Karartma Arka Planı */
-#sidebarOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.3);
-    display: none;
-    z-index: 9998;
-    backdrop-filter: blur(2px);
-}
-#sidebarOverlay.active { display: block; }
-
-/* Linkler */
-.sidebar-links {
-    margin-top: 50px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.sidebar-links a {
-    color: white;
-    text-decoration: none;
-    font-size: 14px;
-    text-transform: lowercase;
-    opacity: 0.8;
-}
-
-/* Sosyal Medya Bölümü */
-.sidebar-social {
-    margin-top: auto; /* En alta iter */
-    display: flex;
-    gap: 20px;
-    padding-bottom: 20px;
-}
-
-.sidebar-social svg {
-    stroke: white; /* Logolar beyaz */
-}
-        .nav-link.active { 
-            opacity: 1; 
-            font-weight: bold; 
-            background-color: #d10000; 
-            color: #ffffff; 
-            padding: 2px 8px;
-        }
-        checkout-btn, .add-to-cart-btn, #checkoutPool button {
-    background: #ffffff !important;
-    color: #86baea !important;
-    font-weight: bold;
-    text-transform: lowercase;
-    border: none;
-}
-        #productDetailContent h3, 
-#productDetailContent p, 
-#cartItems span,
-.legal-footer div {
-    color: #ffffff !important;
-}
-
-/* Form inputlarının kenarlıklarını da beyaz yapalım */
-.form-input, input, textarea {
-    border: 1px solid #ffffff !important;
-    color: #ffffff !important;
-}
-
-/* Input yer tutucu (placeholder) renklerini de beyaza yakın yapalım */
-::placeholder {
-    color: rgba(255, 255, 255, 0.7) !important;
-}
-
-        /* --- ÜRÜN HAVUZU --- */
+        /* --- PRODUCTS --- */
         .products-pool { 
-    position: absolute; 
-    top: 200px; /* 140'tan 160'a çıkardık, böylece yukarı kaymazlar */
-    bottom: 80px; 
-    width: 100%; 
-    overflow-y: auto; 
-    padding: 15px; 
-    -webkit-overflow-scrolling: touch; /* Mobilde akıcı kaydırma için */
-}
+            position: absolute; top: 150px; bottom: 80px; 
+            width: 100%; overflow-y: auto; padding: 15px; 
+        }
         .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .product-card { cursor: pointer; text-align: center; }
-        .product-box { 
-    border: none !important; /* Çerçeveyi sildik */
-    aspect-ratio: 1/1; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    margin-bottom: 0; /* Alt boşluğu sıfırladık */
-    background: transparent !important; /* Arka plan rengini tamamen şeffaf yaptık */
-}
+        .product-box { border: none; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; background: transparent; cursor: pointer; }
         .product-box img { width: 100%; height: 100%; object-fit: contain; }
-        .product-info { display: none !important;}
 
-        /* --- MODAL VE SEPET --- */
+        /* --- MODALS --- */
         #infoPool, #productDetailPool, #checkoutPool {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: var(--bg-color); z-index: 2500; display: none; overflow-y: auto;
         }
         #infoPool.active, #productDetailPool.active, #checkoutPool.active { display: block; }
+        
+        .info-content { padding: 80px 30px 40px 30px; font-size: 11px; line-height: 1.6; white-space: pre-wrap; color: white; }
 
         .side-cart {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 90%; height: 85vh; background-color: var(--bg-color);
-            border: 1px solid var(--text-color); z-index: 3000; display: none; padding: 25px; flex-direction: column;
+            width: 90%; height: 70vh; background-color: var(--bg-color);
+            border: 1px solid white; z-index: 3000; display: none; padding: 25px; flex-direction: column;
         }
         .side-cart.active { display: flex; }
 
-        .legal-footer { position: fixed; bottom: 20px; left: 0; width: 100%; display: flex; flex-direction: row; justify-content: center; gap: 15px; font-size: 9px; }
-        #copyright-text { opacity: 0.3; }
-        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 11px; opacity: 0.5; }
+        .btn-white { background: white; color: #86baea; border: none; padding: 15px; font-weight: bold; font-family: inherit; width: 100%; cursor: pointer; text-transform: lowercase; }
+        
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; background: none; border: 1px solid white; color: white; font-family: inherit; outline: none; }
+        ::placeholder { color: rgba(255,255,255,0.7); }
+
+        .legal-footer { position: fixed; bottom: 20px; width: 100%; text-align: center; font-size: 9px; opacity: 0.5; pointer-events: none; }
+        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 11px; cursor: pointer; color: white; z-index: 2600; }
     </style>
 </head>
 <body>
 
     <header>
+        <div class="menu-toggle" onclick="toggleSidebar()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </div>
         <img src="media/mobillogo.webp" alt="Logo" class="brand-logo-img" onclick="location.reload()">
-        
-       <div class="top-right-nav">
-    <button class="cart-toggle" onclick="toggleCart()" id="cartCount">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <path d="M16 10a4 4 0 0 1-8 0"></path>
-        </svg>
-        <span id="cartBadge" style="position: absolute; top: -5px; right: -8px; font-size: 9px; background: #ffffff !important; color: #86baea !important;font-weight: bold; padding: 1px 5px; border-radius: 10px; display: none;">0</span>
-    </button>
-</div>
+        <div class="top-right-nav">
+            <button class="cart-toggle" onclick="toggleCart()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                <span id="cartBadge" style="display: none;">0</span>
+            </button>
+        </div>
     </header>
 
+    <div id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    <div id="sideNav" class="sidebar">
+        <span onclick="toggleSidebar()" style="font-size: 12px; opacity: 0.5; cursor: pointer;">[kapat]</span>
+        <div class="sidebar-links">
+            <a onclick="openInfoPool('contact')">iletişim</a>
+            <a onclick="openInfoPool('privacy')">kvkk & gizlilik</a>
+            <a onclick="openInfoPool('sales')">mesafeli satış</a>
+            <a onclick="openInfoPool('shipping')">teslimat ve iade</a>
+            <a onclick="openInfoPool('privacy')">çerez politikası</a>
+        </div>
+        <div class="sidebar-social">
+            <a href="https://www.instagram.com/reehastudio/" target="_blank"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+            <a href="https://www.tiktok.com/@reehastudio" target="_blank"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg></a>
+        </div>
+    </div>
+
     <nav id="main-nav">
-        <a onclick="loadProducts('tops', event)" class="nav-link">üst giyim</a>
+        <a onclick="loadProducts('tops', event)" class="nav-link active">üst giyim</a>
         <a onclick="loadProducts('bottoms', event)" class="nav-link">alt giyim</a>
     </nav>
 
     <main class="products-pool" id="mainPool"></main>
 
-    <div class="side-cart" id="sideCart">
-        <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-size:12px; border-bottom:1px solid black; padding-bottom:10px;">
-            <span>sepet</span>
-            <span onclick="toggleCart()" style="opacity:0.5;">[kapat]</span>
-        </div>
-        <div id="cartItems" style="flex:1; overflow-y:auto; font-size:11px;"></div>
-        <button onclick="startCheckout()" style="width:100%; padding:15px; background:black; color:white; border:none; margin-top:10px; font-family:inherit; font-size:12px;">Ödemeye Geç</button>
+    <div id="infoPool">
+        <span class="close-btn" onclick="closeAllPanels()">[kapat]</span>
+        <div id="infoContent" class="info-content"></div>
     </div>
 
     <div id="productDetailPool">
@@ -323,31 +197,46 @@ f<!DOCTYPE html>
         <div id="checkoutFormContent" style="padding:20px; margin-top:60px;"></div>
     </div>
 
-    <footer class="legal-footer">
-        <div onclick="openInfo('sales')" style="opacity:0.5;">mesafeli satış</div>
-        <div onclick="openInfo('shipping')" style="opacity:0.5;">iade politikası</div>
-        <div id="copyright-text">© 2026 reeha.</div>
-    </footer>
+    <div class="side-cart" id="sideCart">
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px; border-bottom:1px solid white; padding-bottom:10px;"><span>sepet</span><span onclick="toggleCart()" style="cursor:pointer;">[x]</span></div>
+        <div id="cartItems" style="flex:1; overflow-y:auto;"></div>
+        <div id="cartTotalArea" style="margin: 15px 0; font-size: 14px; display: flex; justify-content: space-between;"><span>toplam:</span><span id="cartTotal">0TL</span></div>
+        <button class="btn-white" onclick="startCheckout()">Ödemeye Geç</button>
+    </div>
+
+    <footer class="legal-footer">© 2026 reeha.</footer>
 
     <script>
-        // Ürün Verileri
+        // ÜRÜN VERİLERİ
         const productsData = {
             tops: [
-                { id: 1, name: "basic t-shirt white", price: 400, img: "elbise/tshirt1.webp" },
-                { id: 2, name: "heavy cotton hoodie", price: 1100, img: "elbise/tshirt2.webp" }
+                { id: 1, name: "basic t-shirt white", price: 400, img: "elbise/tshirt1.webp", desc: "100% heavy cotton." },
+                { id: 2, name: "heavy cotton hoodie", price: 1100, img: "elbise/tshirt2.webp", desc: "Oversized fit." }
             ],
             bottoms: []
         };
 
+        // KVKK VE DİĞER METİNLER (TAM HALİ)
+        const infoTexts = {
+            contact: { tr: `İLETİŞİM BİLGİLERİ\n\nVeri Sorumlusu: Reeha (Adem Koymak)\nAdres: Arnavutköy / İSTANBUL\nE-posta: admkymk25@gmail.com\nTelefon: +90 534 875 57 60` },
+            privacy: { tr: `KVKK & GİZLİLİK POLİTİKASI\n\nKişisel verileriniz Reeha tarafından güvenle işlenmektedir. Verileriniz sadece sipariş ve teslimat süreçleri için kullanılır. Üçüncü taraflarla ticari amaçla paylaşılmaz.` },
+            sales: { tr: `MESAFELI SATIŞ SÖZLEŞMESİ\n\nBu sözleşme, alıcı ve satıcı arasındaki hakları belirler. Sipariş onaylandığında bu şartlar kabul edilmiş sayılır.` },
+            shipping: { tr: `TESLİMAT VE İADE\n\nTeslimat süresi 1-3 iş günüdür. 14 gün içerisinde iade hakkınız mevcuttur. İade kargo ücreti alıcıya aittir.` }
+        };
+
         let cart = [];
+
+        function toggleSidebar() {
+            document.getElementById('sideNav').classList.toggle('active');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
 
         function loadProducts(cat, e) {
             const pool = document.getElementById('mainPool');
             const data = productsData[cat] || [];
             pool.innerHTML = `<div class="products-grid">` + data.map(p => `
-                <div class="product-card" onclick="openProductDetail('${cat}', ${p.id})">
-                    <div class="product-box"><img src="${p.img}"></div>
-                    <div class="product-info">${p.name}<br>${p.price}TL</div>
+                <div class="product-box" onclick="openProductDetail('${cat}', ${p.id})">
+                    <img src="${p.img}">
                 </div>
             `).join('') + `</div>`;
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
@@ -357,50 +246,93 @@ f<!DOCTYPE html>
         function openProductDetail(cat, id) {
             const p = productsData[cat].find(x => x.id === id);
             document.getElementById('productDetailContent').innerHTML = `
-                <img src="${p.img}" style="width:100%; margin-bottom:20px; border:1px solid rgba(0,0,0,0.1);">
-                <h3 style="font-size:16px; margin-bottom:10px;">${p.name}</h3>
-                <p style="font-size:14px; margin-bottom:20px;">${p.price}TL</p>
-                <button onclick="addToCart(${p.id}, '${cat}')" style="width:100%; padding:15px; background:black; color:white; border:none; font-family:inherit;">Sepete Ekle</button>
+                <img src="${p.img}" style="width:100%; margin-bottom:20px; border:1px solid rgba(255,255,255,0.1);">
+                <h3>${p.name}</h3>
+                <p style="margin:10px 0;">${p.price}TL</p>
+                <p style="font-size:10px; opacity:0.7; margin-bottom:20px;">${p.desc}</p>
+                <button class="btn-white" onclick="addToCart(${p.id}, '${cat}')">Sepete Ekle</button>
             `;
             document.getElementById('productDetailPool').classList.add('active');
         }
 
         function addToCart(id, cat) {
             const p = productsData[cat].find(x => x.id === id);
-            cart.push(p);
+            cart.push({...p});
             updateCart();
             closeAllPanels();
             toggleCart();
         }
 
         function updateCart() {
-            document.getElementById('cartCount').innerText = `sepet (${cart.length})`;
-            document.getElementById('cartItems').innerHTML = cart.length === 0 ? "boş." : cart.map(i => `<div style="margin-bottom:10px; display:flex; justify-content:space-between;"><span>${i.name}</span><span>${i.price}TL</span></div>`).join('');
+            const badge = document.getElementById('cartBadge');
+            badge.innerText = cart.length;
+            badge.style.display = cart.length > 0 ? 'block' : 'none';
+            
+            let total = 0;
+            document.getElementById('cartItems').innerHTML = cart.length === 0 ? "boş." : cart.map((i, idx) => {
+                total += i.price;
+                return `<div style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.1); font-size:12px; display:flex; justify-content:space-between;">
+                            <span>${i.name}</span>
+                            <span>${i.price}TL</span>
+                        </div>`;
+            }).join('');
+            document.getElementById('cartTotal').innerText = total + "TL";
         }
-        function toggleSidebar() {
-    document.getElementById('sideNav').classList.toggle('active');
-    document.getElementById('sidebarOverlay').classList.toggle('active');
-}
 
-// Menüdeki linklere tıklandığında menüyü kapatması için:
-function openInfo(type) {
-    toggleSidebar(); // Önce menüyü kapat
-    // Mevcut openInfoPool veya modal açma fonksiyonunu buraya bağla
-    openInfoPool(type); 
-}
+        function openInfoPool(type) {
+            if(document.getElementById('sideNav').classList.contains('active')) toggleSidebar();
+            document.getElementById('infoContent').innerText = infoTexts[type].tr;
+            document.getElementById('infoPool').classList.add('active');
+        }
 
         function toggleCart() { document.getElementById('sideCart').classList.toggle('active'); }
-        function closeAllPanels() { document.querySelectorAll('#productDetailPool, #checkoutPool, #sideCart').forEach(x => x.classList.remove('active')); }
+        
+        function closeAllPanels() { 
+            document.querySelectorAll('#infoPool, #productDetailPool, #checkoutPool, #sideCart, #sidebarOverlay').forEach(x => x.classList.remove('active')); 
+            document.getElementById('sideNav').classList.remove('active');
+        }
 
-        function startCheckout() {
+        // PAYTR ENTEGRASYONU (EKSİKSİZ)
+        async function startCheckout() {
+            document.getElementById('sideCart').classList.remove('active');
+            const total = cart.reduce((a, c) => a + c.price, 0);
+            
             document.getElementById('checkoutFormContent').innerHTML = `
-                <h2 style="font-size:14px; margin-bottom:20px; border-bottom:1px solid black; padding-bottom:5px;">teslimat</h2>
-                <input id="bill_email" placeholder="e-posta" style="width:100%; padding:12px; margin-bottom:10px; background:none; border:1px solid black; font-family:inherit;">
-                <input id="bill_name" placeholder="ad soyad" style="width:100%; padding:12px; margin-bottom:10px; background:none; border:1px solid black; font-family:inherit;">
-                <textarea id="bill_address" placeholder="adres" style="width:100%; padding:12px; margin-bottom:10px; background:none; border:1px solid black; font-family:inherit; height:80px;"></textarea>
-                <button onclick="alert('Ödeme sistemine bağlanılıyor...')" style="width:100%; padding:15px; background:black; color:white; border:none; font-family:inherit;">Ödemeyi Tamamla</button>
+                <h3 style="margin-bottom:15px;">teslimat bilgileri</h3>
+                <input id="bill_email" placeholder="e-posta">
+                <input id="bill_name" placeholder="ad soyad">
+                <textarea id="bill_address" placeholder="adres" style="height:80px;"></textarea>
+                <button class="btn-white" onclick="processPayment(${total})">Ödemeyi Tamamla</button>
             `;
             document.getElementById('checkoutPool').classList.add('active');
+        }
+
+        async function processPayment(total) {
+            const email = document.getElementById('bill_email').value;
+            const name = document.getElementById('bill_name').value;
+            const address = document.getElementById('bill_address').value;
+
+            if(!email || !name || !address) { alert("Lütfen tüm alanları doldurun."); return; }
+
+            const content = document.getElementById('checkoutFormContent');
+            content.innerHTML = `<p style="text-align:center;">PayTR sistemine bağlanılıyor...</p>`;
+
+            try {
+                const response = await fetch("https://shopier-backend.vercel.app/api/get-paytr-token", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, total, name, address })
+                });
+                const data = await response.json();
+                if(data.status === "success" && data.token) {
+                    content.innerHTML = `<iframe src="https://www.paytr.com/odeme/guvenli/${data.token}" frameborder="0" scrolling="yes" style="width:100%; height:600px; background:white;"></iframe>`;
+                } else {
+                    alert("Ödeme başlatılamadı.");
+                    startCheckout();
+                }
+            } catch(e) {
+                alert("Bağlantı hatası.");
+            }
         }
 
         window.onload = () => { loadProducts('tops'); };
