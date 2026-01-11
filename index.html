@@ -271,22 +271,20 @@ body[data-theme="dark"] .theme-toggle {
     line-height: 1;            /* Satır yüksekliğini sıfırlar */
 }
     
-    /* --- SADECE BİLGİSAYAR İÇİN AYARLAR (Buton burada görünür) --- */
+    /* --- BİLGİSAYAR AYARLARI (769px ve Üstü) --- */
 @media (min-width: 769px) {
     :root {
-        --bg-color: #ffffff; /* Bilgisayarda varsayılan beyaz */
+        --bg-color: #ffffff;
         --text-color: #000000;
     }
-    
     body[data-theme="dark"] {
         --bg-color: #000000;
         --text-color: #ffffff;
     }
-
+    /* Butonu bilgisayarda gösteriyoruz */
     .theme-toggle {
-        display: block !important; /* Butonu bilgisayarda göster */
+        display: block !important; 
     }
-
     #copyright-text {
         position: fixed;
         bottom: 30px;
@@ -294,32 +292,38 @@ body[data-theme="dark"] .theme-toggle {
         transform: translateX(-50%);
         white-space: nowrap;
     }
+}
 
-
-/* --- SADECE MOBİL İÇİN AYARLAR (Mavi Sabit, Buton Gizli) --- */
+/* --- MOBİL AYARLARI (768px ve Altı) --- */
 @media (max-width: 768px) {
-    :root {
+    /* Mobilde her şeyi bu maviye zorluyoruz */
+    :root, body, body[data-theme="dark"] {
         --bg-color: #86baea !important;
         --text-color: #000000 !important;
-    }
-
-    body, body[data-theme="dark"] {
         background-color: #86baea !important;
         color: #000000 !important;
     }
 
+    /* Mobilde tema butonunu gizliyoruz çünkü renk sabit */
     .theme-toggle {
-        display: none !important; /* Butonu mobilde gizle */
+        display: none !important;
     }
 
-    #infoPool, #productDetailPool, #checkoutPool, .side-cart, .info-sidebar, .info-content {
+    /* Tüm modal ve pencereleri mavi yapıyoruz */
+    #infoPool, #productDetailPool, #checkoutPool, .side-cart, 
+    .info-sidebar, .info-content, .detail-container, .checkout-container {
         background-color: #86baea !important;
         color: #000000 !important;
     }
 
+    /* Kenar çizgilerini siyah tonuna çekiyoruz */
     * {
-        border-color: rgba(0, 0, 0, 0.2) !important;
+        border-color: rgba(0, 0, 0, 0.3) !important;
     }
+
+    /* Menü ve Footer Ayarları */
+    nav#main-nav { top: 140px; left: 0; width: 100%; flex-direction: row; justify-content: flex-start; padding: 0 40px; gap: 20px; overflow-x: auto; white-space: nowrap; }
+    .legal-footer { position: fixed; bottom: 30px; left: 40px; display: flex; flex-direction: column; gap: 5px; z-index: 10; }
 }
 
  
