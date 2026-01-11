@@ -294,7 +294,7 @@
                 <div id="checkoutSummaryItems"></div>
                 <div style="margin-top:20px; font-size:14px; display:flex; justify-content:space-between; font-weight:bold;">
                     <span>total:</span>
-                    <span id="checkoutTotal">0€</span>
+                    <span id="checkoutTotal">0TL</span>
                 </div>
             </div>
         </div>
@@ -319,7 +319,7 @@
         <div id="cartItems" class="cart-items-container"><div id="emptyCartTxt" style="opacity:0.5; font-size:10px;">boş.</div></div>
         <div class="cart-footer" id="cartFooter" style="display:none;">
             <textarea id="cartNotePlaceholder" class="cart-note"></textarea>
-            <div style="font-size:12px; margin-bottom:15px; display:flex; justify-content:space-between;"><span>total:</span><span id="cartTotal">0€</span></div>
+            <div style="font-size:12px; margin-bottom:15px; display:flex; justify-content:space-between;"><span>total:</span><span id="cartTotal">0TL</span></div>
             <button class="checkout-btn" onclick="startCheckout()" id="checkoutBtnLabel">Ödemeyi Tamamla</button>
         </div>
     </div>
@@ -850,7 +850,7 @@ The Buyer declares that they have read and accepted this agreement by placing an
         </div>
         <div class="product-info">
             <div>${p.name}</div>
-            <div>${p.price}€</div>
+            <div>${p.price}TL</div>
         </div>
     </div>`;
     }).join('');
@@ -870,7 +870,7 @@ The Buyer declares that they have read and accepted this agreement by placing an
                 <div class="detail-info-box">
                     <div style="font-size: 18px; font-weight: bold;">${product.name}</div>
                     <div style="font-size: 12px; opacity: 0.7; line-height:1.5;">${product.desc}</div>
-                    <div style="font-size: 16px;">${product.price}€</div>
+                    <div style="font-size: 16px;">${product.price}TL</div>
                     <div>
                         <div style="font-size: 10px; margin-bottom: 5px;">beden/size:</div>
                         <div class="size-selector">
@@ -945,7 +945,7 @@ The Buyer declares that they have read and accepted this agreement by placing an
                 <div class="cart-item">
                     <div>
                         <div style="font-weight:bold;">${item.name} (${item.size})</div>
-                        <div style="opacity:0.7;">${item.price}€</div>
+                        <div style="opacity:0.7;">${item.price}TL</div>
                         <div class="qty-controls">
                             <button class="qty-btn" onclick="changeQty(${idx}, -1)">-</button>
                             <span>${item.qty}</span>
@@ -957,7 +957,7 @@ The Buyer declares that they have read and accepted this agreement by placing an
             });
 
             container.innerHTML = html;
-            document.getElementById('cartTotal').innerText = totalPrice + '€';
+            document.getElementById('cartTotal').innerText = totalPrice + 'TL';
             
             // Text güncellemeleri
             document.getElementById('cartHeaderLabel').innerText = currentLang === 'tr' ? 'sepet' : 'cart';
@@ -984,14 +984,14 @@ The Buyer declares that they have read and accepted this agreement by placing an
             const t = translations[currentLang];
             const totalPrice = cart.reduce((a,c) => a + c.price * c.qty, 0);
             
-            document.getElementById('checkoutTotal').innerText = totalPrice + '€';
+            document.getElementById('checkoutTotal').innerText = totalPrice + 'TL';
             document.getElementById('summaryTitle').innerText = t.summaryTitle;
             
             let summaryHtml = '';
             cart.forEach(c => {
                 summaryHtml += `<div style="display:flex; justify-content:space-between; margin-bottom:5px; opacity:0.7;">
                     <span>${c.name} (${c.size}) x${c.qty}</span>
-                    <span>${c.price * c.qty}€</span>
+                    <span>${c.price * c.qty}TL</span>
                 </div>`;
             });
             document.getElementById('checkoutSummaryItems').innerHTML = summaryHtml;
