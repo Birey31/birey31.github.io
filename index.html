@@ -92,13 +92,21 @@
             position: fixed; top: 30px; right: 30px;
             display: flex; align-items: center; gap: 20px; z-index: 1000;
         }
-        .theme-toggle {
-            background: none; border: 1px solid var(--text-color);
-            width: 14px; height: 14px; border-radius: 50%; cursor: pointer;
-        }
-        body:not([data-theme="light"]) .theme-toggle { background: var(--text-color); }
-        .cart-toggle { background: none; border: none; color: var(--text-color); font-size: 13px; cursor: pointer; text-transform: lowercase; }
+        /* Butonun genel hali (Gündüz modunda içi boş) */
+.theme-toggle {
+    background: transparent !important; /* Başlangıçta boş */
+    border: 1px solid var(--text-color);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
+/* Gece modunda butonun içini text rengiyle doldur */
+body[data-theme="dark"] .theme-toggle {
+    background-color: var(--text-color) !important;
+}
         /* --- MODAL POOLS --- */
         /* DÜZELTME 2: Virgül hatası giderildi */
         #infoPool, #productDetailPool, #checkoutPool {
