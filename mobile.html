@@ -7,7 +7,6 @@
     <title>Reeha | Store Mobile</title>
     
     <script>
-        // Bilgisayardan girilirse ana sayfaya yönlendir
         if (window.innerWidth > 768) {
             window.location.href = "index.html";
         }
@@ -16,7 +15,7 @@
     <style>
         :root {
             --bg-color: #86baea;
-            --text-color: #f8f9fa;
+            --text-color: #ffffff;
         }
 
         * {
@@ -28,10 +27,9 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: "Courier New", Courier, monospace;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            /* Havuz mantığı kalktığı için overflow'u serbest bıraktık */
+            overflow-x: hidden;
+            overflow-y: auto;
             -webkit-font-smoothing: antialiased;
         }
 
@@ -78,6 +76,40 @@
             padding: 1px 5px; border-radius: 10px; font-weight: bold;
         }
 
+        /* --- NAVIGATION --- */
+        nav#main-nav { 
+            position: fixed; top: 90px; left: 0; width: 100%; 
+            display: flex; justify-content: center; gap: 25px; 
+            padding: 15px 0; z-index: 1000; background-color: var(--bg-color);
+        }
+        .nav-link { color: white; text-decoration: none; font-size: 12px; opacity: 0.6; text-transform: lowercase; cursor: pointer; }
+        .nav-link.active { opacity: 1; font-weight: bold; border-bottom: 2px solid white; }
+
+        /* --- MAIN CONTENT AREA --- */
+        #content-area {
+            margin-top: 150px; /* Header ve Nav'ın altında kalmaması için */
+            width: 100%;
+            padding-bottom: 50px;
+        }
+
+        .products-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 15px; 
+            padding: 0 15px;
+        }
+
+        .product-box { border: none; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; background: transparent; cursor: pointer; }
+        .product-box img { width: 100%; height: 100%; object-fit: contain; }
+
+        /* --- SPOTIFY SECTION --- */
+        .spotify-section {
+            width: 100%;
+            padding: 40px 20px 100px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
         /* --- SIDEBAR --- */
         .sidebar {
             position: fixed; top: 0; left: -280px; 
@@ -98,59 +130,28 @@
 
         .sidebar-links { margin-top: 50px; display: flex; flex-direction: column; gap: 20px; }
         .sidebar-links a { color: white; text-decoration: none; font-size: 14px; text-transform: lowercase; font-weight: bold; cursor: pointer; }
-        
         .sidebar-social { margin-top: auto; display: flex; gap: 20px; padding-bottom: 20px; }
 
-        /* --- NAVIGATION --- */
-        nav#main-nav { 
-            position: fixed; top: 90px; left: 0; width: 100%; 
-            display: flex; justify-content: center; gap: 25px; 
-            padding: 10px 0; z-index: 10; background-color: var(--bg-color);
-        }
-        .nav-link { color: white; text-decoration: none; font-size: 12px; opacity: 0.6; text-transform: lowercase; cursor: pointer; }
-        .nav-link.active { opacity: 1; font-weight: bold; border-bottom: 2px solid white; }
-
-        /* --- PRODUCTS --- */
-        .products-pool { 
-            position: absolute; top: 150px; bottom: 140px; 
-            width: 100%; overflow-y: auto; padding: 15px; z-index: 1;
-        }
-        .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .product-box { border: none; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; background: transparent; cursor: pointer; }
-        .product-box img { width: 100%; height: 100%; object-fit: contain; }
-
-        /* --- MODALS --- */
+        /* --- MODALS & SEPET --- */
         #infoPool, #productDetailPool, #checkoutPool {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--bg-color); z-index: 2500; display: none; overflow-y: auto;
+            background-color: var(--bg-color); z-index: 10000; display: none; overflow-y: auto;
         }
         #infoPool.active, #productDetailPool.active, #checkoutPool.active { display: block; }
-        
         .info-content { padding: 80px 30px 40px 30px; font-size: 11px; line-height: 1.6; white-space: pre-wrap; color: white; }
 
         .side-cart {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 90%; height: 70vh; background-color: var(--bg-color);
-            border: 1px solid white; z-index: 3000; display: none; padding: 25px; flex-direction: column;
+            border: 1px solid white; z-index: 11000; display: none; padding: 25px; flex-direction: column;
         }
         .side-cart.active { display: flex; }
 
         .btn-white { background: white; color: #86baea; border: none; padding: 15px; font-weight: bold; font-family: inherit; width: 100%; cursor: pointer; text-transform: lowercase; }
-        
         input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; background: none; border: 1px solid white; color: white; font-family: inherit; outline: none; }
         ::placeholder { color: rgba(255,255,255,0.7); }
-
-        .legal-footer { position: fixed; bottom: 20px; width: 100%; text-align: center; font-size: 9px; opacity: 0.5; pointer-events: none; }
+        .legal-footer { text-align: center; font-size: 9px; opacity: 0.5; padding: 20px 0; }
         .close-btn { position: absolute; top: 20px; right: 20px; font-size: 11px; cursor: pointer; color: white; z-index: 2600; }
-         .spotify-container {
-    width: 100%;
-    padding: 20px 0 100px 0; /* Alttan 100px boşluk verdik ki en son ürün rahat gözüksün */
-    display: flex;
-    justify-content: center;
-    background: transparent;
-    /* Sabitleyici kodları sildik, artık akışa dahil */
-}
-
     </style>
 </head>
 <body>
@@ -166,7 +167,6 @@
                 <span id="cartBadge" style="display: none;">0</span>
             </button>
         </div>
-        
     </header>
 
     <div id="sidebarOverlay" onclick="toggleSidebar()"></div>
@@ -177,7 +177,6 @@
             <a onclick="openInfoPool('privacy')">kvkk & gizlilik</a>
             <a onclick="openInfoPool('sales')">mesafeli satış</a>
             <a onclick="openInfoPool('shipping')">teslimat ve iade</a>
-            <a onclick="openInfoPool('privacy')">çerez politikası</a>
         </div>
         <div class="sidebar-social">
             <a href="https://www.instagram.com/reehastudio/" target="_blank"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
@@ -190,7 +189,19 @@
         <a onclick="loadProducts('bottoms', event)" class="nav-link">alt giyim</a>
     </nav>
 
-    <main class="products-pool" id="mainPool"></main>
+    <div id="content-area">
+        <div id="products-list" class="products-grid"></div>
+        
+        <div class="spotify-section">
+            <iframe style="border-radius:12px" 
+                src="https://open.spotify.com/embed/playlist/38BAtG8N7M6Y0p6UvXoU8Y?utm_source=generator&theme=0" 
+                width="100%" height="152" frameBorder="0" allowfullscreen="" 
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy">
+            </iframe>
+        </div>
+
+        <footer class="legal-footer">© 2026 reeha.</footer>
+    </div>
 
     <div id="infoPool">
         <span class="close-btn" onclick="closeAllPanels()">[kapat]</span>
@@ -213,21 +224,8 @@
         <div id="cartTotalArea" style="margin: 15px 0; font-size: 14px; display: flex; justify-content: space-between;"><span>toplam:</span><span id="cartTotal">0TL</span></div>
         <button class="btn-white" onclick="startCheckout()">Ödemeye Geç</button>
     </div>
-    <div class="spotify-container">
-    <iframe style="border-radius:12px" 
-        src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGW2MvMA?utm_source=generator&theme=0" 
-        width="100%" 
-        height="80" 
-        frameBorder="0" 
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-        loading="lazy">
-    </iframe>
-</div>
-    
-    <footer class="legal-footer">© 2026 reeha.tüm hakları saklıdır.SEX</footer>
 
     <script>
-        // ÜRÜN VERİLERİ
         const productsData = {
             tops: [
                 { id: 1, name: "basic t-shirt white", price: 400, img: "elbise/tshirt1.webp", desc: "100% heavy cotton." },
@@ -236,12 +234,11 @@
             bottoms: []
         };
 
-        // KVKK VE DİĞER METİNLER (TAM HALİ)
         const infoTexts = {
             contact: { tr: `İLETİŞİM BİLGİLERİ\n\nVeri Sorumlusu: Reeha (Adem Koymak)\nAdres: Arnavutköy / İSTANBUL\nE-posta: admkymk25@gmail.com\nTelefon: +90 534 875 57 60` },
-            privacy: { tr: `KVKK & GİZLİLİK POLİTİKASI\n\nKişisel verileriniz Reeha tarafından güvenle işlenmektedir. Verileriniz sadece sipariş ve teslimat süreçleri için kullanılır. Üçüncü taraflarla ticari amaçla paylaşılmaz.` },
-            sales: { tr: `MESAFELI SATIŞ SÖZLEŞMESİ\n\nBu sözleşme, alıcı ve satıcı arasındaki hakları belirler. Sipariş onaylandığında bu şartlar kabul edilmiş sayılır.` },
-            shipping: { tr: `TESLİMAT VE İADE\n\nTeslimat süresi 1-3 iş günüdür. 14 gün içerisinde iade hakkınız mevcuttur. İade kargo ücreti alıcıya aittir.` }
+            privacy: { tr: `KVKK & GİZLİLİK POLİTİKASI\n\nKişisel verileriniz Reeha tarafından güvenle işlenmektedir...` },
+            sales: { tr: `MESAFELI SATIŞ SÖZLEŞMESİ\n\nBu sözleşme, alıcı ve satıcı arasındaki hakları belirler...` },
+            shipping: { tr: `TESLİMAT VE İADE\n\nTeslimat süresi 1-3 iş günüdür. 14 gün içerisinde iade hakkınız mevcuttur.` }
         };
 
         let cart = [];
@@ -252,37 +249,18 @@
         }
 
         function loadProducts(cat, e) {
-    const pool = document.getElementById('mainPool');
-    const data = productsData[cat] || [];
-    
-    // 1. Elbiselerin ızgarasını oluşturuyoruz
-    let productsHtml = `<div class="products-grid">` + data.map(p => `
-        <div class="product-box" onclick="openProductDetail('${cat}', ${p.id})">
-            <img src="${p.img}">
-        </div>
-    `).join('') + `</div>`;
+            const listElement = document.getElementById('products-list');
+            const data = productsData[cat] || [];
+            listElement.innerHTML = data.map(p => `
+                <div class="product-box" onclick="openProductDetail('${cat}', ${p.id})">
+                    <img src="${p.img}">
+                </div>
+            `).join('');
 
-    // 2. Spotify kodunu bir değişken içine alıyoruz
-    let spotifyHtml = `
-        <div class="spotify-container">
-            <iframe style="border-radius:12px" 
-                src="https://open.spotify.com/embed/playlist/38BAtG8N7M6Y0p6UvXoU8Y?utm_source=generator&theme=0" 
-                width="90%" 
-                height="152" 
-                frameBorder="0" 
-                allowfullscreen="" 
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                loading="lazy">
-            </iframe>
-        </div>`;
-
-    // 3. Hepsini mainPool içine sırayla basıyoruz (Ürünler + Spotify)
-    pool.innerHTML = productsHtml + spotifyHtml;
-
-    // Aktif menü görselini güncelle
-    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-    if(e) e.target.classList.add('active');
-}
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            if(e) e.target.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         function openProductDetail(cat, id) {
             const p = productsData[cat].find(x => x.id === id);
@@ -308,14 +286,10 @@
             const badge = document.getElementById('cartBadge');
             badge.innerText = cart.length;
             badge.style.display = cart.length > 0 ? 'block' : 'none';
-            
             let total = 0;
-            document.getElementById('cartItems').innerHTML = cart.length === 0 ? "boş." : cart.map((i, idx) => {
+            document.getElementById('cartItems').innerHTML = cart.length === 0 ? "boş." : cart.map((i) => {
                 total += i.price;
-                return `<div style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.1); font-size:12px; display:flex; justify-content:space-between;">
-                            <span>${i.name}</span>
-                            <span>${i.price}TL</span>
-                        </div>`;
+                return `<div style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.1); font-size:12px; display:flex; justify-content:space-between;"><span>${i.name}</span><span>${i.price}TL</span></div>`;
             }).join('');
             document.getElementById('cartTotal').innerText = total + "TL";
         }
@@ -333,11 +307,9 @@
             document.getElementById('sideNav').classList.remove('active');
         }
 
-        // PAYTR ENTEGRASYONU (EKSİKSİZ)
         async function startCheckout() {
             document.getElementById('sideCart').classList.remove('active');
             const total = cart.reduce((a, c) => a + c.price, 0);
-            
             document.getElementById('checkoutFormContent').innerHTML = `
                 <h3 style="margin-bottom:15px;">teslimat bilgileri</h3>
                 <input id="bill_email" placeholder="e-posta">
@@ -352,12 +324,9 @@
             const email = document.getElementById('bill_email').value;
             const name = document.getElementById('bill_name').value;
             const address = document.getElementById('bill_address').value;
-
             if(!email || !name || !address) { alert("Lütfen tüm alanları doldurun."); return; }
-
             const content = document.getElementById('checkoutFormContent');
             content.innerHTML = `<p style="text-align:center;">PayTR sistemine bağlanılıyor...</p>`;
-
             try {
                 const response = await fetch("https://shopier-backend.vercel.app/api/get-paytr-token", {
                     method: "POST",
@@ -367,13 +336,8 @@
                 const data = await response.json();
                 if(data.status === "success" && data.token) {
                     content.innerHTML = `<iframe src="https://www.paytr.com/odeme/guvenli/${data.token}" frameborder="0" scrolling="yes" style="width:100%; height:600px; background:white;"></iframe>`;
-                } else {
-                    alert("Ödeme başlatılamadı.");
-                    startCheckout();
-                }
-            } catch(e) {
-                alert("Bağlantı hatası.");
-            }
+                } else { alert("Ödeme başlatılamadı."); startCheckout(); }
+            } catch(e) { alert("Bağlantı hatası."); }
         }
 
         window.onload = () => { loadProducts('tops'); };
