@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
  <meta name="google-site-verification" content="PWkN9ngjm8T5C4tuYg8Me5C_HJtvNtJ7N8M7ytFt77Y" />
  <link rel="canonical" href="https://reehastudio.com/index.html">
  <link rel="icon" type="image/png" href="media/mobillogo.webp?v=2">
@@ -525,6 +526,13 @@ Politika, site üzerinde yayınlandığı tarihten itibaren yürürlüğe girer.
             if(e) e.target.classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+     anime({
+  targets: '.product-box',
+  translateY: [20, 0], // 20px aşağıdan gel
+  opacity: [0, 1],     // Görünmezden görünür ol
+  delay: anime.stagger(100), // Her ürün arasında 0.1 saniye fark olsun
+  easing: 'easeOutExpo'
+});
         function toggleAccordion(btn) {
     const item = btn.parentElement;
     item.classList.toggle('active');
