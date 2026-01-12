@@ -44,12 +44,16 @@
         }
 
         /* --- HEADER & LOGO --- */
-        .header-left { position: fixed; top: 30px; left: 40px; z-index: 1000; }
-        .brand-logo {
-            font-family: 'Averta', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: 900; font-size: 24px; letter-spacing: 1px;
-            line-height: 1; margin-bottom: 8px; text-transform: uppercase;
+        .header-left { position: fixed; top: 30px; left: 40px; z-index: 1000; display: flex; flex-direction: column; gap: 5px; }
+        
+        /* Yeni Logo Görseli Stili */
+        .brand-logo-top {
+            height: 35px; /* Boyutu buradan ayarlayabilirsin */
+            width: auto;
+            cursor: pointer;
+            object-fit: contain;
         }
+
         #current-time { font-size: 11px; opacity: 0.8; letter-spacing: 0.5px; }
 
         /* --- NAV & FOOTER --- */
@@ -89,7 +93,7 @@
         body[data-theme="dark"] .theme-toggle { background-color: var(--text-color); }
         .top-right-nav { position: fixed; top: 30px; right: 30px; display: flex; align-items: center; gap: 20px; z-index: 1000; }
         
-        /* Sepet Butonu ve Badge */
+        /* Sepet Butonu */
         .cart-toggle { background: none; border: none; color: var(--text-color); cursor: pointer; position: relative; display: flex; align-items: center; }
         #cartBadge { position: absolute; top: -5px; right: -10px; background: #d10000; color: white; font-size: 9px; padding: 2px 5px; border-radius: 10px; font-weight: bold; }
 
@@ -116,7 +120,7 @@
     </div>
 
     <div class="header-left">
-        <div class="brand-logo" onclick="showLandingImage()" style="cursor: pointer;">REEHA</div>
+        <img src="media/mobillogoW.webp" alt="reeha." class="brand-logo-top" onclick="showLandingImage()">
         <span id="current-time"></span>
     </div>
 
@@ -204,7 +208,7 @@
 
         function loadProducts(cat, e) {
             const pool = document.getElementById('mainPool');
-            pool.innerHTML = `<div class="products-grid">` + productsData[cat].map(p => {
+            pool.innerHTML = `<div class="products-grid">` + (productsData[cat] || []).map(p => {
                 if(p.isEmpty) return `<div></div>`;
                 return `<div class="product-card" onclick="openProductDetail('${cat}', ${p.id})">
                     <div class="product-box"><img src="${p.img}"></div>
@@ -307,7 +311,8 @@
         function loadInfo(type) {
             document.getElementById('infoContent').innerText = infoTexts[type].tr;
             document.querySelectorAll('.info-nav-link').forEach(el => el.style.opacity = '0.5');
-            document.getElementById('link-' + type).style.opacity = '1';
+            const targetLink = document.getElementById('link-' + type);
+            if(targetLink) targetLink.style.opacity = '1';
         }
 
         function closeAllPanels() {
