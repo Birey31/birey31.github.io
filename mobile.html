@@ -64,11 +64,13 @@
             align-items: center;
         }
 
-        .brand-logo-img {
-            height: 45px;
-            width: auto;
-            object-fit: contain;
-        }
+         .brand-logo-img {
+    height: 45px;
+    width: auto;
+    object-fit: contain;
+    opacity: 0; /* Başlangıçta gizli tutuyoruz ki Anime.js ile belirsin */
+    will-change: opacity, transform;
+}
 
         .top-right-nav { 
             position: absolute; 
@@ -654,7 +656,19 @@ function updateQty(amount) {
             } catch(e) { alert("Bağlantı hatası."); }
         }
 
-        window.onload = () => { loadProducts('tops'); };
+        window.onload = () => {
+    loadProducts('tops');
+
+    // Logo Asil Belirme Efekti
+    anime({
+        targets: '.brand-logo-img',
+        opacity: [0, 1],       // 0'dan 1'e (görünürlük)
+        scale: [0.95, 1],      // %95 büyüklükten orijinal boyutuna
+        translateY: [5, 0],    // 5px aşağıdan yukarıya çok hafif kayış
+        duration: 2500,        // 2.5 saniye sürsün (asil ve yavaş)
+        easing: 'easeOutExpo'  // Yumuşak bir bitiş
+    });
+};
     </script>
 </body>
 </html>
