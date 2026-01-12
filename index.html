@@ -23,6 +23,29 @@
         /* --- LOGO & HEADER --- */
         .header-left { position: fixed; top: 40px; left: 40px; z-index: 2001; }
         .brand-logo-top { height: 55px; width: auto; cursor: pointer; object-fit: contain; }
+        /* SAĞ ALT SOSYAL MEDYA */
+.social-footer {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    display: flex;
+    gap: 20px;
+    z-index: 1000;
+}
+
+.social-icon {
+    color: #000;
+    opacity: 0.5;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-icon:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+}
 
         /* --- ÜST ORTA NAV --- */
         nav#main-nav { position: fixed; top: 55px; left: 50%; transform: translateX(-50%); display: flex; gap: 40px; z-index: 1000; }
@@ -124,6 +147,21 @@
         <div style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:10px; opacity:0.5; z-index:3000;" onclick="closeAllPanels()">[iptal]</div>
         <div id="checkoutFormContent" style="flex:1; padding:80px; overflow-y:auto;"></div>
     </div>
+    <div class="social-footer">
+    <a href="https://instagram.com/reehastudio" target="_blank" class="social-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+    </a>
+    
+    <a href="https://tiktok.com/@reehastudio" target="_blank" class="social-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path>
+        </svg>
+    </a>
+</div>
 
     <div id="copyright-text">© 2026 reeha. tüm hakları saklıdır.</div>
 
