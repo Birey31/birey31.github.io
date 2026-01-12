@@ -42,15 +42,7 @@
             display: flex;
             flex-direction: column;
         }
-#hero-section:not(.active) {
-    display: none !important;
-    pointer-events: none !important;
-}
 
-#globalOverlay:not(.active) {
-    display: none !important;
-    pointer-events: none !important;
-}
         /* --- HEADER & LOGO --- */
         .header-left { position: fixed; top: 30px; left: 40px; z-index: 1000; }
         .brand-logo {
@@ -72,7 +64,7 @@
         /* --- PRODUCTS --- */
         .products-pool { position: fixed; top: 50%; left: 55%; transform: translate(-50%, -50%); width: 75%; height: 70%; display: flex; align-items: center; justify-content: center; z-index: 5; }
         .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 30px; width: 100%; height: 100%; overflow-y: auto; }
-        .product-card { cursor: pointer;z-index: 110; }
+        .product-card { cursor: pointer; z-index: 110; }
         .product-box { width: 100%; aspect-ratio: 1/1; border: 1px solid rgba(128,128,128,0.2); display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 8px; }
         .product-box img { width: 90%; height: 90%; object-fit: contain; transition: 0.5s; }
         .product-card:hover .product-box img { transform: scale(1.1); }
@@ -96,9 +88,13 @@
         .theme-toggle { background: transparent; border: 1px solid var(--text-color); width: 16px; height: 16px; border-radius: 50%; cursor: pointer; }
         body[data-theme="dark"] .theme-toggle { background-color: var(--text-color); }
         .top-right-nav { position: fixed; top: 30px; right: 30px; display: flex; align-items: center; gap: 20px; z-index: 1000; }
+        
+        /* Sepet Butonu ve Badge */
+        .cart-toggle { background: none; border: none; color: var(--text-color); cursor: pointer; position: relative; display: flex; align-items: center; }
+        #cartBadge { position: absolute; top: -5px; right: -10px; background: #d10000; color: white; font-size: 9px; padding: 2px 5px; border-radius: 10px; font-weight: bold; }
+
         .checkout-btn { width: 100%; background: var(--text-color); color: var(--bg-color); border: none; padding: 15px; font-family: inherit; cursor: pointer; font-weight: bold; }
         
-        /* Ödeme iFrame Pencere Ayarı */
         .checkout-container { display: flex; width: 100%; height: 100%; }
         .checkout-form-box { flex: 1; padding: 60px; overflow-y: auto; }
     </style>
@@ -108,7 +104,14 @@
     <div id="globalOverlay" onclick="handleOverlayClick()"></div>
 
     <div class="top-right-nav">
-        <button class="cart-toggle" onclick="toggleCart()" id="cartCount" data-tr-prefix="sepet" data-en-prefix="cart" style="background:none; border:none; color:var(--text-color); cursor:pointer; font-size:12px;">sepet (0)</button>
+        <button class="cart-toggle" onclick="toggleCart()">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            <span id="cartBadge" style="display: none;">0</span>
+        </button>
         <button class="theme-toggle" onclick="toggleTheme()"></button>
     </div>
 
@@ -132,7 +135,7 @@
         <div id="cartItems" style="flex:1; overflow-y:auto;"><div style="opacity:0.5; font-size:10px;">boş.</div></div>
         <div id="cartFooter" style="display:none; border-top:1px solid var(--text-color); padding-top:20px;">
             <div style="font-size:12px; margin-bottom:15px; display:flex; justify-content:space-between;"><span>total:</span><span id="cartTotal">0TL</span></div>
-            <button class="checkout-btn" onclick="startCheckout()">Ödemeyi Tamamla</button>
+            <button class="checkout-btn" onclick="startCheckout()">Ödemeye Geç</button>
         </div>
     </div>
 
@@ -170,7 +173,6 @@
     <div id="copyright-text">© 2026 reeha. tüm hakları saklıdır.</div>
 
     <script>
-        // --- VERİLER ---
         const productsData = {
             tops: [
                 { id: 1, name: "basic t-shirt white", price: 400, img: "elbise/tshirt1.webp", desc: "100% heavy cotton." },
@@ -180,14 +182,14 @@
         };
 
         const infoTexts = {
-            contact: { tr: `İLETİŞİM BİLGİLERİ... (Buraya KVKK metnini koyunuz)`, en: `CONTACT...` },
-            // ... Diğer tüm KVKK metinleri buraya gelecek (Snippet nedeniyle kısalttım, elindeki dosyadan yapıştırabilirsin)
+            contact: { tr: `İLETİŞİM BİLGİLERİ\n\nSorumlu: Reeha (Adem Koymak)\n\nAdres: Arnavutköy / İSTANBUL\n\nTelefon: +90 534 875 57 60\n\nE-posta: admkymk25@gmail.com`, en: `CONTACT...` },
+            privacy: { tr: `KVKK & GİZLİLİK...`, en: `PRIVACY...` },
+            sales: { tr: `MESAFELİ SATIŞ SÖZLEŞMESİ...`, en: `SALES...` },
+            shipping: { tr: `TESLİMAT & İADE...`, en: `SHIPPING...` }
         };
 
         let cart = [];
-        let currentLang = 'tr';
 
-        // --- FONKSİYONLAR ---
         function toggleTheme() {
             const body = document.body;
             const isDark = body.getAttribute('data-theme') === 'dark';
@@ -217,12 +219,66 @@
             document.getElementById('mainPool').innerHTML = `<img src="media/sanat.webp" style="width:100%; height:100%; object-fit:cover; cursor:pointer;" onclick="loadProducts('tops')">`;
         }
 
-        // ÖDEME SİSTEMİ (PAYTR)
+        function updateCart() {
+            const badge = document.getElementById('cartBadge');
+            badge.innerText = cart.length;
+            badge.style.display = cart.length > 0 ? 'block' : 'none';
+            
+            const total = cart.reduce((a, c) => a + c.price, 0);
+            document.getElementById('cartTotal').innerText = total + "TL";
+            document.getElementById('cartFooter').style.display = cart.length > 0 ? 'block' : 'none';
+            
+            document.getElementById('cartItems').innerHTML = cart.length === 0 ? "boş." : cart.map(i => `
+                <div style="font-size:11px; margin-bottom:10px; display:flex; justify-content:space-between;">
+                    <span>${i.name}</span><span>${i.price}TL</span>
+                </div>
+            `).join('');
+        }
+
+        function openProductDetail(cat, id) {
+            const p = productsData[cat].find(x => x.id === id);
+            document.getElementById('productDetailContent').innerHTML = `
+                <div style="flex:1; display:flex; align-items:center; justify-content:center; padding:40px;">
+                    <img src="${p.img}" style="max-width:100%; max-height:100%; object-fit:contain;">
+                </div>
+                <div style="width:400px; border-left:1px solid var(--text-color); padding:60px; display:flex; flex-direction:column; justify-content:center;">
+                    <h2 style="font-size:24px; margin-bottom:10px;">${p.name}</h2>
+                    <p style="font-size:18px; margin-bottom:30px;">${p.price}TL</p>
+                    <p style="font-size:12px; opacity:0.6; margin-bottom:40px;">${p.desc}</p>
+                    <button class="checkout-btn" onclick="addToCart(${p.id}, '${cat}')">Sepete Ekle</button>
+                </div>
+            `;
+            document.getElementById('productDetailPool').classList.add('active');
+            document.getElementById('globalOverlay').classList.add('active');
+        }
+
+        function addToCart(id, cat) {
+            const p = productsData[cat].find(x => x.id === id);
+            cart.push({...p});
+            updateCart();
+            closeAllPanels();
+            toggleCart();
+        }
+
+        async function startCheckout() {
+            closeAllPanels();
+            const totalPrice = cart.reduce((a, c) => a + c.price, 0);
+            document.getElementById('checkoutFormContent').innerHTML = `
+                <h3 style="margin-bottom:20px;">Teslimat Bilgileri</h3>
+                <input id="bill_email" placeholder="E-posta" style="width:100%; padding:10px; margin-bottom:10px; background:none; border:1px solid var(--text-color); color:var(--text-color);">
+                <input id="bill_name" placeholder="Ad Soyad" style="width:100%; padding:10px; margin-bottom:10px; background:none; border:1px solid var(--text-color); color:var(--text-color);">
+                <textarea id="bill_address" placeholder="Adres" style="width:100%; padding:10px; height:100px; margin-bottom:20px; background:none; border:1px solid var(--text-color); color:var(--text-color);"></textarea>
+                <button class="checkout-btn" onclick="startPayTR()">Ödemeye Geç (${totalPrice}TL)</button>
+            `;
+            document.getElementById('checkoutPool').classList.add('active');
+            document.getElementById('globalOverlay').classList.add('active');
+        }
+
         async function startPayTR() {
             const email = document.getElementById('bill_email').value;
             const name = document.getElementById('bill_name').value;
             const address = document.getElementById('bill_address').value;
-            const totalPrice = cart.reduce((a, c) => a + (c.price * c.qty), 0);
+            const totalPrice = cart.reduce((a, c) => a + c.price, 0);
 
             if (!email || !name || !address) { alert("Eksik bilgi!"); return; }
 
@@ -237,9 +293,21 @@
                 });
                 const data = await res.json();
                 if (data.status === "success") {
-                    checkoutContent.innerHTML = `<iframe src="https://www.paytr.com/odeme/guvenli/${data.token}" style="width:100%; height:800px; border:none;"></iframe>`;
+                    checkoutContent.innerHTML = `<iframe src="https://www.paytr.com/odeme/guvenli/${data.token}" style="width:100%; height:600px; border:none; background:white;"></iframe>`;
                 }
             } catch (err) { alert("Hata oluştu."); }
+        }
+
+        function openInfoPool(type) {
+            document.getElementById('infoPool').classList.add('active');
+            document.getElementById('globalOverlay').classList.add('active');
+            loadInfo(type);
+        }
+
+        function loadInfo(type) {
+            document.getElementById('infoContent').innerText = infoTexts[type].tr;
+            document.querySelectorAll('.info-nav-link').forEach(el => el.style.opacity = '0.5');
+            document.getElementById('link-' + type).style.opacity = '1';
         }
 
         function closeAllPanels() {
