@@ -6,7 +6,8 @@
     <link rel="icon" type="image/png" href="media/mobillogo.webp">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reeha | Store</title>
+    <title>reeha. zamansız formlar</title>
+    <meta name="description" content="reeha. unisex formlar, ağır dokular ve zamansız detaylar.">
     
     <script>
         if (window.innerWidth <= 768) {
@@ -15,70 +16,34 @@
     </script>
 
     <style>
-        :root {
-            --bg-color: #ffffff;
-            --text-color: #000000;
-        }
+        :root { --bg-color: #ffffff; --text-color: #000000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-color); color: var(--text-color); font-family: "Courier New", Courier, monospace; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        /* --- LOGO & HEADER --- */
+        .header-left { position: fixed; top: 40px; left: 40px; z-index: 2001; }
+        .brand-logo-top { height: 55px; width: auto; cursor: pointer; object-fit: contain; }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: "Courier New", Courier, monospace;
-            height: 100vh;
-            overflow: hidden; 
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* --- HEADER & LOGO --- */
-        .header-left { 
-            position: fixed; 
-            top: 40px; 
-            left: 40px; 
-            z-index: 1000; 
-        }
-        
-        .brand-logo-top { 
-            height: 55px; 
-            width: auto; 
-            cursor: pointer; 
-            object-fit: contain; 
-        }
-
-        /* --- MERKEZİ NAV (YENİ) --- */
-        nav#main-nav { 
-            position: fixed; 
-            top: 55px; /* Logoyla hizalı durması için */
-            left: 50%; 
-            transform: translateX(-50%); 
-            display: flex; 
-            flex-direction: row; /* Yan yana dizilim */
-            gap: 40px; 
-            z-index: 1000; 
-        }
-        
-        .nav-link { 
-            text-decoration: none; 
-            color: var(--text-color); 
-            font-size: 13px; 
-            text-transform: lowercase; 
-            cursor: pointer; 
-            opacity: 0.6; 
-            transition: 0.3s;
-            letter-spacing: 1px;
-        }
+        /* --- ÜST ORTA NAV --- */
+        nav#main-nav { position: fixed; top: 55px; left: 50%; transform: translateX(-50%); display: flex; gap: 40px; z-index: 1000; }
+        .nav-link { text-decoration: none; color: var(--text-color); font-size: 13px; text-transform: lowercase; cursor: pointer; opacity: 0.6; transition: 0.3s; letter-spacing: 1px; }
         .nav-link:hover { opacity: 1; }
         .nav-link.active { opacity: 1; font-weight: bold; border-bottom: 1px solid #000; }
 
-        /* --- SEPET --- */
+        /* --- SAĞ ÜST SEPET --- */
         .top-right-nav { position: fixed; top: 40px; right: 40px; display: flex; align-items: center; z-index: 1000; }
-        .cart-toggle { background: none; border: none; color: #000000; cursor: pointer; position: relative; display: flex; align-items: center; }
-        #cartBadge { position: absolute; top: -5px; right: -10px; background: #000000; color: #ffffff; font-size: 9px; padding: 2px 5px; border-radius: 10px; font-weight: bold; }
+        .cart-toggle { background: none; border: none; color: #000; cursor: pointer; position: relative; }
+        #cartBadge { position: absolute; top: -5px; right: -10px; background: #000; color: #fff; font-size: 9px; padding: 2px 5px; border-radius: 10px; font-weight: bold; }
+
+        /* --- SOL ALT MENÜ TRIGGER --- */
+        .menu-trigger { position: fixed; bottom: 40px; left: 40px; z-index: 2001; cursor: pointer; display: flex; flex-direction: column; gap: 5px; }
+        .menu-trigger span { width: 25px; height: 1.5px; background: #000; transition: 0.3s; }
+
+        /* --- SOL BİLGİ SIDEBAR --- */
+        .info-sidebar { position: fixed; top: 115px; left: -300px; width: 260px; height: calc(100vh - 180px); background: #fff; border-right: 1px solid rgba(0,0,0,0.05); transition: 0.4s ease; z-index: 2000; padding: 40px; display: flex; flex-direction: column; gap: 20px; }
+        .info-sidebar.active { left: 0; }
+        .sidebar-link { text-decoration: none; color: #000; font-size: 11px; text-transform: lowercase; opacity: 0.5; cursor: pointer; transition: 0.3s; }
+        .sidebar-link:hover { opacity: 1; padding-left: 5px; }
 
         /* --- ÜRÜN HAVUZU --- */
         .products-pool { position: fixed; top: 55%; left: 50%; transform: translate(-50%, -50%); width: 85%; height: 75%; display: flex; align-items: center; justify-content: center; z-index: 5; }
@@ -89,24 +54,21 @@
         .product-card:hover .product-box img { transform: scale(1.05); }
         .product-info { font-size: 10px; text-transform: lowercase; opacity: 0.8; text-align: center; }
 
-        /* MODALLAR VE SEPET PANELİ AYNI KALDI */
-        #infoPool, #productDetailPool, #checkoutPool { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 80%; height: 75%; background-color: #ffffff; border: 1px solid #000000; z-index: 100 !important; display: none; opacity: 0; transition: 0.3s; overflow: hidden; }
+        /* --- MODALS & CART PANEL --- */
+        #infoPool, #productDetailPool, #checkoutPool { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 80%; height: 75%; background: #fff; border: 1px solid #000; z-index: 3000; display: none; opacity: 0; transition: 0.3s; overflow: hidden; }
         #infoPool.active, #productDetailPool.active, #checkoutPool.active { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        .side-cart { position: fixed; top: 0; right: -400px; width: 350px; height: 100vh; background-color: #ffffff; border-left: 1px solid #000000; transition: 0.4s; z-index: 2000; padding: 30px; display: flex; flex-direction: column; }
+        .side-cart { position: fixed; top: 0; right: -400px; width: 350px; height: 100vh; background: #fff; border-left: 1px solid #000; transition: 0.4s; z-index: 2000; padding: 30px; display: flex; flex-direction: column; }
         .side-cart.active { right: 0; }
         #globalOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.1); z-index: 1500; display: none; backdrop-filter: blur(2px); }
         #globalOverlay.active { display: block; }
-        .checkout-btn { width: 100%; background: #000000; color: #ffffff; border: none; padding: 15px; font-family: inherit; cursor: pointer; font-weight: bold; text-transform: lowercase; margin-top: 10px; }
-        
-        /* FOOTER */
-        .legal-footer { position: fixed; bottom: 40px; left: 40px; display: flex; gap: 20px; }
-        .legal-link { font-size: 11px; opacity: 0.5; cursor: pointer; color: var(--text-color); text-transform: lowercase; }
+
+        .checkout-btn { width: 100%; background: #000; color: #fff; border: none; padding: 15px; cursor: pointer; font-weight: bold; text-transform: lowercase; margin-top: 10px; }
         #copyright-text { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); font-size: 9px; opacity: 0.3; text-transform: lowercase; }
     </style>
 </head>
 <body>
 
-    <div id="globalOverlay" onclick="handleOverlayClick()"></div>
+    <div id="globalOverlay" onclick="closeAllPanels()"></div>
 
     <div class="header-left">
         <img src="media/mobillogoW.webp" alt="reeha." class="brand-logo-top" onclick="showLandingImage()">
@@ -119,40 +81,38 @@
 
     <div class="top-right-nav">
         <button class="cart-toggle" onclick="toggleCart()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <path d="M16 10a4 4 0 0 1-8 0"></path>
-            </svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
             <span id="cartBadge" style="display: none;">0</span>
         </button>
+    </div>
+
+    <div class="menu-trigger" onclick="toggleSidebar()">
+        <span></span><span></span><span></span>
+    </div>
+
+    <div class="info-sidebar" id="infoSidebar">
+        <a class="sidebar-link" onclick="openInfo('sales')">mesafeli satış</a>
+        <a class="sidebar-link" onclick="openInfo('shipping')">teslimat ve iade</a>
+        <a class="sidebar-link" onclick="openInfo('privacy')">kvkk</a>
+        <a class="sidebar-link" onclick="openInfo('contact')">iletişim</a>
     </div>
 
     <main class="products-pool" id="mainPool"></main>
 
     <div class="side-cart" id="sideCart">
-        <div style="font-size:12px; margin-bottom:20px; border-bottom:1px solid #000000; padding-bottom:10px; display:flex; justify-content:space-between;">
-            <span>sepet</span>
-            <span onclick="toggleCart()" style="cursor:pointer; opacity:0.5;">[x]</span>
+        <div style="font-size:12px; margin-bottom:20px; border-bottom:1px solid #000; padding-bottom:10px; display:flex; justify-content:space-between;">
+            <span>sepet</span><span onclick="toggleCart()" style="cursor:pointer; opacity:0.5;">[x]</span>
         </div>
         <div id="cartItems" style="flex:1; overflow-y:auto;"><div style="opacity:0.5; font-size:10px;">boş.</div></div>
-        <div id="cartFooter" style="display:none; border-top:1px solid #000000; padding-top:20px;">
+        <div id="cartFooter" style="display:none; border-top:1px solid #000; padding-top:20px;">
             <div style="font-size:12px; margin-bottom:15px; display:flex; justify-content:space-between;"><span>total:</span><span id="cartTotal">0TL</span></div>
             <button class="checkout-btn" onclick="startCheckout()">ödemeye geç</button>
         </div>
     </div>
 
     <div id="infoPool">
-        <div style="position:absolute; top:15px; right:15px; cursor:pointer; font-size:10px; opacity:0.5;" onclick="closeAllPanels()">[kapat]</div>
-        <div style="display:flex; width:100%; height:100%;">
-            <div style="width:200px; border-right:1px solid #000000; padding:40px; display:flex; flex-direction:column; gap:20px;">
-                <div class="info-nav-link" onclick="loadInfo('sales')" id="link-sales" style="cursor:pointer; font-size:11px;">mesafeli satış</div>
-                <div class="info-nav-link" onclick="loadInfo('shipping')" id="link-shipping" style="cursor:pointer; font-size:11px;">teslimat & iade</div>
-                <div class="info-nav-link" onclick="loadInfo('privacy')" id="link-privacy" style="cursor:pointer; font-size:11px;">kvkk & gizlilik</div>
-                <div class="info-nav-link" onclick="loadInfo('contact')" id="link-contact" style="cursor:pointer; font-size:11px;">iletişim</div>
-            </div>
-            <div id="infoContent" style="flex:1; padding:80px; overflow-y:auto; font-size:11px; white-space:pre-wrap;"></div>
-        </div>
+        <div style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:10px; opacity:0.5;" onclick="closeAllPanels()">[kapat]</div>
+        <div id="infoContent" style="flex:1; padding:80px; overflow-y:auto; font-size:11px; white-space:pre-wrap;"></div>
     </div>
 
     <div id="productDetailPool">
@@ -162,33 +122,25 @@
 
     <div id="checkoutPool">
         <div style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:10px; opacity:0.5; z-index:3000;" onclick="closeAllPanels()">[iptal]</div>
-        <div class="checkout-container">
-            <div class="checkout-form-box" id="checkoutFormContent" style="flex:1; padding:60px; overflow-y:auto;"></div>
-        </div>
+        <div id="checkoutFormContent" style="flex:1; padding:80px; overflow-y:auto;"></div>
     </div>
 
-    <footer class="legal-footer">
-        <div class="legal-link" onclick="openInfoPool('sales')">mesafeli satış</div>
-        <div class="legal-link" onclick="openInfoPool('shipping')">teslimat ve iade</div>
-        <div class="legal-link" onclick="openInfoPool('privacy')">kvkk</div>
-        <div class="legal-link" onclick="openInfoPool('contact')">iletişim</div>
-    </footer>
     <div id="copyright-text">© 2026 reeha. tüm hakları saklıdır.</div>
 
     <script>
         const productsData = {
             tops: [
-                { id: 1, name: "basic t-shirt white", price: 400, img: "elbise/tshirt1.webp", desc: "100% heavy cotton." },
-                { id: 2, name: "heavy cotton hoodie", price: 1100, img: "elbise/tshirt2.webp", desc: "Oversized." }
+                { id: 1, name: "basic t-shirt white", price: 400, img: "elbise/tshirt1.webp", desc: "unisex fit. %100 ağır pamuk doku." },
+                { id: 2, name: "heavy cotton hoodie", price: 1100, img: "elbise/tshirt2.webp", desc: "oversized form. zamansız detaylar." }
             ],
             bottoms: [{ id: 'e1', isEmpty: true }]
         };
 
         const infoTexts = {
-            contact: { tr: `İLETİŞİM\n\nReeha (Adem Koymak)\nArnavutköy / İSTANBUL\n+90 534 875 57 60\nadmkymk25@gmail.com` },
-            privacy: { tr: `KVKK & GİZLİLİK...` },
-            sales: { tr: `MESAFELİ SATIŞ SÖZLEŞMESİ...` },
-            shipping: { tr: `TESLİMAT & İADE...` }
+            contact: `İLETİŞİM\n\nReeha (Adem Koymak)\nArnavutköy / İSTANBUL\n+90 534 875 57 60\nadmkymk25@gmail.com`,
+            privacy: `KVKK & GİZLİLİK...`,
+            sales: `MESAFELİ SATIŞ SÖZLEŞMESİ...`,
+            shipping: `TESLİMAT & İADE...`
         };
 
         let cart = [];
@@ -204,6 +156,7 @@
             }).join('') + `</div>`;
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             if(e) e.target.classList.add('active');
+            closeAllPanels();
         }
 
         function showLandingImage() {
@@ -219,25 +172,20 @@
             document.getElementById('cartTotal').innerText = total + "TL";
             document.getElementById('cartFooter').style.display = cart.length > 0 ? 'block' : 'none';
             document.getElementById('cartItems').innerHTML = cart.length === 0 ? "boş." : cart.map(i => `
-                <div style="font-size:11px; margin-bottom:10px; display:flex; justify-content:space-between;">
-                    <span>${i.name}</span><span>${i.price}TL</span>
-                </div>
+                <div style="font-size:11px; margin-bottom:10px; display:flex; justify-content:space-between;"><span>${i.name}</span><span>${i.price}TL</span></div>
             `).join('');
         }
 
         function openProductDetail(cat, id) {
             const p = productsData[cat].find(x => x.id === id);
             document.getElementById('productDetailContent').innerHTML = `
-                <div style="flex:1; display:flex; align-items:center; justify-content:center; padding:40px;">
-                    <img src="${p.img}" style="max-width:100%; max-height:100%; object-fit:contain;">
-                </div>
-                <div style="width:400px; border-left:1px solid #000000; padding:60px; display:flex; flex-direction:column; justify-content:center;">
+                <div style="flex:1; display:flex; align-items:center; justify-content:center; padding:40px;"><img src="${p.img}" style="max-width:100%; max-height:100%; object-fit:contain;"></div>
+                <div style="width:400px; border-left:1px solid #000; padding:60px; display:flex; flex-direction:column; justify-content:center;">
                     <h2 style="font-size:20px; margin-bottom:10px;">${p.name}</h2>
                     <p style="font-size:16px; margin-bottom:20px;">${p.price}TL</p>
                     <p style="font-size:11px; opacity:0.6; margin-bottom:40px; line-height:1.6;">${p.desc}</p>
                     <button class="checkout-btn" onclick="addToCart(${p.id}, '${cat}')">sepete ekle</button>
-                </div>
-            `;
+                </div>`;
             document.getElementById('productDetailPool').classList.add('active');
             document.getElementById('globalOverlay').classList.add('active');
         }
@@ -250,16 +198,36 @@
             toggleCart();
         }
 
+        function openInfo(type) {
+            document.getElementById('infoContent').innerText = infoTexts[type];
+            document.getElementById('infoPool').classList.add('active');
+            document.getElementById('infoSidebar').classList.remove('active');
+            document.getElementById('globalOverlay').classList.add('active');
+        }
+
+        function toggleSidebar() {
+            document.getElementById('infoSidebar').classList.toggle('active');
+            document.getElementById('globalOverlay').classList.toggle('active');
+        }
+
+        function toggleCart() {
+            document.getElementById('sideCart').classList.toggle('active');
+            document.getElementById('globalOverlay').classList.toggle('active');
+        }
+
+        function closeAllPanels() {
+            document.querySelectorAll('#infoPool, #productDetailPool, #checkoutPool, #sideCart, #infoSidebar, #globalOverlay').forEach(el => el.classList.remove('active'));
+        }
+
         async function startCheckout() {
             closeAllPanels();
             const totalPrice = cart.reduce((a, c) => a + c.price, 0);
             document.getElementById('checkoutFormContent').innerHTML = `
-                <h3 style="margin-bottom:20px; font-size:16px;">teslimat bilgileri</h3>
-                <input id="bill_email" placeholder="e-posta" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #000000; outline:none;">
-                <input id="bill_name" placeholder="ad soyad" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #000000; outline:none;">
-                <textarea id="bill_address" placeholder="adres" style="width:100%; padding:10px; height:100px; margin-bottom:20px; border:1px solid #000000; outline:none; resize:none;"></textarea>
-                <button class="checkout-btn" onclick="startPayTR()">ödemeye geç (${totalPrice}TL)</button>
-            `;
+                <h3 style="margin-bottom:20px;">teslimat bilgileri</h3>
+                <input id="bill_email" placeholder="e-posta" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #000; outline:none;">
+                <input id="bill_name" placeholder="ad soyad" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #000; outline:none;">
+                <textarea id="bill_address" placeholder="adres" style="width:100%; padding:10px; height:100px; margin-bottom:20px; border:1px solid #000; outline:none; resize:none;"></textarea>
+                <button class="checkout-btn" onclick="startPayTR()">ödemeye geç (${totalPrice}TL)</button>`;
             document.getElementById('checkoutPool').classList.add('active');
             document.getElementById('globalOverlay').classList.add('active');
         }
@@ -268,53 +236,23 @@
             const email = document.getElementById('bill_email').value;
             const name = document.getElementById('bill_name').value;
             const address = document.getElementById('bill_address').value;
-            const totalPrice = cart.reduce((a, c) => a + c.price, 0);
-
-            if (!email || !name || !address) { alert("lütfen eksik alanları doldurun."); return; }
-
-            const checkoutContent = document.getElementById('checkoutFormContent');
-            checkoutContent.innerHTML = `<p style="font-size:12px;">bağlanılıyor...</p>`;
-
+            const total = cart.reduce((a, c) => a + c.price, 0);
+            if (!email || !name || !address) { alert("eksik alanları doldurun."); return; }
+            const content = document.getElementById('checkoutFormContent');
+            content.innerHTML = `<p>bağlanılıyor...</p>`;
             try {
                 const res = await fetch("https://shopier-backend.vercel.app/api/get-paytr-token", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email, total: totalPrice, name, address })
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, total, name, address })
                 });
                 const data = await res.json();
                 if (data.status === "success") {
-                    checkoutContent.innerHTML = `<iframe src="https://www.paytr.com/odeme/guvenli/${data.token}" style="width:100%; height:600px; border:none;"></iframe>`;
+                    content.innerHTML = `<iframe src="https://www.paytr.com/odeme/guvenli/${data.token}" style="width:100%; height:600px; border:none;"></iframe>`;
                 }
-            } catch (err) { alert("bir hata oluştu."); }
+            } catch (err) { alert("hata oluştu."); }
         }
 
-        function openInfoPool(type) {
-            document.getElementById('infoPool').classList.add('active');
-            document.getElementById('globalOverlay').classList.add('active');
-            loadInfo(type);
-        }
-
-        function loadInfo(type) {
-            document.getElementById('infoContent').innerText = infoTexts[type].tr;
-            document.querySelectorAll('.info-nav-link').forEach(el => el.style.opacity = '0.5');
-            const targetLink = document.getElementById('link-' + type);
-            if(targetLink) targetLink.style.opacity = '1';
-        }
-
-        function closeAllPanels() {
-            document.querySelectorAll('#infoPool, #productDetailPool, #checkoutPool, #sideCart, #globalOverlay').forEach(el => el.classList.remove('active'));
-        }
-
-        function toggleCart() {
-            document.getElementById('sideCart').classList.toggle('active');
-            document.getElementById('globalOverlay').classList.toggle('active');
-        }
-
-        function handleOverlayClick() { closeAllPanels(); }
-
-        window.onload = () => {
-            showLandingImage();
-        };
+        window.onload = showLandingImage;
     </script>
 </body>
 </html>
