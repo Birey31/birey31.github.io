@@ -155,22 +155,44 @@
     min-width: 20px;
     text-align: center;
 }
-     .social-footer {
-    position: fixed;
-    bottom: 60px; /* Copyright'ın biraz üzerinde */
-    right: 40px;
+     /* Sayfanın en altında, copyright'ın üstünde duracak kapsayıcı */
+.footer-container {
+    position: absolute; /* Fixed değil, sayfanın sonuna bağlı */
+    bottom: 20px;       /* Sayfanın en altından uzaklık */
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
-    gap: 20px;
-    z-index: 1000;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;          /* İkonlar ve yazı arasındaki boşluk */
+    width: 100%;
+    padding-bottom: 20px;
 }
-     @media screen and (max-width: 768px) {
-    .social-footer {
-        right: auto;
-        left: 50%;
-        transform: translateX(-50%); /* Tam ortalar */
-        bottom: 60px; /* Copyright metninin (30px) üstünde kalır */
-        gap: 25px;
-    }
+
+.social-footer {
+    display: flex;
+    gap: 25px;
+}
+
+.social-icon {
+    color: #ffffff !important;
+    text-decoration: none;
+    opacity: 0.8;
+    transition: 0.3s;
+}
+
+.social-icon svg {
+    stroke: #ffffff; /* İkon rengi beyaz */
+}
+
+#copyright-text {
+    position: static; /* Fixed'den çıkardık */
+    transform: none;
+    font-size: 9px;
+    opacity: 0.3;
+    color: #ffffff;
+    text-align: center;
+}
     
     #copyright-text {
         bottom: 25px; /* Metni biraz daha aşağı çektik */
@@ -321,8 +343,6 @@
         </svg>
     </a>
 </div>
-
-
         <footer class="legal-footer">© 2026 reeha. tüm hakları saklıdır.</footer>
     </div>
 
