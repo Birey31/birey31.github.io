@@ -45,16 +45,18 @@
         }
 
         /* --- HEADER --- */
-        header {
-            width: 100%;
-            padding: 20px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: fixed;
-            top: 0; left: 0; z-index: 1000;
-            background-color: var(--bg-color);
-        }
+        header, .header-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 140px; /* Logonun ve menünün bittiği yere kadar bir yükseklik */
+    background-color: #8dbbe6; /* Ekran görüntüsündeki mavi tonu */
+    z-index: 2000; /* Ürünlerden (z-index: 5 veya 110) çok daha yüksek olmalı */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
         .menu-toggle {
             position: absolute;
@@ -215,6 +217,10 @@
             gap: 15px; 
             padding: 0 15px;
         }
+     .products-pool {
+    margin-top: 150px; /* Header'dan sonra başlaması için */
+    overflow-y: scroll; /* Sadece bu alanın kaymasını istersen */
+}
 
         .product-box { border: none; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; background: transparent; cursor: pointer; }
         .product-box img { width: 100%; height: 100%; object-fit: contain; }
