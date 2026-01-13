@@ -155,6 +155,27 @@
     min-width: 20px;
     text-align: center;
 }
+     .social-footer {
+    position: fixed;
+    bottom: 60px; /* Copyright'ın biraz üzerinde */
+    right: 40px;
+    display: flex;
+    gap: 20px;
+    z-index: 1000;
+}
+     @media screen and (max-width: 768px) {
+    .social-footer {
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%); /* Tam ortalar */
+        bottom: 60px; /* Copyright metninin (30px) üstünde kalır */
+        gap: 25px;
+    }
+    
+    #copyright-text {
+        bottom: 25px; /* Metni biraz daha aşağı çektik */
+    }
+}
         /* --- NAVIGATION --- */
         nav#main-nav { 
             position: fixed; top: 90px; left: 0; width: 100%; 
@@ -273,10 +294,7 @@
             <a onclick="openInfoPool('sales')">mesafeli satış</a>
             <a onclick="openInfoPool('shipping')">teslimat ve iade</a>
         </div>
-        <div class="sidebar-social">
-            <a href="https://www.instagram.com/reehastudio/" target="_blank"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
-            <a href="https://www.tiktok.com/@reehastudio" target="_blank"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg></a>
-        </div>
+        
     </div>
 
     <nav id="main-nav">
@@ -288,6 +306,23 @@
         <div id="products-list" class="products-grid"></div>
         <div class="spotify-section">
 <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/playlist/1TBTCXT9375pAntfD2YzUY?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>        </div>
+     <div class="social-footer">
+    <a href="https://instagram.com/reehastudio" target="_blank" class="social-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+    </a>
+    
+    <a href="https://tiktok.com/@reehastudio" target="_blank" class="social-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path>
+        </svg>
+    </a>
+</div>
+
+<div id="copyright-text">© 2026 reeha. tüm hakları saklıdır.</div>
         <footer class="legal-footer">© 2026 reeha. tüm hakları saklıdır.</footer>
     </div>
 
